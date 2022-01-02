@@ -1,0 +1,42 @@
+type Users @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  username: String
+  isAdmin: Boolean
+  groupName: String
+}
+
+type Money @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  creatorName: String
+  moneyFromName: String
+  moneyToName: String
+  amount: Float
+  paid: Boolean
+  comment: String
+}
+
+type Comments @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  authorName: String
+  content: String
+}
+
+type WishlistItems @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  imageUrls: [String]
+  images: [String]
+  name: String
+  link: String
+  note: String
+  gottenBy: [String]
+  wantsToGet: [String]
+  price: Float
+}
+
+type Wishlist @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  ownerName: String
+  numberOfItems: Int
+  amazonWishlistUrl: AWSURL
+}
+ 

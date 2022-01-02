@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3awsgiftappimages",
+  "bucketName": "aws-gift-app-images",
+  "policyUUID": "09d99f30",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}
