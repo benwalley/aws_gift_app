@@ -1,0 +1,68 @@
+.textButton,
+.textButtonSecondary {
+    background: var(--light-green);
+    border: none;
+    height: 40px;
+    color: #0c0c0c;
+    padding: 10px;
+    line-height: 20px;
+    display: grid;
+    text-align: center;
+    border-radius: 3px;
+    width: auto;
+    white-space: nowrap;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    font-family: Lato, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+        filter: brightness(110%);
+        box-shadow: 0 0 4px 0 #a7a7a7;
+    }
+
+    &.textButtonSecondary {
+        background: #4db34d;
+    }
+}
+
+.iconButton {
+    background: none;
+    border: none;
+    padding: 0 12px;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: #363535;
+    }
+
+}
+
+.buttonAsText {
+    border: none;
+    background: none;
+    height: 40px;
+    font-size: 22px;
+    line-height: 30px;
+    padding: 5px;
+    margin: 0 auto;
+    font-family: Lato, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: #363535;
+    }
+}
+

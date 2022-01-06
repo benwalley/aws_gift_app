@@ -4,10 +4,6 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
-type UsersMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
 type MoneyMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -24,17 +20,6 @@ type WishlistMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-export declare class Users {
-  readonly id: string;
-  readonly username?: string;
-  readonly isAdmin?: boolean;
-  readonly groupName?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Users, UsersMetaData>);
-  static copyOf(source: Users, mutator: (draft: MutableModel<Users, UsersMetaData>) => MutableModel<Users, UsersMetaData> | void): Users;
-}
-
 export declare class Money {
   readonly id: string;
   readonly creatorName?: string;
@@ -43,6 +28,9 @@ export declare class Money {
   readonly amount?: number;
   readonly paid?: boolean;
   readonly comment?: string;
+  readonly creatorId?: string;
+  readonly moneyFromId?: string;
+  readonly moneyToId?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Money, MoneyMetaData>);
@@ -53,6 +41,10 @@ export declare class Comments {
   readonly id: string;
   readonly authorName?: string;
   readonly content?: string;
+  readonly wishlistID?: string;
+  readonly wishlistitemsID?: string;
+  readonly visibleToOwner?: boolean;
+  readonly authorId?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Comments, CommentsMetaData>);
@@ -69,6 +61,8 @@ export declare class WishlistItems {
   readonly gottenBy?: (string | null)[];
   readonly wantsToGet?: (string | null)[];
   readonly price?: number;
+  readonly wishlistID?: string;
+  readonly wishlistItemComments?: (Comments | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<WishlistItems, WishlistItemsMetaData>);
@@ -80,6 +74,9 @@ export declare class Wishlist {
   readonly ownerName?: string;
   readonly numberOfItems?: number;
   readonly amazonWishlistUrl?: string;
+  readonly Items?: (WishlistItems | null)[];
+  readonly wishlistComments?: (Comments | null)[];
+  readonly ownerId?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Wishlist, WishlistMetaData>);

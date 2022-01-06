@@ -1,0 +1,117 @@
+.addListItemContainer {
+    //position: fixed;
+    //top: 0;
+    //bottom: 0;
+    //left: 0;
+    //right: 0;
+    //background: #00000077;
+
+    .addListItemBackground {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #62626277;
+    }
+
+    .addListItemContent {
+        position: fixed;
+        top: 10%;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 800px;
+        width: 90%;
+        background: white;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        box-shadow: 1px 1px 10px #6f6f6f;
+        text-align: center;
+        padding-bottom: 50px;
+
+        .addListItemScrollingContainer {
+            height: 100%;
+            overflow-y:auto;
+            padding-bottom: 25px;
+            box-sizing: border-box;
+        }
+    }
+
+    .addListItemInput {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-bottom: 10px;
+
+        label {
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+    }
+
+    .addImages {
+
+        .addListItemInput {
+            margin-bottom: 0;
+        }
+
+        .addImagesTitle {
+            padding: 10px;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .addImagesInput {
+            position: relative;
+            margin-top: 5px;
+            margin-bottom: 5px;
+
+            input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+
+        .removeImageUrl {
+            background: none;
+            border: none;
+            position: absolute;
+            right: 5px;
+            height: 100%;
+            color: #db3939;
+
+        }
+
+        .addAnotherImageButton {
+            background: none;
+            border: none;
+            font-size: 16px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    .addItemButton {
+        justify-content: center;
+        display: flex;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+
+        .textButton {
+            font-size: 20px;
+            line-height: 20px;
+            padding: 15px 30px;
+            height: 50px;
+            width: 100%;
+
+        }
+    }
+}

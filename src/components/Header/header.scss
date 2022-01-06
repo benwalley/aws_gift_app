@@ -1,0 +1,9 @@
+.headerContainer {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content min-content min-content min-content;
+    background: white;
+    padding: 5px;
+    box-shadow: 0 0 7px #4a4a4a;
+    grid-gap: 10px;
+
+}

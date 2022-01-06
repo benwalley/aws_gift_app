@@ -1,0 +1,29 @@
+$thumbnailImageWidth: 50px;
+
+.wishlistListingItem {
+    display: grid;
+    grid-template-columns: 50px 1fr min-content;
+    border-top: 1px solid black;
+    padding: 10px;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: -1px;
+    cursor: pointer;
+    align-items: center;
+    box-sizing: border-box;
+
+    .imageThumbnail {
+        width: 100%;
+        max-width: $thumbnailImageWidth;
+        max-height: $thumbnailImageWidth;
+    }
+
+    .name {
+        margin: 0 10px
+    }
+
+    .price {
+        white-space: nowrap;
+    }
+}

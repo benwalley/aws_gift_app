@@ -1,0 +1,41 @@
+/* CSS HEX */
+:root {
+    --electric-blue: #90f1efff;
+    --mimi-pink: #ffd6e0ff;
+    --green-yellow-crayola: #ffef9fff;
+    --mint-green: #c1fba4ff;
+    --light-green: #7bf1a8ff;
+    --primary-color: --light-green;
+}
+
+/* SCSS HEX */
+$electric-blue: #90f1efff;
+$mimi-pink: #ffd6e0ff;
+$green-yellow-crayola: #ffef9fff;
+$mint-green: #c1fba4ff;
+$light-green: #7bf1a8ff;
+
+/* SCSS HSL */
+$electric-blue: hsla(179, 78%, 75%, 1);
+$mimi-pink: hsla(345, 100%, 92%, 1);
+$green-yellow-crayola: hsla(50, 100%, 81%, 1);
+$mint-green: hsla(100, 92%, 81%, 1);
+$light-green: hsla(143, 81%, 71%, 1);
+
+/* SCSS RGB */
+$electric-blue: rgba(144, 241, 239, 1);
+$mimi-pink: rgba(255, 214, 224, 1);
+$green-yellow-crayola: rgba(255, 239, 159, 1);
+$mint-green: rgba(193, 251, 164, 1);
+$light-green: rgba(123, 241, 168, 1);
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(0deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-right: linear-gradient(90deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-bottom: linear-gradient(180deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-left: linear-gradient(270deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-top-right: linear-gradient(45deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-bottom-right: linear-gradient(135deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-top-left: linear-gradient(225deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-bottom-left: linear-gradient(315deg, #90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
+$gradient-radial: radial-gradient(#90f1efff, #ffd6e0ff, #ffef9fff, #c1fba4ff, #7bf1a8ff);
