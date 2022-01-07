@@ -8,7 +8,7 @@ import './addListItem.scss'
 import TextButton from "../Buttons/TextButton";
 
 export default function AddListItem(props) {
-    const {user, close} = props;
+    const {user, close, updateMyWishlistItems} = props;
     const [name, setName] = useState('')
     const [imageUrls, setImageUrls] = useState([''])
     const [link, setLink] = useState('')
@@ -46,10 +46,6 @@ export default function AddListItem(props) {
             <p className="addImagesTitle">Add Image Urls</p>
             {inputs}
         </div>)
-    }
-
-    const getWishlistId = () => {
-        return '1'
     }
 
     const createUsersWishlist = async (user) => {
@@ -90,6 +86,8 @@ export default function AddListItem(props) {
         const response = await DataStore.save(
             new WishlistItems(itemData)
         );
+        close();
+        updateMyWishlistItems();
     }
 
     const handleImageUrlFieldChange = (e, index) => {

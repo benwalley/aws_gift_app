@@ -12,40 +12,38 @@ import GetMyWishlist from "../../helpers/getWishlists";
 import createUsersWishlist from "../../helpers/createUserWishlist";
 import Header from "../Header/header";
 import './dashboard.scss'
+import WishlistItemLarge from "../WishlistItemLarge/wishlistItemLarge";
 
 export default function Dashboard(props) {
-    const {user} = props
+    const {user, myWishlist, myWishlistItems, updateMyWishlistItems} = props
     const [wishlist, setWishlist] = useState(undefined)
     const [wishlistId, setWishlistId] = useState(undefined)
+    const [visibleWishlistItemId, setVisibleWishlistItemId] = useState(undefined)
+    const [wishlistItems, setWishlistItems] = useState([])
 
-    const getMyWishlist = async () => {
-        try {
-            const myWishlists = await DataStore.query(Wishlist, c => c.ownerId("eq", user.username));
-            if(myWishlists && myWishlists.length > 0) {
-                setWishlistId(myWishlists[0].id)
-                setWishlist(myWishlists[0])
-            } else if (myWishlists && myWishlists.length === 0) {
-                // this means the query returned, but there are no wishlists created yet
-                const myWishlist = await createUsersWishlist(user);
-                setWishlistId(myWishlist.id)
-                setWishlist(myWishlist)
-                console.log("I hit this when I shouldn't have")
-            }
 
-        } catch(e) {
-            // do nothing, it should try again
-            console.log(e)
-        }
+
+    const handleSelectWishlistItem = (itemData) => {
+        setVisibleWishlistItemId(itemData.id)
     }
 
-    useEffect(() => {
-        getMyWishlist()
-    }, [user])
+    const getVisibleWishlistItem = () => {
+        if(!visibleWishlistItemId) return;
+        return (<div className="visibleWishlistItem">
+            <WishlistItemLarge wishlistItemId={visibleWishlistItemId} updateMyWishlistItems={updateMyWishlistItems}/>
+        </div>)
+    }
 
     return (
         <div className="dashboardContainer">
+            {getVisibleWishlistItem()}
             <div className="wishlistListing">
-                <WishlistListing wishlistId={wishlistId}/>
+                <WishlistListing
+                    wishlistId={wishlistId}
+                    handleSelectWishlistItem={handleSelectWishlistItem}
+                    wishlistItems={myWishlistItems}
+                    updateMyWishlistItems={updateMyWishlistItems}
+                />
             </div>
         </div>
     );

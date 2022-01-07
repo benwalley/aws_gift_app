@@ -43,7 +43,6 @@
     &:focus {
         color: #363535;
     }
-
 }
 
 .buttonAsText {
@@ -58,6 +57,7 @@
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     cursor: pointer;
+    white-space: nowrap;
 
     &:hover,
     &:active,

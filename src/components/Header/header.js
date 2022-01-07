@@ -10,13 +10,15 @@ import AddListItem from "../AddListItem/addListItem";
 
 
 export default function Header(props) {
-    const {user} = props
+    const {user, updateMyWishlistItems} = props
     const [addItemPopupOpen, setAddItemPopupOpen] = useState(false)
 
     const getAddItemPopup = () => {
         if(addItemPopupOpen) {
-            return <AddListItem user={user} close={(e) => {
-                e.preventDefault();
+            return <AddListItem updateMyWishlistItems={updateMyWishlistItems} user={user} close={(e) => {
+                if(e) {
+                    e.preventDefault();
+                }
                 setAddItemPopupOpen(false)}
             }
                 />
@@ -26,9 +28,11 @@ export default function Header(props) {
 
     return (
         <div className="headerContainer">
-            <TextButton displayName={"My Dashboard"}/>
+            <ButtonAsText displayName={"My Dashboard"}/>
             <ButtonAsText displayName={'Current Wishlist'}/>
-            <TextButton onClick={SignOut} displayName={'Sign Out'}/>
+            <span className="signOutButton">
+               <ButtonAsText onClick={SignOut} displayName={'Sign Out'}/>
+            </span>
             {/*<IconButton displayName={'money'} icon={<FontAwesomeIcon icon={faDollarSign} size="2x" />}/>*/}
             <IconButton displayName={'money'} icon={<FontAwesomeIcon icon={faFileInvoiceDollar} size="2x" />}/>
             <IconButton onClick={() => setAddItemPopupOpen(!addItemPopupOpen)} displayName={'add item'} icon={<FontAwesomeIcon icon={faPlus} size="2x"/>}/>

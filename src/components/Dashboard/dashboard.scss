@@ -1,11 +1,11 @@
 .dashboardContainer {
     display: grid;
     grid-template:
-            "leftSidebar center rightSidebar";
-    grid-template-columns: auto 1fr auto;
+            "left right";
+    grid-template-columns: 1fr 400px;
 
     .wishlistListing {
-        grid-area: rightSidebar;
+        grid-area: right;
     }
 }
 

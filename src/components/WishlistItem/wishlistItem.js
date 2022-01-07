@@ -3,7 +3,7 @@ import './wishlistItem.scss'
 import formatPrice from "../../helpers/formatPrice";
 
 export default function WishlistItem(props) {
-    const {data} = props
+    const {data, handleSelectWishlistItem} = props
 
     const getImage = () => {
         if(!data.imageUrls) return '';
@@ -20,8 +20,7 @@ export default function WishlistItem(props) {
     }
 
     const handleItemClick = () => {
-        console.log(data)
-        console.log("clicked " + data.name)
+        handleSelectWishlistItem(data)
     }
 
 

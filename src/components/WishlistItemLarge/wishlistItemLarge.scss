@@ -1,0 +1,60 @@
+.largeWishlistItemContainer {
+    display: grid;
+    grid-template:
+            "name name"
+            "image actionButtons"
+            "image information"
+            "image notes"
+            "extras extras";
+
+    grid-template-columns: 1fr 1fr;
+    padding: 20px;
+    grid-gap: 10px;
+
+    .name {
+        grid-area: name;
+    }
+
+    .primaryImage {
+        grid-area: image;
+        border: 1px solid black;
+        max-width: 400px;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .notes {
+        grid-area: notes;
+    }
+
+    .information {
+        grid-area: information;
+    }
+
+    .extras {
+        grid-area: extras;
+    }
+
+    .actionButtons {
+        grid-area: actionButtons;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 15px;
+
+        .iconButton {
+            background: var(--light-green);
+            border-radius: 5px;
+            height: 50px;
+            width: 100%;
+            min-width: 50px;
+        }
+
+        .deleteButton {
+            .iconButton {
+                background: var(--theme-red);
+            }
+        }
+    }
+}

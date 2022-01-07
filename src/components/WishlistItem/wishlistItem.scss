@@ -13,6 +13,10 @@ $thumbnailImageWidth: 50px;
     align-items: center;
     box-sizing: border-box;
 
+    &:hover {
+        background: #f1f1f1;
+    }
+
     .imageThumbnail {
         width: 100%;
         max-width: $thumbnailImageWidth;
