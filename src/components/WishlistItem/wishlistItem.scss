@@ -1,9 +1,18 @@
 $thumbnailImageWidth: 50px;
 
-.wishlistListingItem {
+.wishlistListingItemEven {
+    background: #f1f1f1;
+
+
+}
+
+.wishlistListingItemOdd {
+    background: var(--electric-blue);
+}
+.wishlistListingItemEven,
+.wishlistListingItemOdd {
     display: grid;
     grid-template-columns: 50px 1fr min-content;
-    border-top: 1px solid black;
     padding: 10px;
     max-width: 400px;
     width: 100%;
@@ -12,9 +21,13 @@ $thumbnailImageWidth: 50px;
     cursor: pointer;
     align-items: center;
     box-sizing: border-box;
+    position: relative;
 
     &:hover {
-        background: #f1f1f1;
+        filter: brightness(90%);
+        .deleteButton {
+            display: grid;
+        }
     }
 
     .imageThumbnail {
@@ -30,4 +43,22 @@ $thumbnailImageWidth: 50px;
     .price {
         white-space: nowrap;
     }
+
+    .deleteButton {
+        display: none;
+        position: absolute;
+        right: 10px;
+        border-radius: 5px;
+        background: var(--delete-red);
+        height: 40px;
+        width: 40px;
+        align-items: center;
+        justify-content: center;
+
+        .iconButton {
+
+        }
+    }
+
+
 }

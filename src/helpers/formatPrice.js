@@ -6,7 +6,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 
 export default function formatPrice(price) {
-    price = parseInt(price)
+    price = parseFloat(price)
     if(isNaN(price)) {
         return undefined
     }

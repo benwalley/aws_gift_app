@@ -1,19 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import { DataStore, Predicates, SortDirection, syncExpression } from 'aws-amplify'
-import { WishlistItems, Wishlist } from '../../models';
+import {WishlistItems, Wishlist, Users} from '../../models';
 import GetMyWishlist from "../../helpers/getWishlists";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import './addListItem.scss'
 import TextButton from "../Buttons/TextButton";
+import createUsersWishlist from "../../helpers/createUserWishlist";
+import GetNameOrEmail from "../../helpers/getNameOrEmail";
 
 export default function AddListItem(props) {
-    const {user, close, updateMyWishlistItems} = props;
+    const {user, close, updateVisibleWishlist, visibleWishlist, usingUser, authUser, addError, addSuccess} = props;
     const [name, setName] = useState('')
     const [imageUrls, setImageUrls] = useState([''])
     const [link, setLink] = useState('')
     const [note, setNote] = useState('')
     const [price, setPrice] = useState('')
+    const [addingToUser, setAddingToUser] = useState(undefined)
+    const [otherUsers, setOtherUsers] = useState([])
+
+    useEffect(() => {
+        setAddingToUser(usingUser)
+        updateOtherUsers()
+    }, [usingUser])
 
     const createInput = (value, setValue, displayName) => {
         return (
@@ -35,7 +44,7 @@ export default function AddListItem(props) {
         const inputs = imageUrls.map((url, index) => {
             return <div key={index} className="addImagesInput">
                 <input type="text" value={url} onChange={(e) => handleImageUrlFieldChange(e, index)}/>
-                <button className="removeImageUrl"
+                <button type="button" className="removeImageUrl"
                         onClick={(e) => handleRemoveImageUrl(e, index)}
                         aria-label="remove image url">
                     <FontAwesomeIcon icon={faTimesCircle} size="2x"/>
@@ -48,24 +57,14 @@ export default function AddListItem(props) {
         </div>)
     }
 
-    const createUsersWishlist = async (user) => {
-        const wishlistData = {
-            "ownerId": user.username,
-            "ownerName": "ben"
-        }
-        const response = await DataStore.save(
-            new Wishlist(wishlistData)
-        );
-        return response;
-    }
-
     const handleAddItem = async (e) => {
         //TODO: handle verifying there is at least a name set
         e.preventDefault()
+        if(!name || !visibleWishlist || !visibleWishlist.ownerId) return;
         // check if wishlist exists for you. If so, get the id
-        let myWishlist = await GetMyWishlist(user)
-        if(!myWishlist || !myWishlist[0].id) {
-            myWishlist = await createUsersWishlist(user);
+        let myWishlist = await DataStore.query(Wishlist, c => c.ownerId("eq", addingToUser.id));
+        if(!myWishlist || myWishlist.length === 0 || !myWishlist[0].id) {
+            myWishlist = await createUsersWishlist(addingToUser.id);
         } else {
             myWishlist = myWishlist[0]
         }
@@ -80,14 +79,15 @@ export default function AddListItem(props) {
             "gottenBy": [],
             "wantsToGet": [],
             "price": parseFloat(price),
-            "wishlistID": wishlistId,
+            "wishlistId": wishlistId,
+            "ownerId": usingUser.id,
             "wishlistItemComments": []
         }
         const response = await DataStore.save(
             new WishlistItems(itemData)
         );
         close();
-        updateMyWishlistItems();
+        updateVisibleWishlist();
     }
 
     const handleImageUrlFieldChange = (e, index) => {
@@ -104,27 +104,41 @@ export default function AddListItem(props) {
         setImageUrls([...imageUrlsCopy])
     }
 
+    const updateOtherUsers = async () => {
+        const gottenOtherUsers = await DataStore.query(Users, c => c.parentUserId("eq", authUser.id));
+        setOtherUsers(gottenOtherUsers)
+
+    }
+
     return (
         <div className="addListItemContainer" >
             <div className="addListItemBackground" onClick={close}></div>
-            <div className="addListItemContent">
+            <form className="addListItemContent" onSubmit={handleAddItem}>
                 <div className="addListItemScrollingContainer">
                     <h2>Add an item to your wishlist</h2>
-                    <form action="">
+                    <div className="addingAsName">
+                        <span className="addingName">{`Adding to wishlist: ${GetNameOrEmail(addingToUser)}`}</span>
+                        <span className="addToOtherUserButtons">
+                            {otherUsers.map(thisUser => {
+                                return <span key={thisUser.id} className="switchUser" onClick={() => setAddingToUser(thisUser)}>{thisUser.displayName}</span>
+                            })}
+                        </span>
+                    </div>
+
                         {createInput(name, setName, 'Item Name')}
                         {createInput(note, setNote, 'Note')}
                         {createInput(link, setLink, 'Link to item')}
                         {createInput(price, setPrice, 'Approximate price')}
                         <div className="addImages">
                             {imageUrlInputs()}
-                            <button className="addAnotherImageButton" onClick={handleAddAnotherImageUrl}>Add another image url</button>
+                            <button type="button" className="addAnotherImageButton" onClick={handleAddAnotherImageUrl}>Add another image url</button>
                         </div>
-                    </form>
+
                 </div>
                 <div className="addItemButton">
                     <TextButton displayName={"Add Item"} onClick={handleAddItem}/>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

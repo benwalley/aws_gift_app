@@ -1,0 +1,53 @@
+.moneyModalContents {
+    .amountOwedInputContainer {
+        display: grid;
+        grid-template-columns: 1fr min-content 1fr 1fr;
+        grid-gap: 20px;
+
+        > div {
+            display: grid;
+            grid-template-columns: 1fr;
+            font-size: 16px;
+
+            label {
+                padding: 10px;
+            }
+
+            input {
+                width: 150px;
+                padding: 10px;
+                box-sizing: border-box;
+                margin: 0 auto;
+                text-align: center;
+                font-size: 16px;
+
+            }
+        }
+
+        .arrow {
+            margin-top: auto;
+            margin-bottom: 10px;
+        }
+    }
+
+    .amountOwedRendered {
+        padding: 30px 10px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .comment {
+        grid-column: 1 / span 4;
+
+        input.commentInput {
+            width: 100%;
+        }
+    }
+
+    .submitMonies {
+        .textButton {
+            margin: 0 auto;
+            width: 400px;
+        }
+    }
+}

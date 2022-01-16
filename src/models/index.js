@@ -4,9 +4,11 @@ import { schema } from './schema';
 
 
 
-const { Money, Comments, WishlistItems, Wishlist } = initSchema(schema);
+const { Users, Groups, Money, Comments, WishlistItems, Wishlist } = initSchema(schema);
 
 export {
+  Users,
+  Groups,
   Money,
   Comments,
   WishlistItems,

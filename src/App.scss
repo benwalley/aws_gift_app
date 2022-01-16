@@ -3,3 +3,29 @@
   grid-template-rows: 50px 1fr;
   grid-gap: 10px;
 }
+
+body {
+  background: #fff3f6;
+}
+
+.errorsDiv {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 20px;
+  border: 3px solid #c90000;
+  color: #c90000;
+  z-index: 10000000;
+  background: white;
+}
+
+.successDiv {
+  position: fixed;
+  top: 55px;
+  right: 0;
+  padding: 20px;
+  border: 3px solid green;
+  color: green;
+  z-index: 10000000;
+  background: white;
+}

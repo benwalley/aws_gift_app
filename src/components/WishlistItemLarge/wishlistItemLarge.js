@@ -4,23 +4,22 @@ import './wishlistItemLarge.scss'
 import TextButton from "../Buttons/TextButton";
 import IconButton from "../Buttons/IconButton";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt, faShoppingCart, faUserFriends } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt, faShoppingCart, faUserFriends, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import {DataStore} from "@aws-amplify/datastore";
 import {WishlistItems} from "../../models";
+import Modal from "../Modal/modal";
+import createStyledInput from "../../helpers/createStyledInput";
+import EditWishlistItemPopup from "../EditWishlistItemPopup/editWishlistItemPopup";
+import CommentsComponent from "../CommentsComponent/commentsComponent";
 
 export default function WishlistItemLarge(props) {
-    const {wishlistItemId, updateMyWishlistItems} = props
-    const [data, setData] = useState({})
-
+    const {updateVisibleWishlist, usingUser, isOwner, isCreator, data, user, dbUser} = props
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
     useEffect(() => {
-        updateWishlistItem()
-    }, [wishlistItemId])
-
-    const updateWishlistItem = async () => {
-        const item = await DataStore.query(WishlistItems, wishlistItemId);
-        setData(item);
-    }
+        setSelectedImageIndex(0)
+    }, [data])
 
     const getPrice = () => {
         if(!data || !data.price) return '';
@@ -37,92 +36,137 @@ export default function WishlistItemLarge(props) {
     }
 
     const getImage = () => {
+        try {
+            if(data && data.imageUrls && data.imageUrls.length > 0) {
+                if(data.imageUrls.length >= 1) {
+                    return (<div className="primaryImage">
+                        <img src={data.imageUrls[selectedImageIndex]} alt={data.name || "product image"}/>
+                    </div>)
+                }
+            }
+        } catch(e) {
+            return
+        }
+
+    }
+
+    const selectImage = (index) => {
+        setSelectedImageIndex(index)
+    }
+
+    const getOtherImages = () => {
         if(data && data.imageUrls && data.imageUrls.length > 0) {
-            if(data.imageUrls.length >= 1) {
-                return (<div className="primaryImage">
-                    <img src={data.imageUrls[0]} alt={data.name || "product image"}/>
-                </div>)
+            if(data.imageUrls.length > 1) {
+                return <div className="imageList">
+                    {data.imageUrls.map((image, index) => {
+                        return (<div key={index} onClick={() => selectImage(index)} className={index === selectedImageIndex ? "imageListItemSelected" : "imageListItem"}>
+                            <img src={image} alt={data.name || "product image"}/>
+                        </div>)
+                    })}
+                </div>
+
             }
         }
     }
 
     const handleDelete = async (e) => {
         e.preventDefault()
-        const toDelete = await DataStore.query(WishlistItems, wishlistItemId);
+        const toDelete = await DataStore.query(WishlistItems, data.id);
         await DataStore.delete(toDelete);
     //    refresh data
-        updateWishlistItem();
-        updateMyWishlistItems();
+        updateVisibleWishlist()
     }
 
     const handleGetting = async (e) => {
         e.preventDefault()
-        const original = await DataStore.query(WishlistItems, wishlistItemId);
+        const original = await DataStore.query(WishlistItems, data.id);
+        const gottenByList = [...original.gottenBy]
+        let alreadyGotten = false;
+        for(let i = 0; i < gottenByList.length; i++) {
+            const gottenItem = gottenByList[i]
+            if(gottenItem === user.id) {
+                alreadyGotten = true;
+                gottenByList.splice(i, 1)
+            }
+        }
+        if(!alreadyGotten) {
+            gottenByList.push(user.id)
+        }
+
         await DataStore.save(
             WishlistItems.copyOf(original, updated => {
-                updated.gottenBy = ['Ben']; // TODO: update with proper data. maybe using ids
+                updated.gottenBy = gottenByList; //
             })
         );
-        updateWishlistItem();
+        updateVisibleWishlist()
     }
 
     const handleWantsToGet = async (e) => {
-        e.preventDefault()
-        const original = await DataStore.query(WishlistItems, wishlistItemId);
-        await DataStore.save(
-            WishlistItems.copyOf(original, updated => {
-                updated.wantsToGet = ['Ben']; // TODO: update with proper data. maybe using ids
-            })
-        );
-        updateWishlistItem();
+
+        try {
+            e.preventDefault()
+            const original = await DataStore.query(WishlistItems, data.id);
+            const wantsList = [...original.wantsToGet]
+            let alreadyGotten = false;
+            for(let i = 0; i < wantsList.length; i++) {
+                const gottenItem = JSON.parse(wantsList[i])
+                if(gottenItem === user.id) {
+                    alreadyGotten = true;
+                    wantsList.splice(i, 1)
+                }
+            }
+            if(!alreadyGotten) {
+                wantsList.push(user.id)
+            }
+            await DataStore.save(
+                WishlistItems.copyOf(original, updated => {
+                    updated.wantsToGet = wantsList;
+                })
+            );
+            updateVisibleWishlist()
+        } catch(e) {
+            console.log(e)
+        }
+
 
     }
 
     const getWantsToGet = () => {
-        if(!data || !data.wantsToGet || data.wantsToGet.length === 0) {
-            return;
-        }
-        if(data.wantsToGet.length === 1) {
-            return <div>{`${data.wantsToGet[0]} wants someone to go in on this with them.`}</div>
-        } else if (data.wantsToGet.length > 1) {
-            let wantsToGetNames = '';
-            for(let i = 0; i < data.wantsToGet.length; i++) {
-                if(i === data.wantsToGet.length - 1) {
-                    wantsToGetNames += ` ${data.wantsToGet[i]}`;
-                } else {
-                    wantsToGetNames += ` ${data.wantsToGet[i]} and`;
-                }
-
+        try {
+            if(!data || !data.wantsToGet || data.wantsToGet.length === 0) {
+                return;
             }
-            return <div>{`${wantsToGetNames} want someone to go in on this with them.`}</div>
+            return data.wantsToGet.map((person, index) => {
+                return(<div className="wantsToGetPerson" key={index}>
+                    {person}
+                </div>)
+            })
+        } catch(e) {
+            console.log(e)
         }
     }
 
 
     const getGetting = () => {
-        if(!data || !data.gottenBy || data.gottenBy.length === 0) {
-            return;
-        }
-        if(data.gottenBy.length === 1) {
-            return <div>{`${data.gottenBy[0]} is getting this.`}</div>
-        } else if (data.gottenBy.length > 1) {
-            let gottenByNames = '';
-            for(let i = 0; i < data.gottenBy.length; i++) {
-                if(i === data.gottenBy.length - 1) {
-                    gottenByNames += ` ${data.gottenBy[i]}`;
-                } else {
-                    gottenByNames += ` ${data.gottenBy[i]} and`;
-                }
-
+        try {
+            if(!data || !data.gottenBy || data.gottenBy.length === 0) {
+                return;
             }
-            return <div>{`${gottenByNames} are getting this.`}</div>
+            return data.gottenBy.map((person, index) => {
+                return(<div className="gettingPerson" key={index}>
+                    {person}
+                </div>)
+            })
+        } catch(e) {
+            console.log(e)
         }
+
     }
 
     const getLink = () => {
         if( data && data.link) {
             return (
-                <a href={data.link} aria-label="this is a test" target="_blank`">Link to product</a>
+                <a href={data.link} aria-label={data.name} target="_blank`">Link to product</a>
             )
         }
     }
@@ -143,17 +187,24 @@ export default function WishlistItemLarge(props) {
         !data ? <div></div> :
         <div className="largeWishlistItemContainer">
             {getName()}
-            {getImage()}
+            <div className="imagesContainer">
+                {getImage()}
+                {getOtherImages()}
+            </div>
+
             <div className="actionButtons">
-                <div>
+                {!isOwner && <div>
                     <IconButton onClick={handleGetting} displayName={"Get This"} icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}/>
-                </div>
-                <div>
+                </div>}
+                {(data.ownerId === usingUser.id || isCreator || isOwner) && <div>
+                    <IconButton onClick={() => setEditModalOpen(true)} displayName={"Edit"} icon={<FontAwesomeIcon icon={faPencilAlt} size="2x" />}/>
+                </div>}
+                {!isOwner && <div>
                     <IconButton onClick={handleWantsToGet} displayName={"Want to get this"} icon={<FontAwesomeIcon icon={faUserFriends} size="2x" />}/>
-                </div>
-                <div className="deleteButton">
+                </div>}
+                {(data.ownerId === usingUser.id || isCreator || isOwner) && <div className="deleteButton">
                     <IconButton onClick={handleDelete} displayName={"Delete"} icon={<FontAwesomeIcon icon={faTrashAlt} size="2x" />}/>
-                </div>
+                </div>}
             </div>
             <div className="information">
                 {getPrice()}
@@ -161,9 +212,26 @@ export default function WishlistItemLarge(props) {
             </div>
             {getNote()}
             <div className="extras">
-                <div className="wantsToGet">{getWantsToGet()}</div>
-                <div className="getting">{getGetting()}</div>
+                {data.wantsToGet && data.wantsToGet.length > 0 && <div className="wantsToGet">
+                    <h3>Want to go in on this:</h3>
+                    <div className="wantsToGetList">
+                        {getWantsToGet()}
+                    </div>
+                </div>}
+                {data.gottenBy && data.gottenBy.length > 0 && <div className="getting">
+                    <h3>Want to go in on this:</h3>
+                    <div className="gettingList">
+                        {getGetting()}
+                    </div>
+                </div>}
             </div>
+            {data && data.id && <CommentsComponent wishlistItem={data} commenterId={user.id} dbUser={dbUser}/>}
+            <Modal close={() => setEditModalOpen(false)} isOpen={editModalOpen}>
+                <EditWishlistItemPopup
+                    itemData={data}
+                    updateVisibleWishlist={updateVisibleWishlist}
+                    close={() => setEditModalOpen(false)}/>
+            </Modal>
         </div>
     );
 }

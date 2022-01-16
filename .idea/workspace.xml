@@ -3,9 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="0e23d880-b016-40cb-bb66-07cd0e0b3779" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/cli-inputs.json" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/cli-inputs.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/schema.graphql" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/schema.graphql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/colors.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/colors.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/AddListItem/addListItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AddListItem/addListItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AddListItem/addListItem.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AddListItem/addListItem.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Buttons/ButtonAsText.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Buttons/ButtonAsText.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Buttons/IconButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Buttons/IconButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Buttons/TextButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Buttons/TextButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Buttons/buttons.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Buttons/buttons.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Dashboard/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Dashboard/dashboard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Dashboard/dashboard.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Dashboard/dashboard.scss" afterDir="false" />
@@ -13,7 +20,14 @@
       <change beforePath="$PROJECT_DIR$/src/components/Header/header.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/header.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistListing/wishlistListing.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistListing/wishlistListing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers/createUserWishlist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/createUserWishlist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers/formatPrice.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/formatPrice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/schema.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/schema.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,11 +99,30 @@
       <updated>1641078648543</updated>
       <workItem from="1641078650116" duration="612000" />
       <workItem from="1641102192134" duration="8906000" />
-      <workItem from="1641224332093" duration="63763000" />
+      <workItem from="1641224332093" duration="140860000" />
+      <workItem from="1641915184707" duration="82000" />
+      <workItem from="1641915311265" duration="88030000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/FirstTimePopup/firstTimePopup.js</url>
+          <line>49</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/App.js</url>
+          <line>173</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

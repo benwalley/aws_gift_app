@@ -1,10 +1,5 @@
 .addListItemContainer {
-    //position: fixed;
-    //top: 0;
-    //bottom: 0;
-    //left: 0;
-    //right: 0;
-    //background: #00000077;
+    z-index: 12;
 
     .addListItemBackground {
         position: fixed;
@@ -114,4 +109,32 @@
 
         }
     }
+
+    .addingAsName {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .addingName {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .addToOtherUserButtons {
+            .switchUser {
+                background: var(--electric-blue);
+                height: 25px;
+                border-radius: 12.5px;
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                margin: 0 10px;
+                padding: 0 10px;
+                float: left;
+                cursor: pointer;
+            }
+        }
+
+    }
+
+
 }

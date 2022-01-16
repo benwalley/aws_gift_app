@@ -1,47 +1,62 @@
+type Users @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  displayName: String
+  isAdmin: Boolean!
+  groupId: String
+  userUsername: String
+  isSubUser: Boolean
+  parentUserId: String
+  emailAddress: String!
+}
+
+type Groups @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  memberIds: [String]
+  adminUserId: String!
+  groupName: String
+  invitedIds: [String]
+}
+
 type Money @model @auth(rules: [{allow: public}]) {
   id: ID!
-  creatorName: String
-  moneyFromName: String
-  moneyToName: String
   amount: Float
   paid: Boolean
   comment: String
-  creatorId: String
+  creatorId: String!
   moneyFromId: String
   moneyToId: String
+  moneyFromName: String
+  moneyToName: String
 }
 
 type Comments @model @auth(rules: [{allow: public}]) {
   id: ID!
-  authorName: String
-  content: String
-  wishlistID: ID @index(name: "byWishlist")
-  wishlistitemsID: ID @index(name: "byWishlistItems")
-  visibleToOwner: Boolean
-  authorId: String
+  content: String!
+  visibleToOwner: Boolean!
+  authorId: String!
+  parentCommentId: String
+  wishlistItemId: String
+  wishlistId: String
+  createdAt: AWSDateTime!
 }
 
 type WishlistItems @model @auth(rules: [{allow: public}]) {
   id: ID!
   imageUrls: [String]
   images: [String]
-  name: String
+  name: String!
   link: String
   note: String
   gottenBy: [String]
   wantsToGet: [String]
   price: Float
-  wishlistID: ID @index(name: "byWishlist")
-  wishlistItemComments: [Comments] @hasMany(indexName: "byWishlistItems", fields: ["id"])
+  wishlistId: String!
+  ownerId: String!
 }
 
 type Wishlist @model @auth(rules: [{allow: public}]) {
   id: ID!
-  ownerName: String
-  numberOfItems: Int
   amazonWishlistUrl: AWSURL
-  Items: [WishlistItems] @hasMany(indexName: "byWishlist", fields: ["id"])
-  wishlistComments: [Comments] @hasMany(indexName: "byWishlist", fields: ["id"])
-  ownerId: String
+  ownerId: String!
 }
  

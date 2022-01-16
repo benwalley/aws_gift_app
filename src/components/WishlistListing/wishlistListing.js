@@ -7,17 +7,19 @@ import WishlistItem from "../WishlistItem/wishlistItem";
 import './wishlistListing.scss'
 
 export default function WishlistListing(props) {
-    const { wishlistId, handleSelectWishlistItem, wishlistItems } = props;
-
+    const { visibleWishlist, handleSelectWishlistItem, wishlistItems, updateVisibleWishlist, dbUser } = props;
 
 
     return (
         <div className="wishlistListingContainer">
-            {wishlistItems.map(item => {
+            {wishlistItems.map((item, index) => {
                 return <WishlistItem
                     data={item}
                     key={item.id}
+                    count={index}
                     handleSelectWishlistItem={handleSelectWishlistItem}
+                    updateMyWishlistItems={updateVisibleWishlist}
+                    dbUser={dbUser}
                 />
             })}
         </div>

@@ -1,0 +1,72 @@
+.themeStyledInput {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 10px;
+    position: relative;
+
+    label {
+        padding: 10px;
+        font-size: 20px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 16px;
+    }
+}
+
+.addImages {
+
+    .addImagesTitle {
+        padding: 10px;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .addImagesInput {
+        position: relative;
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
+    .removeImageUrl {
+        background: none;
+        border: none;
+        position: absolute;
+        right: 5px;
+        height: 100%;
+        color: #db3939;
+        cursor: pointer;
+    }
+
+    .addAnotherImageButton {
+        background: none;
+        border: none;
+        font-size: 16px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+.updateItemButton {
+    justify-content: center;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    .textButton {
+        font-size: 20px;
+        line-height: 20px;
+        padding: 15px 30px;
+        height: 50px;
+        width: 100%;
+
+    }
+}

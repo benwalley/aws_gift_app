@@ -1,0 +1,36 @@
+.modalContainer {
+    z-index: 12;
+    .modalBackground {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #62626277;
+    }
+
+    .modalContent {
+        position: fixed;
+        top: 10%;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 800px;
+        width: 90%;
+        background: white;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        box-shadow: 1px 1px 10px #6f6f6f;
+        text-align: center;
+        padding-bottom: 50px;
+        overflow-y: scroll;
+
+        .modalScrollingContainer {
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 25px;
+            box-sizing: border-box;
+        }
+    }
+}

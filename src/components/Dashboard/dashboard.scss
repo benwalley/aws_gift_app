@@ -1,11 +1,27 @@
 .dashboardContainer {
     display: grid;
     grid-template:
+            "title title"
             "left right";
     grid-template-columns: 1fr 400px;
 
     .wishlistListing {
         grid-area: right;
+    }
+
+    .visibleWishlistItem {
+        grid-area: left;
+    }
+
+    .dashboardTitle {
+        grid-area: title;
+        text-align: center;
+        border-bottom: 1px solid black;
+        padding-bottom: 20px;
+    }
+
+    .commentsContainer {
+        grid-column: 1 /span 2;
     }
 }
 

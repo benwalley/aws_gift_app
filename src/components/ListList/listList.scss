@@ -1,0 +1,16 @@
+.listListContainer {
+  .usersListItem {
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    background: white;
+
+    &:nth-child(even) {
+      background: var(--electric-blue);
+    }
+
+    &:hover {
+      filter: brightness(90%);
+    }
+  }
+}

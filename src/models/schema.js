@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "Money": {
-            "name": "Money",
+        "Users": {
+            "name": "Users",
             "fields": {
                 "id": {
                     "name": "id",
@@ -10,25 +10,187 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "creatorName": {
-                    "name": "creatorName",
+                "displayName": {
+                    "name": "displayName",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "moneyFromName": {
-                    "name": "moneyFromName",
+                "isAdmin": {
+                    "name": "isAdmin",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "groupId": {
+                    "name": "groupId",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "moneyToName": {
-                    "name": "moneyToName",
+                "userUsername": {
+                    "name": "userUsername",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
+                    "attributes": []
+                },
+                "isSubUser": {
+                    "name": "isSubUser",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "parentUserId": {
+                    "name": "parentUserId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "emailAddress": {
+                    "name": "emailAddress",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Users",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Groups": {
+            "name": "Groups",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "memberIds": {
+                    "name": "memberIds",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "adminUserId": {
+                    "name": "adminUserId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "groupName": {
+                    "name": "groupName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "invitedIds": {
+                    "name": "invitedIds",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Groups",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Money": {
+            "name": "Money",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "amount": {
@@ -56,7 +218,7 @@ export const schema = {
                     "name": "creatorId",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "moneyFromId": {
@@ -68,6 +230,20 @@ export const schema = {
                 },
                 "moneyToId": {
                     "name": "moneyToId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "moneyFromName": {
+                    "name": "moneyFromName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "moneyToName": {
+                    "name": "moneyToName",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -125,43 +301,43 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "authorName": {
-                    "name": "authorName",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "content": {
                     "name": "content",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "wishlistID": {
-                    "name": "wishlistID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "wishlistitemsID": {
-                    "name": "wishlistitemsID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "visibleToOwner": {
                     "name": "visibleToOwner",
                     "isArray": false,
                     "type": "Boolean",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "authorId": {
                     "name": "authorId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "parentCommentId": {
+                    "name": "parentCommentId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "wishlistItemId": {
+                    "name": "wishlistItemId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "wishlistId": {
+                    "name": "wishlistId",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -171,9 +347,8 @@ export const schema = {
                     "name": "createdAt",
                     "isArray": false,
                     "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
+                    "isRequired": true,
+                    "attributes": []
                 },
                 "updatedAt": {
                     "name": "updatedAt",
@@ -190,24 +365,6 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byWishlist",
-                        "fields": [
-                            "wishlistID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byWishlistItems",
-                        "fields": [
-                            "wishlistitemsID"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -257,7 +414,7 @@ export const schema = {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "link": {
@@ -297,26 +454,19 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "wishlistID": {
-                    "name": "wishlistID",
+                "wishlistId": {
+                    "name": "wishlistId",
                     "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
+                    "type": "String",
+                    "isRequired": true,
                     "attributes": []
                 },
-                "wishlistItemComments": {
-                    "name": "wishlistItemComments",
-                    "isArray": true,
-                    "type": {
-                        "model": "Comments"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "wishlistitemsID"
-                    }
+                "ownerId": {
+                    "name": "ownerId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -341,15 +491,6 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byWishlist",
-                        "fields": [
-                            "wishlistID"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -379,20 +520,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "ownerName": {
-                    "name": "ownerName",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "numberOfItems": {
-                    "name": "numberOfItems",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "amazonWishlistUrl": {
                     "name": "amazonWishlistUrl",
                     "isArray": false,
@@ -400,39 +527,11 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Items": {
-                    "name": "Items",
-                    "isArray": true,
-                    "type": {
-                        "model": "WishlistItems"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "wishlistID"
-                    }
-                },
-                "wishlistComments": {
-                    "name": "wishlistComments",
-                    "isArray": true,
-                    "type": {
-                        "model": "Comments"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "wishlistID"
-                    }
-                },
                 "ownerId": {
                     "name": "ownerId",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -480,5 +579,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "261b0598c4b48476a09f1ce767e6ed26"
+    "version": "d9d308dcb4e776e88541891ef8e941af"
 };

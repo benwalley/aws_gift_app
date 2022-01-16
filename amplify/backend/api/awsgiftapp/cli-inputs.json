@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "awsgiftapp",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-5c8b2c66-a588-4a22-af79-7cb44f83f09c/amplify/backend/api/awsgiftapp/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-f7b93741-a2d1-430e-b3b4-eaae26889e14/amplify/backend/api/awsgiftapp/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",

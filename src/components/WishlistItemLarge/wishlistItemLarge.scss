@@ -2,26 +2,94 @@
     display: grid;
     grid-template:
             "name name"
+            "image extras"
             "image actionButtons"
             "image information"
             "image notes"
-            "extras extras";
+            "comments comments";
+
 
     grid-template-columns: 1fr 1fr;
     padding: 20px;
+    padding-top: 0;
     grid-gap: 10px;
 
     .name {
         grid-area: name;
     }
 
-    .primaryImage {
-        grid-area: image;
-        border: 1px solid black;
-        max-width: 400px;
+    .commentsContainer {
+        grid-area: comments;
+    }
 
-        img {
+    .wantsToGet,
+    .getting{
+        h3 {
+            margin: 5px 0;
+        }
+        .wantsToGetList,
+        .gettingList{
             width: 100%;
+            float: left;
+            .wantsToGetPerson,
+            .gettingPerson{
+                background: var(--mimi-pink);
+                padding: 0 20px;
+                height: 24px;
+                border-radius: 12px;
+                font-size: 13px;
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                float: left;
+                margin: 5px;
+
+                &.gettingPerson {
+                    background: var(--electric-blue)
+                }
+            }
+        }
+
+    }
+
+    .imagesContainer {
+        grid-area: image;
+        .primaryImage {
+            aspect-ratio: 1/1;
+            display: grid;
+            align-items: center;
+
+
+            img {
+                width: 100%;
+                box-shadow: 1px 1px 4px grey;
+            }
+        }
+
+        .imageList {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-gap: 5px;
+            margin-top: 10px;
+
+            .imageListItem,
+            .imageListItemSelected {
+                width: 100%;
+                background: #d2d2d2;
+                box-shadow: 1px 1px 3px #909090;
+                cursor: pointer;
+                box-sizing: border-box;
+                display: grid;
+                align-items: center;
+
+                &Selected {
+                    border: 2px solid #0f7235;
+                }
+
+                img {
+                    width: 100%;
+                }
+            }
         }
     }
 

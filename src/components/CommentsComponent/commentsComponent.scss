@@ -1,0 +1,150 @@
+
+
+.commentsContainer {
+  width: 90%;
+  margin: 20px auto;
+  box-sizing: border-box;
+
+  .title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  padding: 10px;
+
+  .commentContent {
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    margin: 5px 0;
+    display: grid;
+    box-shadow: 1px 1px 4px grey;
+    position: relative;
+
+    .deleteButton {
+      position: absolute;
+      top: 5px;
+      right: 0;
+
+      .iconButton {
+        color: var(--delete-red)
+      }
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: min-content 1fr 1fr 1fr;
+      margin-bottom: 10px;
+      padding: 5px;
+      padding-right: 35px;
+      border-bottom: 1px solid #d8d8d8;
+      font-size: 13px;
+      color: #373737;
+      align-items: center;
+
+      .profileImage {
+        padding-right: 20px;
+      }
+
+      .date {
+        text-align: right;
+      }
+
+    }
+
+    .content {
+      display: grid;
+      padding: 5px;
+    }
+
+
+  }
+
+  .addComment {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding-top: 15px;
+
+    .inputContainer {
+      position: relative;
+
+      input {
+        width: 100%;
+        padding: 12px 40px 12px 16px;
+        box-sizing: border-box;
+        font-size: 16px;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 1px 1px 4px grey;
+
+      }
+
+      .sendButton {
+        position: absolute;
+        right: 7px;
+        top: 10px;
+
+        .iconButton {
+
+        }
+      }
+    }
+  }
+
+  .canOwnerSeeButton {
+    background: none;
+    border: none;
+    display: grid;
+    grid-template-columns: min-content 1fr 1fr 1fr;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+
+    label {
+      white-space: nowrap;
+      cursor: pointer;
+      width: 140px;
+    }
+
+    .locked {
+
+    }
+
+    .unlocked {
+
+    }
+
+    .ownerSeeToggleUnlocked,
+    .ownerSeeToggleLocked {
+      background: white;
+      height: 20px;
+      border-radius: 10px;
+      width: 35px;
+      box-shadow: 1px 1px 4px grey;
+      position: relative;
+      cursor: pointer;
+
+      &:before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: auto;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        content: '';
+        background: var(--theme-red);
+        box-shadow: 1px 1px 4px grey;
+
+      }
+
+      &.ownerSeeToggleUnlocked {
+        &:before {
+          right: auto;
+          left: 0;
+        }
+      }
+    }
+  }
+}

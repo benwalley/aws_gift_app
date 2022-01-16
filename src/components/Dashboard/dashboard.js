@@ -1,50 +1,65 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import { DataStore, Predicates, SortDirection, syncExpression } from 'aws-amplify'
-import {Wishlist, WishlistItems} from "../../models";
-import { API } from 'aws-amplify';
-import * as queries from '../../graphql/queries'
-import {graphqlOperation} from "@aws-amplify/api-graphql/lib";
-import * as mutations from '../../graphql/mutations';
-import {listWishlists} from "../../graphql/queries";
-import AddListItem from "../AddListItem/addListItem";
 import WishlistListing from "../WishlistListing/wishlistListing";
-import GetMyWishlist from "../../helpers/getWishlists";
-import createUsersWishlist from "../../helpers/createUserWishlist";
-import Header from "../Header/header";
 import './dashboard.scss'
 import WishlistItemLarge from "../WishlistItemLarge/wishlistItemLarge";
+import {DataStore} from "@aws-amplify/datastore";
+import {Comments, Users} from "../../models";
+import GetNameOrEmail from "../../helpers/getNameOrEmail";
+import CommentsComponent from "../CommentsComponent/commentsComponent";
 
 export default function Dashboard(props) {
-    const {user, myWishlist, myWishlistItems, updateMyWishlistItems} = props
-    const [wishlist, setWishlist] = useState(undefined)
-    const [wishlistId, setWishlistId] = useState(undefined)
-    const [visibleWishlistItemId, setVisibleWishlistItemId] = useState(undefined)
-    const [wishlistItems, setWishlistItems] = useState([])
+    const {user, dbUser, usingUser, visibleWishlist, visibleWishlistItems, updateVisibleWishlist, setLargeWishlistItemId, largeWishlistItemData} = props;
+    const [wishlistDisplayName, setWishlistDisplayName] = useState('loading...')
 
-
+    useEffect(() => {
+        updateUserName()
+    }, [visibleWishlist, user])
 
     const handleSelectWishlistItem = (itemData) => {
-        setVisibleWishlistItemId(itemData.id)
+        setLargeWishlistItemId(itemData.id)
     }
 
     const getVisibleWishlistItem = () => {
-        if(!visibleWishlistItemId) return;
+        if(!largeWishlistItemData || !largeWishlistItemData.id) return;
         return (<div className="visibleWishlistItem">
-            <WishlistItemLarge wishlistItemId={visibleWishlistItemId} updateMyWishlistItems={updateMyWishlistItems}/>
+            <WishlistItemLarge
+                wishlistItemId={largeWishlistItemData.id}
+                updateVisibleWishlist={updateVisibleWishlist}
+                isOwner={user && visibleWishlist && user.id === largeWishlistItemData.ownerId}
+                isCreator={largeWishlistItemData.ownerId === user.id}
+                user={user}
+                usingUser={usingUser}
+                data={largeWishlistItemData}
+                dbUser={dbUser}
+            />
         </div>)
+    }
+
+    const updateUserName = async () => {
+        try {
+            const user = await DataStore.query(Users, visibleWishlist.ownerId);
+            setWishlistDisplayName(GetNameOrEmail(user));
+        } catch(e) {
+            return "loading..."
+        }
     }
 
     return (
         <div className="dashboardContainer">
-            {getVisibleWishlistItem()}
+            {visibleWishlist && <h1 className="dashboardTitle">{wishlistDisplayName}</h1>}
+            <div className="visibleWishlistItem">
+                {getVisibleWishlistItem()}
+            </div>
             <div className="wishlistListing">
                 <WishlistListing
-                    wishlistId={wishlistId}
+                    visibleWishlist={visibleWishlist}
                     handleSelectWishlistItem={handleSelectWishlistItem}
-                    wishlistItems={myWishlistItems}
-                    updateMyWishlistItems={updateMyWishlistItems}
+                    wishlistItems={visibleWishlistItems}
+                    updateVisibleWishlist={updateVisibleWishlist}
+                    dbUser={dbUser}
                 />
             </div>
+            {visibleWishlist && <CommentsComponent wishlist={visibleWishlist} commenterId={dbUser.id} usingUser={usingUser} dbUser={dbUser}/>}
         </div>
     );
 }

@@ -1,0 +1,112 @@
+.moneyRecordsListContainer {
+
+    .moneyRecordsList {
+        border: 1px solid var(--light-green);
+    }
+     .moneyListHeader {
+         display: grid;
+         grid-template-columns: 1fr 1fr 1fr;
+         background: var(--light-green);
+         font-weight: bold;
+         padding: 7px;
+         font-size: 17px;
+
+         .headerAmount {
+             text-align: right;
+             padding-right: 70px;
+         }
+     }
+
+    .moneyRecordRowOdd {
+        background: var(--light-green);
+    }
+
+    .moneyRecordRowEven {
+        background: white;
+    }
+
+    .moneyRecordRowEven,
+    .moneyRecordRowOdd {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 50px;
+        padding: 5px;
+
+        .recordAmount {
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .deleteRow {
+            .iconButton {
+                color: var(--delete-red);
+                cursor: pointer;
+
+                &:hover {
+                    filter: brightness(110%);
+                }
+            }
+        }
+    }
+
+    .moneyRecordsFilterBar {
+        display: grid;
+        grid-template:
+                "title title"
+                "selectOne selectTwo";
+
+        .recordsFilterTitle {
+            grid-area: title;
+        }
+
+        .recordsFilterOne {
+            grid-area: selectOne;
+        }
+
+        .recordsFilterTwo {
+            grid-area: selectTwo;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .moneyTotalsData {
+        display: grid;
+        grid-gap: 5px;
+        margin-top: 10px;
+        background: var(--mimi-pink);
+        padding: 10px;
+
+        .totalsDataRow {
+            width: 60%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-gap: 10px;
+            margin: 0 auto;
+
+            span {
+                text-align: left;
+            }
+
+            .priceSpan {
+                text-align: right;
+            }
+        }
+
+        .personName {
+            //font-weight: 600;
+        }
+
+        .totalHeader {
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            padding: 5px;
+        }
+    }
+}

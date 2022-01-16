@@ -66,3 +66,20 @@
     }
 }
 
+.buttonConfirmation {
+    position: fixed;
+    background: white;
+    padding: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 4px grey;
+    z-index: 1;
+
+    .buttonConfirmationButtons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+    }
+}
+
