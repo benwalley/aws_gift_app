@@ -149,7 +149,7 @@ export default function WishlistListing(props) {
         <div className="wishlistListingContainer">
             <div className="filtering">
                 <h4>Filter by:</h4>
-                <select name="filterBy" id="filterBy" onChange={(e) => setSelectedFilterBy(e.target.value)}>
+                <select className="themeSelect" name="filterBy" id="filterBy" onChange={(e) => setSelectedFilterBy(e.target.value)}>
                     {getFilterOptions()}
                 </select>
                 {selectedFilterBy === "name (search)" && <div className="nameSearchContainer">

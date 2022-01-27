@@ -16,6 +16,10 @@ import yourGroupName from "./yourGroupName";
 import updateGroupVersion from "./updateGroupVersion";
 import invitedGroupUsers from "./invitedGroupUsers";
 import updateLargeWishlistItemVersion from "./updateLargeWishlistItemVersion";
+import yourGettingList from "./yourGettingList";
+import youWantToGetList from "./youWantToGetList";
+import yourGroupInvites from "./yourGroupInvites";
+import isSuperOwner from "./isSuperOwner";
 
 export {subUsersState,
     largeWishlistItemDataState,
@@ -32,7 +36,11 @@ export {subUsersState,
     yourGroupName,
     updateGroupVersion,
     invitedGroupUsers,
-    updateLargeWishlistItemVersion
+    updateLargeWishlistItemVersion,
+    yourGettingList,
+    youWantToGetList,
+    yourGroupInvites,
+    isSuperOwner
 };
 
 export default atom

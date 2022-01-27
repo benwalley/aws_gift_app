@@ -3,7 +3,7 @@ import './firstTimePopup.scss'
 import {DataStore} from "@aws-amplify/datastore";
 import {Groups, Users} from "../../models";
 import TextButton from "../Buttons/TextButton";
-import {dbUserState} from "../../recoil/selectors";
+import {dbUserState, yourGroupInvites} from "../../recoil/selectors";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import refreshDbUser from "../../recoil/selectors/refreshDbUser";
 
@@ -12,21 +12,10 @@ export default function FirstTimePopup(props) {
     const [username, setUsername] = useState('noname')
     const [groupName, setGroupName] = useState('')
     const [isJoiningGroup, setIsJoiningGroup] = useState('admin')
-    const [groupInvites, setGroupInvites] = useState([])
     const [groupJoining, setGroupJoining] = useState(undefined)
     const dbUser = useRecoilValue(dbUserState)
     const updateDbUser = useSetRecoilState(refreshDbUser)
-
-    useEffect(() => {
-        updateGroupInvites()
-    }, [dbUser])
-
-    const updateGroupInvites = async () => {
-        if(!dbUser || !dbUser.id) return;
-        const allGroups = await DataStore.query(Groups, c => c.invitedIds("contains", dbUser.id));
-        console.log(allGroups)
-        setGroupInvites(allGroups)
-    }
+    const groupInvites = useRecoilValue(yourGroupInvites)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -104,6 +93,7 @@ export default function FirstTimePopup(props) {
     }
 
     const renderJoiningChoiceSection = () => {
+        console.log(groupInvites)
         if(groupInvites && groupInvites.length > 0) {
             return (<div className="section">
                 <h2>Are you creating your own group, or joining an existing group?</h2>

@@ -1,22 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import './subUsers.scss'
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {dbUserState, subUsersState, updateGroupVersion} from "../../../recoil/selectors";
 import {DataStore} from "aws-amplify";
 import {Groups, Money, Users} from "../../../models";
 import IconButton from "../../Buttons/IconButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {usingUserIdState} from "../../../recoil/atoms";
 
 export default function SubUsers() {
     const [subUserName, setSubUserName] = useState('')
     const subUsers = useRecoilValue(subUsersState);
     const updateGroup = useSetRecoilState(updateGroupVersion)
     const dbUser = useRecoilValue(dbUserState)
-
-    const renderSubUsers = () => {
-        return "test"
-    }
+    const [usingUserId, setUsingUserId] = useRecoilState(usingUserIdState)
 
     const handleAddSubUser = async (e) => {
         e.preventDefault();
@@ -44,10 +42,25 @@ export default function SubUsers() {
         updateGroup()
     }
 
+    const handleViewEditAsUser = (e, user) => {
+        e.preventDefault()
+        setUsingUserId(user.id)
+    }
+
+    const handleSwitchToMainUser = (e) => {
+        e.preventDefault()
+        setUsingUserId(dbUser.id)
+    }
+
     const getSubUserList = () => {
         return subUsers.map((user, index) => {
             return <div key={user.id} className={index%2 === 0 ? "even" : "odd"}>
-                <div className="name">{user.displayName}</div>
+                <div className="name">
+                    {user.displayName}
+                    {usingUserId === user.id ? ' (current)' : ''}
+                </div>
+                <button onClick={(e) => handleViewEditAsUser(e, user)} className="viewEditButton">view/edit as {user.displayName}</button>
+
                 <IconButton
                     displayName={'delete'}
                     icon={<FontAwesomeIcon icon={faTimesCircle} size="lg"/>}
@@ -67,6 +80,8 @@ export default function SubUsers() {
                     <h3 className="groupName">Your Sub-users</h3>
                     {getSubUserList()}
                 </div>
+                {usingUserId !== dbUser.id && <button onClick={handleSwitchToMainUser} className="themeSecondaryButtonNonFullWidth">Switch to main user</button>}
+
             </div>}
             <div className="inviteUserSection">
                 <h3>Add a sub-user</h3>

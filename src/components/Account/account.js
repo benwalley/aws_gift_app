@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import YourGettingList from './YourGettingList/yourGettingList'
 import './account.scss'
 import {
     BrowserRouter as Router,
@@ -27,10 +28,8 @@ export default function Account() {
                 <Outlet/>
             </div>
             <div className="rightContainer">
-
+                <YourGettingList/>
             </div>
-
-
         </div>
     );
 }

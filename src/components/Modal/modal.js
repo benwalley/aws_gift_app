@@ -10,9 +10,7 @@ export default function Modal(props) {
             {isOpen && <div className="modalContainer" >
                 <div className="modalBackground" onClick={close}></div>
                 <div className="modalContent">
-                    <div className="addListItemScrollingContainer">
-                        {props.children}
-                    </div>
+                    {props.children}
                 </div>
             </div>}
     </>

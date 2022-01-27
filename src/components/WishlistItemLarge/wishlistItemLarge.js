@@ -18,8 +18,15 @@ import {
     useNavigate
 } from "react-router-dom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {largeWishlistItemDataState, updateLargeWishlistItemVersion, usingUserState} from "../../recoil/selectors";
-import {largeWishlistItemIdState} from "../../recoil/atoms";
+import {
+    dbUserState,
+    largeWishlistItemDataState,
+    updateLargeWishlistItemVersion,
+    usingUserState,
+    visibleWishlistState
+} from "../../recoil/selectors";
+import {largeWishlistItemIdState, visibleWishlistIDState} from "../../recoil/atoms";
+import {isSuperOwner} from "../../recoil/selectors/"
 
 
 export default function WishlistItemLarge(props) {
@@ -30,7 +37,10 @@ export default function WishlistItemLarge(props) {
     const setLargeWishlistItemId = useSetRecoilState(largeWishlistItemIdState)
     const usingUser = useRecoilValue(usingUserState)
     const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
+    const visibleWishlist = useRecoilValue((visibleWishlistState))
     let { wishlistId, itemId } = useParams();
+    const dbUser = useRecoilValue(dbUserState)
+    const isSuper = useRecoilValue(isSuperOwner)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -203,7 +213,10 @@ export default function WishlistItemLarge(props) {
 
     // only if the using user is the one who created the wishlist
     const isOwner = () => {
-        if(!data) return true;
+        return usingUser.id === visibleWishlist.ownerId;
+    }
+
+    const isSubUser = () => {
 
     }
 
@@ -224,13 +237,13 @@ export default function WishlistItemLarge(props) {
                 {!isOwner() && <div>
                     <IconButton onClick={handleGetting} displayName={"Get This"} icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}/>
                 </div>}
-                {(isOwner()) && <div>
+                {(isOwner() || isSuper) && <div>
                     <IconButton onClick={() => setEditModalOpen(true)} displayName={"Edit"} icon={<FontAwesomeIcon icon={faPencilAlt} size="2x" />}/>
                 </div>}
                 {!isOwner() && <div>
                     <IconButton onClick={handleWantsToGet} displayName={"Want to get this"} icon={<FontAwesomeIcon icon={faUserFriends} size="2x" />}/>
                 </div>}
-                {(isOwner()) && <div className="deleteButton">
+                {(isOwner() || isSuper) && <div className="deleteButton">
                     <IconButton onClick={handleDelete} displayName={"Delete"} icon={<FontAwesomeIcon icon={faTrashAlt} size="2x" />}/>
                 </div>}
             </div>

@@ -38,7 +38,6 @@ import {dbUserState} from "./recoil/selectors";
 Amplify.configure(awsconfig);
 // TODO: add list of what you're getting
 // TODO: (someday maybe) let users upload profile pic
-// TODO: Let people sort list by priority (or price)
 // TODO: mobile styling
 // TODO: add better loading states
 

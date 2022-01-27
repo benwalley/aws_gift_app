@@ -83,9 +83,9 @@ export default function Header(props) {
         if(!usingUser) return;
         try {
             if(usingUser && usingUser.isSubUser) {
-                return (`${GetNameOrEmail(usingUser)} (Viewing as ${ GetNameOrEmail(usingUser)})`)
+                return (`${GetNameOrEmail(dbUser)} (Viewing as ${ GetNameOrEmail(usingUser)})`)
             } else {
-                return GetNameOrEmail(usingUser)
+                return GetNameOrEmail(dbUser)
             }
         } catch(e) {
             console.log(e)

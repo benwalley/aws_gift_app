@@ -13,7 +13,7 @@ const dbUserState = selector({
         const version = get(dbUserVersion)
         if(!username || !email) return '';
         // get the user
-        const user = await DataStore.query(Users, c => c.userUsername("eq", username));
+        const user = await DataStore.query(Users, c => c.emailAddress("eq", email));
         if(user && user.length > 0) return user[0];
         // if the user isn't found, create it, and then return it
         const userData = {

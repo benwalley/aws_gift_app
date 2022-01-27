@@ -3,46 +3,29 @@
   <component name="ChangeListManager">
     <list default="true" id="0e23d880-b016-40cb-bb66-07cd0e0b3779" name="Default Changelist" comment=", 'price (high to low)', 'priority (high first)', &quot;not gotten&quot;, &quot;someone wants to go in on it&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/cli-inputs.json" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/cli-inputs.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/parameters.json" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/parameters.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/schema.graphql" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/api/awsgiftapp/schema.graphql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amplify/backend/auth/awsgiftapp/cli-inputs.json" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/auth/awsgiftapp/cli-inputs.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amplify/backend/backend-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/backend-config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amplify/backend/storage/s3awsgiftappimages/cli-inputs.json" beforeDir="false" afterPath="$PROJECT_DIR$/amplify/backend/storage/s3awsgiftappimages/cli-inputs.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/colors.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/colors.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AddListItem/addListItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AddListItem/addListItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CommentsComponent/SingleComment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentsComponent/SingleComment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CommentsComponent/commentsComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentsComponent/commentsComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CommentsComponent/commentsComponent.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CommentsComponent/commentsComponent.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CurrentUserInformation/currentUserInformation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CurrentUserInformation/currentUserInformation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Dashboard/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Dashboard/dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Account/SubUsers/subUsers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Account/SubUsers/subUsers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Account/SubUsers/subUsers.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Account/SubUsers/subUsers.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Account/account.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Account/account.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AddListItem/addListItem.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AddListItem/addListItem.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Dashboard/dashboard.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Dashboard/dashboard.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/EditWishlistItemPopup/editWishlistItemPopup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/EditWishlistItemPopup/editWishlistItemPopup.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/EditWishlistItemPopup/editWishlistItemPopup.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/EditWishlistItemPopup/editWishlistItemPopup.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/FirstTimePopup/firstTimePopup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FirstTimePopup/firstTimePopup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/FirstTimePopup/firstTimePopup.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FirstTimePopup/firstTimePopup.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Header/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Header/header.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/header.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ListList/listList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ListList/listList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MoneyModal/moneyModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MoneyModal/moneyModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modal/modal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modal/modal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modal/modal.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modal/modal.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/MoneyModal/moneyModal.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MoneyModal/moneyModal.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MoneyRecordsList/moneyRecordsList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MoneyRecordsList/moneyRecordsList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MoneyRecordsList/moneyRecordsList.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MoneyRecordsList/moneyRecordsList.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/MyAccountPopup/myAccountPopup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyAccountPopup/myAccountPopup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SubUsers/subUsers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SubUsers/subUsers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItem/wishlistItem.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistItemLarge/wishlistItemLarge.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistListing/wishlistListing.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistListing/wishlistListing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/WishlistListing/wishlistListing.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WishlistListing/wishlistListing.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers/createUserWishlist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/createUserWishlist.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/index.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/schema.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/schema.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/global.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/global.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/selectors/dbUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/selectors/dbUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/selectors/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/selectors/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +109,7 @@
       <workItem from="1642610129319" duration="581000" />
       <workItem from="1642905860977" duration="40242000" />
       <workItem from="1643158342132" duration="17232000" />
-      <workItem from="1643241988974" duration="4364000" />
+      <workItem from="1643241988974" duration="10212000" />
     </task>
     <servers />
   </component>
@@ -138,12 +121,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/FirstTimePopup/firstTimePopup.js</url>
-          <line>54</line>
+          <line>43</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/App.js</url>
-          <line>72</line>
+          <line>71</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

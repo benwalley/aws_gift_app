@@ -11,31 +11,27 @@ import {
     useNavigate
 } from "react-router-dom";
 import {sDbUser, sUsingUser, gDbUser, gUsingUser} from '../../helpers/users'
+import {usersInGroupState} from "../../recoil/selectors";
+import {useRecoilValue} from "recoil";
+import createUsersWishlist from "../../helpers/createUserWishlist";
 
 
 export default function ListList(props) {
-    const {close, setVisibleWishlistOwnerId} = props
-    const [users, setUsers] = useState([])
+    const {close} = props
+    const users = useRecoilValue(usersInGroupState)
     const navigate = useNavigate()
-
-    useEffect(() => {
-        updateList()
-    }, [])
-
-    const updateList = async() => {
-        try {
-            const myUser = await DataStore.query(Users, gDbUser())
-            const users = await DataStore.query(Users, c => c.groupId("eq", myUser.groupId))
-            setUsers(users)
-        } catch(e) {
-            console.log(e)
-        }
-    }
 
     const handleSelectList = async (e, user) => {
         e.preventDefault();
         const list = await DataStore.query(Wishlist, c => c.ownerId("eq", user.id));
-        navigate(`/${list[0].id}`)
+        let theList;
+        if(!list || list.length === 0) {
+            // create a wishlist for that users
+            theList = await createUsersWishlist(user)
+        } else {
+            theList = list[0]
+        }
+        navigate(`/${theList.id}`)
         close()
     }
 
@@ -52,7 +48,7 @@ export default function ListList(props) {
     }
 
     return (
-        <div>
+        <div className="listListContainerContainer">
             {getListList()}
         </div>
     );

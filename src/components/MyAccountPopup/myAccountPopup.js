@@ -301,7 +301,6 @@ export default function MyAccountPopup(props) {
 
 
     const handleDeleteGroupMember = async (e, user) => {
-        // TODO: just remove user from group, don't delete it'
         const id = yourGroupData.id
 
         const original = await DataStore.query(Groups, id);

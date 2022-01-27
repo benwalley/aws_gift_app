@@ -12,8 +12,10 @@ import {
     useNavigate
 } from "react-router-dom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {dbUserState, updateLargeWishlistItemVersion} from "../../recoil/selectors";
+import {dbUserState, isSuperOwner, updateLargeWishlistItemVersion} from "../../recoil/selectors";
 import {refreshNumberOfComments, refreshVisibleWishlistList} from "../../recoil/versionAtoms";
+import visibleWishlist from "../../recoil/selectors/visibleWishlist";
+import visibleWishlistState from "../../recoil/selectors/visibleWishlist";
 
 export default function WishlistItem(props) {
     const {data, count} = props
@@ -23,6 +25,8 @@ export default function WishlistItem(props) {
     const [visibleListVersion, updateVisibleList] = useRecoilState(refreshVisibleWishlistList)
     const numCommentsVersion = useRecoilValue(refreshNumberOfComments)
     const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
+    const visibleWishlist = useRecoilValue(visibleWishlistState)
+    const isSuper = useRecoilValue(isSuperOwner)
     const navigate = useNavigate()
 
 
@@ -91,6 +95,13 @@ export default function WishlistItem(props) {
         </div>
     }
 
+    const isOwner = () => {
+        if(!dbUser) return false;
+        if(dbUser.id === visibleWishlist.ownerId) return true;
+        return !!isSuper;
+
+    }
+
     const getIndicators = () => {
         if(data.gottenBy && data.gottenBy.length > 0 && data.wantsToGet && data.wantsToGet.length > 0) {
             return <div className="gottenAndWantsIndicator">
@@ -113,7 +124,7 @@ export default function WishlistItem(props) {
                 {getImage()}
                 <h2 className="name">{data.name}</h2>
                 {getPrice()}
-                {data && dbUser && data.ownerId === dbUser.id && <div className="deleteButton">
+                {isOwner() && <div className="deleteButton">
                     <IconButton icon={<FontAwesomeIcon icon={faTimesCircle} size="lg" />} displayName={'delete'} onClick={handleDelete}/>
                 </div>}
                 {getNumberOfComments()}

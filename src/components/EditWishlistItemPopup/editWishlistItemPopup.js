@@ -8,15 +8,20 @@ import GetMyWishlist from "../../helpers/getWishlists";
 import {DataStore} from "aws-amplify";
 import {Wishlist, WishlistItems} from "../../models";
 import PriorityInput from "../PriorityInput/priorityInput";
+import {updateLargeWishlistItemVersion} from "../../recoil/selectors";
+import {refreshVisibleWishlistList} from "../../recoil/versionAtoms";
+import {useSetRecoilState} from "recoil";
 
 export default function EditWishlistItemPopup(props) {
-    const {itemData, updateVisibleWishlist, close} = props;
+    const {itemData, close} = props;
     const [name, setName] = useState('')
     const [imageUrls, setImageUrls] = useState([''])
     const [link, setLink] = useState('')
     const [note, setNote] = useState('')
     const [price, setPrice] = useState('')
     const [priority, setPriority] = useState()
+    const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
+    const updateVisibleWishlist = useSetRecoilState(refreshVisibleWishlistList)
 
     useEffect(() => {
         setName(itemData.name)
@@ -30,7 +35,7 @@ export default function EditWishlistItemPopup(props) {
     const imageUrlInputs = () => {
         const inputs = imageUrls.map((url, index) => {
             return <div key={index} className="themeStyledInput">
-                <input type="text" value={url} onChange={(e) => handleImageUrlFieldChange(e, index)}/>
+                <input className="themeInput" type="text" value={url} onChange={(e) => handleImageUrlFieldChange(e, index)}/>
                 <button type="button" className="removeImageUrl"
                         onClick={(e) => handleRemoveImageUrl(e, index)}
                         aria-label="remove image url">
@@ -81,6 +86,7 @@ export default function EditWishlistItemPopup(props) {
             })
         );
         updateVisibleWishlist()
+        updateLargeItem()
         close();
     }
 
@@ -88,30 +94,30 @@ export default function EditWishlistItemPopup(props) {
         return (
             <div className="themeStyledInput">
                 <label htmlFor={value}>{displayName}</label>
-                <input id={value} type="text" value={value} onChange={(e) => setValue(e.target.value)}/>
+                <input className="themeInput" id={value} type="text" value={value} onChange={(e) => setValue(e.target.value)}/>
             </div>
         )
     }
 
     return (
-        <div>
-            <h2>Edit item</h2>
-            <form onSubmit={handleSubmit}>
-                {createStyledInput(name, 'Item Name', setName)}
-                <PriorityInput priority={priority} setPriority={setPriority}/>
-                {createStyledInput(note, 'Note', setNote)}
-                {createStyledInput(link, 'Link to item', setLink,)}
-                {createStyledInput(price, 'Approximate price', setPrice,)}
-                <div className="addImages">
-                    {imageUrlInputs()}
-                    <button type="button" className="addAnotherImageButton" onClick={handleAddAnotherImageUrl}>Add another image url
-                    </button>
+            <form className="editWishlistContentsContainer" onSubmit={handleSubmit}>
+                <div className="scrollingContents">
+                    <h2>Edit item</h2>
+                    {createStyledInput(name, 'Item Name', setName)}
+                    <PriorityInput priority={priority} setPriority={setPriority}/>
+                    {createStyledInput(note, 'Note', setNote)}
+                    {createStyledInput(link, 'Link to item', setLink,)}
+                    {createStyledInput(price, 'Approximate price', setPrice,)}
+                    <div className="addImages">
+                        {imageUrlInputs()}
+                        <button type="button" className="addAnotherImageButton" onClick={handleAddAnotherImageUrl}>Add another image url
+                        </button>
+                    </div>
                 </div>
                 <div className="updateItemButton">
                     <TextButton displayName={"Update item"} onClick={handleSubmit}/>
                 </div>
             </form>
-        </div>
     );
 }
 
