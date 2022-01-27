@@ -1,0 +1,148 @@
+$sadColor: #6d737a;
+$happyColor: #ff006d;
+
+.priorityContainer {
+  label {
+    padding: 10px;
+    font-size: 20px;
+    display: block;
+  }
+
+  .sliderScale {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    width: 80%;
+    margin: 0 auto;
+
+    .buttonSelected,
+    .button {
+      cursor: pointer;
+      padding: 10px;
+      color: #4a4a4a;
+
+      &:hover {
+        color: var(--electric-blue);
+      }
+
+      &.buttonSelected:not(:hover) {
+        color: var(--theme-red);
+      }
+    }
+  }
+}
+
+.priorityDisplay {
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+
+  .priorityDisplayContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .numberVersion {
+    strong {
+      color: black;
+    }
+  }
+
+
+
+  .visualVersion {
+    min-width: 90px;
+    padding: 0 10px;
+    display: grid;
+    grid-template:
+        "smileyLeft number smileyRight"
+        "progress progress progress" / min-content 1fr min-content;
+    align-items: center;
+    height: 30px;
+
+    .numberSad,
+    .numberHappy{
+      grid-area: number;
+      text-align: center;
+      color: $sadColor;
+      font-weight: bold;
+      font-size: 16px;
+
+      &.numberHappy {
+        color: $happyColor;
+      }
+    }
+
+    .smileyRight {
+      grid-area: smileyRight;
+      color: $happyColor;
+    }
+
+    .smileyLeft {
+      grid-area: smileyLeft;
+      color: $sadColor;
+    }
+
+    .progressBar {
+      background: linear-gradient(90deg, $sadColor, $happyColor);
+      position: relative;
+      height: 100%;
+      grid-area: progress;
+
+      div {
+        position: absolute;
+        width: 5px;
+        height: 150%;
+        top: -25%;
+        background: var(--electric-blue);
+        box-shadow: 0 0 3px 1px grey;
+        left: 0;
+        transform: translateX(-50%);
+
+        &.a1 {
+          left: 10%;
+        }
+        &.a2 {
+          left: 20%;
+        }
+        &.a3 {
+          left: 30%;
+        }
+        &.a4 {
+          left: 40%;
+        }
+        &.a5 {
+          left: 50%;
+        }
+        &.a6 {
+          left: 60%;
+        }
+        &.a7 {
+          left: 70%;
+        }
+        &.a8 {
+          left: 80%;
+        }
+        &.a9 {
+          left: 90%;
+        }
+        &.a10 {
+          left: 100%;
+        }
+      }
+
+      &:after {
+        color: red;
+        text-align: right;
+        background: var(--electric-blue);
+        width: 50%;
+        position: absolute;
+        height: 100%;
+      }
+    }
+  }
+}

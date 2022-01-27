@@ -7,30 +7,36 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import IconButton from "../Buttons/IconButton";
 import {DataStore} from "@aws-amplify/datastore";
 import {Money} from "../../models";
-
+import userMoniesState from "../../recoil/selectors/userMonies";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import {refreshMonies} from "../../recoil/selectors";
+//TODO: show comment
 export default function MoneyRecordsList(props) {
-    const {records, updateMoneyList} = props
+    const {} = props
     const [people, setPeople] = useState([])
     const [personOne, setPersonOne] = useState('')
     const [personTwo, setPersonTwo] = useState('')
     const [totalPersonOneOwes, setTotalPersonOneOwes] = useState(0)
     const [totalPersonTwoOwes, setTotalPersonTwoOwes] = useState(0)
     const [subtotal, setSubtotal] = useState('')
+    const moneyRecords = useRecoilValue(userMoniesState)
+    const refreshMoney = useSetRecoilState(refreshMonies)
+
 
     useEffect(() => {
         updateRecordPeopleList()
-    }, [records])
+    }, [moneyRecords])
 
     useEffect(() => {
         updateFilteredData()
-    }, [personOne, personTwo, records])
+    }, [personOne, personTwo, moneyRecords])
 
     const handleDeleteItem = async (e, record) => {
         e.preventDefault();
         const id = record.id
         const todelete = await DataStore.query(Money, id);
         await DataStore.delete(todelete);
-        updateMoneyList()
+        refreshMoney()
     }
 
     const getList = () => {
@@ -49,7 +55,7 @@ export default function MoneyRecordsList(props) {
     const getPersonOneSelect = () => {
         const filteredPeople = people.filter(person => person !== personTwo && person !== "")
         return (
-            <select name="people" value={personOne} onChange={(e) => setPersonOne(e.target.value)}>
+            <select className="themeSelect" name="people" value={personOne} onChange={(e) => setPersonOne(e.target.value)}>
                 <option value="">--choose person--</option>
                 {filteredPeople.map(person => {
                     return < option value={person} key={person}>{person}</option>
@@ -61,7 +67,7 @@ export default function MoneyRecordsList(props) {
     const getPersonTwoSelect = () => {
         const filteredPeople = people.filter(person => person !== personOne && person !== "")
         return (
-            <select name="people" value={personTwo} onChange={(e) => setPersonTwo(e.target.value)}>
+            <select className="themeSelect" name="people" value={personTwo} onChange={(e) => setPersonTwo(e.target.value)}>
                 <option value="">--choose person--</option>
                 {filteredPeople.map(person => {
                     return <option value={person} key={person}>{person}</option>
@@ -74,7 +80,7 @@ export default function MoneyRecordsList(props) {
         if(personOne && personTwo) {
             let personOneAmountOwed = 0;
             let personTwoAmountOwed = 0;
-            for(const record of records) {
+            for(const record of moneyRecords) {
                 if(record.moneyFromName === personOne && record.moneyToName === personTwo) {
                     personOneAmountOwed += record.amount
                 }
@@ -95,7 +101,7 @@ export default function MoneyRecordsList(props) {
 
     const updateRecordPeopleList = () => {
         const peopleArray = []
-        for(const record of records) {
+        for(const record of moneyRecords) {
             peopleArray.push(record.moneyFromName)
             peopleArray.push(record.moneyToName)
         }
@@ -104,9 +110,9 @@ export default function MoneyRecordsList(props) {
     }
 
     const getFilteredList = () => {
-        if(!personOne && !personTwo) return records;
+        if(!personOne && !personTwo) return moneyRecords;
         if(personOne && personTwo) {
-            return records.filter(record => {
+            return moneyRecords.filter(record => {
                 const from = record.moneyFromName
                 const to = record.moneyToName
                 if((from === personOne && to === personTwo) || (from === personTwo && to === personOne)) {
@@ -114,7 +120,7 @@ export default function MoneyRecordsList(props) {
                 }
             })
         }
-        return records.filter(record => {
+        return moneyRecords.filter(record => {
             const from = record.moneyFromName
             const to = record.moneyToName
             if(from === personOne || from === personTwo || to === personOne || to === personTwo) {

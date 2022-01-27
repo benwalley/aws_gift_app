@@ -8,6 +8,10 @@
     --primary-color: var(--electric-blue);
     --theme-red: #f07b7b;
     --delete-red: #db3939;
+    --largeBoxShadow: 1px 1px 8px grey;
+    --smallBoxShadow: 1px 1px 4px grey;
+    --main-text-color: #444444;
+    --theme-selected-blue: #1AB1AE;
 
 //    Another color scheme ption
 //    --mantis: #7bc950ff;
@@ -17,6 +21,9 @@
 //    --light-blue: #a0ccdaff;
 
 }
+
+$largeBoxShadow: 1px 1px 8px grey;
+$smallBoxShadow: 1px 1px 4px grey;
 
 /* SCSS HEX */
 $electric-blue: #90f1efff;

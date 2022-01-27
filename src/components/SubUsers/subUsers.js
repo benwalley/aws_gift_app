@@ -5,22 +5,43 @@ import IconButton from "../Buttons/IconButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {DataStore} from "aws-amplify";
-import {Groups, Users} from "../../models";
-
+import {Groups, Users, Wishlist} from "../../models";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams,
+    useNavigate
+} from "react-router-dom";
+import createUsersWishlist from "../../helpers/createUserWishlist";
+import {setDbUser, sUsingUser, getDbUser, gUsingUser} from '../../helpers/users'
 
 export default function SubUsers(props) {
-    const {setVisibleWishlistOwnerId, setUsingUserId, setLargeWishlistItemId, authUser, dbUser, updateYourGroupData, updateSubUsers, subUsers, close, usingUser} = props
+    const {dbUser, updateYourGroupData, updateSubUsers, subUsers, close, versions, setVersions} = props
     const [subUserInput, setSubUserInput] = useState([])
+    const [usingUserData, sUsingUserData] = useState()
+    const navigate = useNavigate()
 
-    const handleViewEditSubUserList = async (e, subUser, index) => {
-        e.preventDefault()
-        setVisibleWishlistOwnerId(subUser.id)
-        setUsingUserId(subUser.id)
-        setLargeWishlistItemId(undefined)
-        close()
+    useEffect(() => {
+        updateInit()
+    }, [])
+
+    const updateInit = async () => {
+        const user = await DataStore.query(Users, gUsingUser());
+        sUsingUserData(user)
     }
 
-
+    const handleViewEditSubUserList = async (e, subUser) => {
+        e.preventDefault()
+        sUsingUser(subUser.id, versions, setVersions)
+        let subUserWishlist = await DataStore.query(Wishlist, c => c.ownerId("eq", subUser.id));
+        if(!subUserWishlist || subUserWishlist.length === 0){
+            subUserWishlist = await createUsersWishlist(subUser)
+        } else {subUserWishlist = subUserWishlist[0]}
+        navigate(`/${subUserWishlist.id}`)
+        close()
+    }
 
     const handleSaveSubUser = async (e) => {
         e.preventDefault()
@@ -54,8 +75,8 @@ export default function SubUsers(props) {
         if(!subUsers || subUsers.length === 0) return;
         return (<div className="subUsersList">
             {subUsers.map((user, index) => {
-                return <div key={index} className={user.id === usingUser.id ? "subUserActive" : "subUser"}>
-                    {(usingUser.id === user.id) ? `${ user.displayName } (current)` : user.displayName}
+                return <div key={index} className={user.id === gUsingUser() ? "subUserActive" : "subUser"}>
+                    {(gUsingUser() === user.id) ? `${ user.displayName } (current)` : user.displayName}
                     <div className="viewEditSubList">
                         <ButtonAsText displayName={"View/Edit list"} onClick={(e) => handleViewEditSubUserList(e, user, index)}/>
                     </div>
@@ -74,8 +95,8 @@ export default function SubUsers(props) {
     return (
         <div className="addSubUserContainer">
             <h2>Your sub-users</h2>
-            {usingUser.isSubUser && <div className="switchToMainAccountButton">
-                <TextButton displayName={"Switch back to main account"} onClick={() => setUsingUserId(authUser.id)}/>
+            {usingUserData && usingUserData.isSubUser && <div className="switchToMainAccountButton">
+                <TextButton displayName={"Switch back to main account"} onClick={() => sUsingUser(dbUser, versions, setVersions)}/>
             </div>}
             <p>Sub-users are users who do not have their own account, and instead you manage their account.
                 You will manage their wishlist, but will not be able to see your own wishlist as their user.</p>

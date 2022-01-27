@@ -7,6 +7,7 @@ type Users @model @auth(rules: [{allow: public}]) {
   isSubUser: Boolean
   parentUserId: String
   emailAddress: String!
+  isCreator: Boolean
 }
 
 type Groups @model @auth(rules: [{allow: public}]) {
@@ -52,11 +53,13 @@ type WishlistItems @model @auth(rules: [{allow: public}]) {
   price: Float
   wishlistId: String!
   ownerId: String!
+  priority: Int
 }
 
 type Wishlist @model @auth(rules: [{allow: public}]) {
   id: ID!
   amazonWishlistUrl: AWSURL
   ownerId: String!
+  groupId: String!
 }
  

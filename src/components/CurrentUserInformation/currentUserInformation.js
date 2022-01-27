@@ -7,26 +7,30 @@ import Modal from "../Modal/modal";
 import GetNameOrEmail from "../../helpers/getNameOrEmail";
 import TextButton from "../Buttons/TextButton";
 import AdminUser from "./AdminUser";
+import {gDbUser} from "../../helpers/users";
 
 //TODO: make admin users update when you make changes in parent
 
 export default function CurrentUserInformation(props) {
-    const {dbUser, addError, addSuccess, setCurrentPage, closeMyAccountPopup} = props;
+    const {addError, addSuccess, closeMyAccountPopup, versions, setVersions} = props;
     const [groupAdmin, setGroupAdmin] = useState()
     const [adminSectionOpen, setAdminSectionOpen] = useState(false)
     const [groupUsers, setGroupUsers] = useState([])
     const [checkboxes, setCheckboxes] = useState([])
     const [invitedToGroups, setInvitedGroups] = useState([])
     const [selectedChangeGroup, setSelectedChangeGroup] = useState()
+    const [dbUser, setDbUser] = useState()
 
     useEffect(() => {
         init()
-    }, [dbUser])
+    }, [versions])
 
 
 
     const init = async () => {
-        const group = await updateGroup()
+        const user = await DataStore.query(Users, gDbUser());
+        setDbUser(user)
+        const group = await updateGroup(user)
         const groupUsers = await updateGroupUsers(group)
         const checkArray = []
         for(const user of groupUsers) {
@@ -53,10 +57,11 @@ export default function CurrentUserInformation(props) {
         }
     }
 
-    const updateGroup = async () => {
-        if (!dbUser) return
+    const updateGroup = async (user) => {
+        if (!dbUser && !user) return
+        const myDbUser = user ?? dbUser;
         try {
-            const group = await DataStore.query(Groups, dbUser.groupId);
+            const group = await DataStore.query(Groups, myDbUser.groupId);
             if (group) {
                 setGroupAdmin(group)
                 return group
@@ -137,13 +142,13 @@ export default function CurrentUserInformation(props) {
             <h2>Your User Information</h2>
             <div className="currentUserInfoItem">
                 <h4>email address</h4>
-                <div>{dbUser.emailAddress}</div>
+                <div>{dbUser && dbUser.emailAddress ? dbUser.emailAddress : ''}</div>
             </div>
-            {!dbUser.isAdmin && <div className="currentUserInfoItem">
+            {(!dbUser || !dbUser.isAdmin) && <div className="currentUserInfoItem">
                 <h4>Your current group</h4>
                 <div>{groupAdmin && groupAdmin.groupName ? groupAdmin.groupName : "loading..."}</div>
             </div>}
-            {groupAdmin && dbUser.isAdmin && <div className="currentUserInfoItem">
+            {groupAdmin && dbUser && dbUser.isAdmin && <div className="currentUserInfoItem">
                 <h4>You are the admin of:</h4>
                 <div>
                     {groupAdmin.groupName}

@@ -37,6 +37,7 @@ export declare class Users {
   readonly isSubUser?: boolean;
   readonly parentUserId?: string;
   readonly emailAddress: string;
+  readonly isCreator?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Users, UsersMetaData>);
@@ -97,6 +98,7 @@ export declare class WishlistItems {
   readonly price?: number;
   readonly wishlistId: string;
   readonly ownerId: string;
+  readonly priority?: number;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<WishlistItems, WishlistItemsMetaData>);
@@ -107,6 +109,7 @@ export declare class Wishlist {
   readonly id: string;
   readonly amazonWishlistUrl?: string;
   readonly ownerId: string;
+  readonly groupId: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Wishlist, WishlistMetaData>);

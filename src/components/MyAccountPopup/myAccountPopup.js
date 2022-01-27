@@ -9,20 +9,17 @@ import {DataStore} from "aws-amplify";
 import {Groups, Users,} from "../../models";
 import SubUsersComponent from '../SubUsers/subUsers'
 import CurrentUserInformation from "../CurrentUserInformation/currentUserInformation";
+import {sDbUser, sUsingUser, gDbUser, gUsingUser, updateDbUVersion} from '../../helpers/users'
 
 export default function MyAccountPopup(props) {
     const {
         authUser,
-        setUsingUserId,
-        usingUser,
-        dbUser,
-        updateDBUser,
         close,
-        setVisibleWishlistOwnerId,
-        setLargeWishlistItemId,
         addError,
         addSuccess,
-        setCurrentPage
+        setCurrentPage,
+        versions,
+        setVersions
     } = props;
     const [username, setUsername] = useState('untitled user')
     const [yourGroupName, setYourGroupName] = useState('untitled group')
@@ -31,14 +28,11 @@ export default function MyAccountPopup(props) {
     const [subUsers, setSubUsers] = useState([])
     const [usersInGroup, setUsersInGroup] = useState({});
     const [invitesInGroup, setInvitesInGroup] = useState([])
+    const [dbUser, setDbUser] = useState()
 
     useEffect(() => {
-        updateSubUsers();
-        updateYourGroupData()
-        updateMyUsername()
-        updateUsersInGroup()
-        updateInvitesInGroup()
-    }, [])
+        updateDbUser()
+    }, [versions])
 
     useEffect(() => {
         updateUsersInGroup()
@@ -46,16 +40,23 @@ export default function MyAccountPopup(props) {
     }, [yourGroupData])
 
     useEffect(() => {
-        updateSubUsers()
+        updateSubUsers();
+        updateYourGroupData()
+        updateMyUsername()
     }, [dbUser])
+
+
+
+    const updateDbUser = async () => {
+        const user = await DataStore.query(Users, gDbUser());
+        setDbUser(user)
+    }
 
     const updateUsersInGroup = async () => {
         try {
             const groupUsers = await DataStore.query(Users, c => c.groupId("eq", yourGroupData.id));
             setUsersInGroup(groupUsers)
-        } catch (e) {
-
-        }
+        } catch (e) {console.log(e)}
     }
 
     const updateInvitesInGroup = async (updatedGroup) => {
@@ -79,9 +80,9 @@ export default function MyAccountPopup(props) {
     const createGroup = async () => {
         const group = await DataStore.save(
             new Groups({
-                "adminUserId": dbUser.id,
-                "memberIds": [dbUser.id],
-                "invitedIds": [dbUser.id],
+                "adminUserId": gDbUser(),
+                "memberIds": [gDbUser()],
+                "invitedIds": [gDbUser()],
                 "memberEmailAddresses": [authUser.attributes.email],
                 "invitedEmailAddresses": [authUser.attributes.email],
             })
@@ -101,7 +102,7 @@ export default function MyAccountPopup(props) {
                 updated.displayName = username;
             })
         );
-        await updateDBUser();
+        await updateDbUVersion()
         close();
     }
 
@@ -257,7 +258,7 @@ export default function MyAccountPopup(props) {
 
         return (<div className="addUsersContainer">
             <h2>Your Group</h2>
-            {dbUser.isAdmin && <form action="" onSubmit={handleSaveGroupName}>
+            {dbUser && dbUser.isAdmin && <form action="" onSubmit={handleSaveGroupName}>
                 <div className="myAccountFormInput">
                     <input className="accountInput" type="text" value={yourGroupName}
                            onChange={(e) => setYourGroupName(e.target.value)}/>
@@ -271,7 +272,7 @@ export default function MyAccountPopup(props) {
                 {getGroupMembers()}
             </div>
 
-            {dbUser.isAdmin && <div>
+            {dbUser && dbUser.isAdmin && <div>
                 <div className="groupUserList">
                     <h3>Invites</h3>
                     {renderInvitedEmails()}
@@ -332,7 +333,13 @@ export default function MyAccountPopup(props) {
             <div className="myAccountPopupBackground" onClick={close}></div>
             <div className="myAccountPopupContent">
                 <div className="myAccountPopupScrollingContainer">
-                    <CurrentUserInformation closeMyAccountPopup={close} addError={addError} addSuccess={addSuccess} dbUser={dbUser} setCurrentPage={setCurrentPage}/>
+                    <CurrentUserInformation
+                        closeMyAccountPopup={close}
+                        addError={addError}
+                        addSuccess={addSuccess}
+                        versions={versions}
+                        setVersions={setVersions}
+                    />
                 </div>
 
                 <div className="myAccountPopupScrollingContainer">
@@ -349,15 +356,13 @@ export default function MyAccountPopup(props) {
                     </form>
                     {getAddUserToGroup()}
                     <SubUsersComponent
-                        setVisibleWishlistOwnerId={setVisibleWishlistOwnerId}
-                        setUsingUserId={setUsingUserId} setLargeWishlistItemId={setLargeWishlistItemId}
                         dbUser={dbUser}
                         updateYourGroupData={updateYourGroupData}
                         updateSubUsers={updateSubUsers}
                         subUsers={subUsers}
                         close={close}
-                        usingUser={usingUser}
-                        authUser={authUser}
+                        versions={versions}
+                        setVersions={setVersions}
                     />
                 </div>
             </div>

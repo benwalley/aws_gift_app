@@ -3,22 +3,27 @@ import './firstTimePopup.scss'
 import {DataStore} from "@aws-amplify/datastore";
 import {Groups, Users} from "../../models";
 import TextButton from "../Buttons/TextButton";
+import {dbUserState} from "../../recoil/selectors";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import refreshDbUser from "../../recoil/selectors/refreshDbUser";
 
 export default function FirstTimePopup(props) {
-    const {close, user, updateDBUser, addError} = props
+    const {close} = props
     const [username, setUsername] = useState('noname')
     const [groupName, setGroupName] = useState('')
     const [isJoiningGroup, setIsJoiningGroup] = useState('admin')
     const [groupInvites, setGroupInvites] = useState([])
     const [groupJoining, setGroupJoining] = useState(undefined)
+    const dbUser = useRecoilValue(dbUserState)
+    const updateDbUser = useSetRecoilState(refreshDbUser)
 
     useEffect(() => {
         updateGroupInvites()
-    }, [user])
+    }, [dbUser])
 
     const updateGroupInvites = async () => {
-        if(!user || !user.id) return;
-        const allGroups = await DataStore.query(Groups, c => c.invitedIds("contains", user.id));
+        if(!dbUser || !dbUser.id) return;
+        const allGroups = await DataStore.query(Groups, c => c.invitedIds("contains", dbUser.id));
         console.log(allGroups)
         setGroupInvites(allGroups)
     }
@@ -26,45 +31,45 @@ export default function FirstTimePopup(props) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(!username || !isJoiningGroup) {
-            addError("Please create a username")
+            // addError("Please create a username")
             return;
         }
 
         if(isJoiningGroup === "join") {
             if(!groupJoining) {
-                addError('You must select a group to join, or create a new group');
+                // addError('You must select a group to join, or create a new group');
                 return;
             }
             // update user
-            const original = await DataStore.query(Users, user.id);
+            const original = await DataStore.query(Users, dbUser.id);
             await DataStore.save(Users.copyOf(original, updated => {
                 updated.groupId = groupJoining;
                 updated.displayName = username;
             }))
         } else if(isJoiningGroup === "admin") {
             if(!groupName) {
-                addError("You must enter a name for your group")
+                // addError("You must enter a name for your group")
                 return;
             }
             //check if they already are an admin of a group, and if so, don't let them create another one.
-            const testGroup = await DataStore.query(Groups, c => c.adminUserId("eq", user.id));
+            const testGroup = await DataStore.query(Groups, c => c.adminUserId("eq", dbUser.id));
             if(testGroup && testGroup.length > 0) {
-                addError(`You are already the admin of a group (${testGroup[0].groupName}). Click My Account to edit the group name.`)
+                // addError(`You are already the admin of a group (${testGroup[0].groupName}). Click My Account to edit the group name.`)
                 close()
                 return;
             }
             //Create new group
             const group = await DataStore.save(
                 new Groups({
-                    "adminUserId": user.id,
-                    "invitedIds": [user.id],
+                    "adminUserId": dbUser.id,
+                    "invitedIds": [dbUser.id],
                     "groupId": groupJoining,
                     "groupName": groupName
                 })
             );
 
             // update user
-            const original = await DataStore.query(Users, user.id);
+            const original = await DataStore.query(Users, dbUser.id);
             await DataStore.save(Users.copyOf(original, updated => {
                 updated.groupId = group.id;
                 updated.displayName = username;
@@ -72,7 +77,7 @@ export default function FirstTimePopup(props) {
                 updated.subUsers = [];
             }))
         }
-        updateDBUser()
+        updateDbUser()
         close()
     }
 

@@ -11,15 +11,36 @@ import Modal from "../Modal/modal";
 import createStyledInput from "../../helpers/createStyledInput";
 import EditWishlistItemPopup from "../EditWishlistItemPopup/editWishlistItemPopup";
 import CommentsComponent from "../CommentsComponent/commentsComponent";
+import PriorityDisplay from "../PriorityInput/priorityDisplay";
+import UserNameBubble from "./UserNameBubble/userNameBubble";
+import {
+    useParams,
+    useNavigate
+} from "react-router-dom";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {largeWishlistItemDataState, updateLargeWishlistItemVersion, usingUserState} from "../../recoil/selectors";
+import {largeWishlistItemIdState} from "../../recoil/atoms";
+
 
 export default function WishlistItemLarge(props) {
-    const {updateVisibleWishlist, usingUser, isOwner, isCreator, data, user, dbUser} = props
+    const {} = props
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+    const data = useRecoilValue(largeWishlistItemDataState)
+    const setLargeWishlistItemId = useSetRecoilState(largeWishlistItemIdState)
+    const usingUser = useRecoilValue(usingUserState)
+    const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
+    let { wishlistId, itemId } = useParams();
+    const navigate = useNavigate()
 
     useEffect(() => {
-        setSelectedImageIndex(0)
-    }, [data])
+        setLargeWishlistItem()
+    }, [wishlistId, itemId])
+
+    const setLargeWishlistItem = () => {
+        if(!wishlistId || !itemId) return;
+        setLargeWishlistItemId(itemId)
+    }
 
     const getPrice = () => {
         if(!data || !data.price) return '';
@@ -29,7 +50,7 @@ export default function WishlistItemLarge(props) {
         }
         return (
             <div className="priceContainer">
-                <p className="priceLabel">Approximate price:</p>
+                <h4 className="priceLabel">Approximate price:</h4>
                 <p className="priceData">{price}</p>
             </div>
         )
@@ -38,7 +59,7 @@ export default function WishlistItemLarge(props) {
     const getImage = () => {
         try {
             if(data && data.imageUrls && data.imageUrls.length > 0) {
-                if(data.imageUrls.length >= 1) {
+                if(data.imageUrls.length >= 1 && data.imageUrls[0] !== "") {
                     return (<div className="primaryImage">
                         <img src={data.imageUrls[selectedImageIndex]} alt={data.name || "product image"}/>
                     </div>)
@@ -73,8 +94,8 @@ export default function WishlistItemLarge(props) {
         e.preventDefault()
         const toDelete = await DataStore.query(WishlistItems, data.id);
         await DataStore.delete(toDelete);
-    //    refresh data
-        updateVisibleWishlist()
+        // refresh data
+        navigate(`/${wishlistId}`)
     }
 
     const handleGetting = async (e) => {
@@ -84,51 +105,48 @@ export default function WishlistItemLarge(props) {
         let alreadyGotten = false;
         for(let i = 0; i < gottenByList.length; i++) {
             const gottenItem = gottenByList[i]
-            if(gottenItem === user.id) {
+            if(gottenItem === usingUser.id) {
                 alreadyGotten = true;
                 gottenByList.splice(i, 1)
             }
         }
         if(!alreadyGotten) {
-            gottenByList.push(user.id)
+            gottenByList.push(usingUser.id)
         }
 
         await DataStore.save(
             WishlistItems.copyOf(original, updated => {
-                updated.gottenBy = gottenByList; //
+                updated.gottenBy = [... new Set(gottenByList)]; //
             })
         );
-        updateVisibleWishlist()
+        updateLargeItem()
     }
 
     const handleWantsToGet = async (e) => {
-
         try {
             e.preventDefault()
             const original = await DataStore.query(WishlistItems, data.id);
             const wantsList = [...original.wantsToGet]
             let alreadyGotten = false;
             for(let i = 0; i < wantsList.length; i++) {
-                const gottenItem = JSON.parse(wantsList[i])
-                if(gottenItem === user.id) {
+                const gottenItem = wantsList[i]
+                if(gottenItem === usingUser.id) {
                     alreadyGotten = true;
                     wantsList.splice(i, 1)
                 }
             }
             if(!alreadyGotten) {
-                wantsList.push(user.id)
+                wantsList.push(usingUser.id)
             }
             await DataStore.save(
                 WishlistItems.copyOf(original, updated => {
-                    updated.wantsToGet = wantsList;
+                    updated.wantsToGet = [...new Set(wantsList)];
                 })
             );
-            updateVisibleWishlist()
+            updateLargeItem()
         } catch(e) {
             console.log(e)
         }
-
-
     }
 
     const getWantsToGet = () => {
@@ -136,10 +154,8 @@ export default function WishlistItemLarge(props) {
             if(!data || !data.wantsToGet || data.wantsToGet.length === 0) {
                 return;
             }
-            return data.wantsToGet.map((person, index) => {
-                return(<div className="wantsToGetPerson" key={index}>
-                    {person}
-                </div>)
+            return data.wantsToGet.map((person) => {
+                return <UserNameBubble key={person} id={person} classString={"electricBlue"}/>
             })
         } catch(e) {
             console.log(e)
@@ -152,10 +168,8 @@ export default function WishlistItemLarge(props) {
             if(!data || !data.gottenBy || data.gottenBy.length === 0) {
                 return;
             }
-            return data.gottenBy.map((person, index) => {
-                return(<div className="gettingPerson" key={index}>
-                    {person}
-                </div>)
+            return data.gottenBy.map(person => {
+                return <UserNameBubble key={person} id={person} classString={"pinkBubble"}/>
             })
         } catch(e) {
             console.log(e)
@@ -179,37 +193,51 @@ export default function WishlistItemLarge(props) {
 
     const getNote = () => {
         if(!data || !data.note) return;
-        return <div className="notes">{data.note}</div>
+        return <div className="notes">
+            <h4>Notes</h4>
+            <div>
+                {data.note}
+            </div>
+        </div>
+    }
+
+    // only if the using user is the one who created the wishlist
+    const isOwner = () => {
+        if(!data) return true;
+
     }
 
 
     return (
-        !data ? <div></div> :
+        !data || !itemId ? <div></div> :
         <div className="largeWishlistItemContainer">
-            {getName()}
+            <div className="nameContainer">
+                {getName()}
+                <PriorityDisplay priority={data.priority} showName={true}showVisual={true}/>
+            </div>
             <div className="imagesContainer">
                 {getImage()}
                 {getOtherImages()}
             </div>
 
             <div className="actionButtons">
-                {!isOwner && <div>
+                {!isOwner() && <div>
                     <IconButton onClick={handleGetting} displayName={"Get This"} icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}/>
                 </div>}
-                {(data.ownerId === usingUser.id || isCreator || isOwner) && <div>
+                {(isOwner()) && <div>
                     <IconButton onClick={() => setEditModalOpen(true)} displayName={"Edit"} icon={<FontAwesomeIcon icon={faPencilAlt} size="2x" />}/>
                 </div>}
-                {!isOwner && <div>
+                {!isOwner() && <div>
                     <IconButton onClick={handleWantsToGet} displayName={"Want to get this"} icon={<FontAwesomeIcon icon={faUserFriends} size="2x" />}/>
                 </div>}
-                {(data.ownerId === usingUser.id || isCreator || isOwner) && <div className="deleteButton">
+                {(isOwner()) && <div className="deleteButton">
                     <IconButton onClick={handleDelete} displayName={"Delete"} icon={<FontAwesomeIcon icon={faTrashAlt} size="2x" />}/>
                 </div>}
             </div>
-            <div className="information">
+            {(getPrice() || getLink()) && <div className="information">
                 {getPrice()}
                 {getLink()}
-            </div>
+            </div>}
             {getNote()}
             <div className="extras">
                 {data.wantsToGet && data.wantsToGet.length > 0 && <div className="wantsToGet">
@@ -219,18 +247,21 @@ export default function WishlistItemLarge(props) {
                     </div>
                 </div>}
                 {data.gottenBy && data.gottenBy.length > 0 && <div className="getting">
-                    <h3>Want to go in on this:</h3>
+                    <h3>Getting this:</h3>
                     <div className="gettingList">
                         {getGetting()}
                     </div>
                 </div>}
             </div>
-            {data && data.id && <CommentsComponent wishlistItem={data} commenterId={user.id} dbUser={dbUser}/>}
+            {data && data.id && <CommentsComponent
+                wishlistItem={data}
+                commenterId={12}
+            />}
             <Modal close={() => setEditModalOpen(false)} isOpen={editModalOpen}>
                 <EditWishlistItemPopup
                     itemData={data}
-                    updateVisibleWishlist={updateVisibleWishlist}
-                    close={() => setEditModalOpen(false)}/>
+                    close={() => setEditModalOpen(false)}
+                 />
             </Modal>
         </div>
     );

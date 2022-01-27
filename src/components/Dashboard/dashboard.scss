@@ -1,15 +1,19 @@
 .dashboardContainer {
     display: grid;
     grid-template:
-            "title title"
-            "left right";
-    grid-template-columns: 1fr 400px;
+            "title title title"
+            "left center right";
+    grid-template-columns: 1fr 900px minMax(300px, 1fr);
 
     .wishlistListing {
         grid-area: right;
     }
 
     .visibleWishlistItem {
+        grid-area: center;
+    }
+
+    .leftColumn {
         grid-area: left;
     }
 
@@ -20,8 +24,12 @@
         padding-bottom: 20px;
     }
 
-    .commentsContainer {
-        grid-column: 1 /span 2;
+    .wishlistCommentsContainer {
+        grid-column: 1 /span 3;
+        background: white;
+        margin: 50px;
+        border-radius: 10px;
+        box-shadow: var(--largeBoxShadow);
     }
 }
 

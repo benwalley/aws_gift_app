@@ -12,7 +12,11 @@ $thumbnailImageWidth: 50px;
 .wishlistListingItemEven,
 .wishlistListingItemOdd {
     display: grid;
-    grid-template-columns: 50px 1fr min-content;
+    grid-template-columns: $thumbnailImageWidth min-content 1fr min-content;
+    grid-template:
+            "image name name delete"
+            "image numComments priority price" / $thumbnailImageWidth min-content 1fr min-content;
+    grid-gap: 5px;
     padding: 10px;
     max-width: 400px;
     width: 100%;
@@ -25,8 +29,28 @@ $thumbnailImageWidth: 50px;
 
     &:hover {
         filter: brightness(90%);
-        .deleteButton {
-            display: grid;
+    }
+
+    .wantsToGetIndicator,
+    .gottenIndicator,
+    .gottenAndWantsIndicator{
+        position: absolute;
+        left: 0;
+        height: 100%;
+        width: 133px;
+        background: linear-gradient(90deg, #e491f1cf, transparent);
+        display: grid;
+        align-items: center;
+        padding-left: 12px;
+
+        &.gottenIndicator {
+            color: var(--light-green);
+        }
+
+        &.wantsToGetIndicator {
+            background: linear-gradient(90deg, var(--mimi-pink), transparent);
+            color: #369fff;
+            padding-left: 8px;
         }
     }
 
@@ -34,31 +58,51 @@ $thumbnailImageWidth: 50px;
         width: 100%;
         max-width: $thumbnailImageWidth;
         max-height: $thumbnailImageWidth;
+        grid-area: image;
     }
 
     .name {
-        margin: 0 10px
+        margin: 0 10px;
+        grid-area: name;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .numComments {
+        grid-area: numComments;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 5px;
+        margin-left: 10px;
+    }
+
+    .priorityDisplay {
+        grid-area: priority;
+        text-align: center;
+
+        .visualVersion {
+            width: 130px;
+            margin: 0 auto;
+        }
     }
 
     .price {
         white-space: nowrap;
+        grid-area: price;
+        margin: 0;
     }
 
     .deleteButton {
-        display: none;
-        position: absolute;
-        right: 10px;
-        border-radius: 5px;
-        background: var(--delete-red);
-        height: 40px;
-        width: 40px;
-        align-items: center;
-        justify-content: center;
+        grid-area: delete;
+        text-align: right;
 
         .iconButton {
+            color: var(--delete-red);
 
+            &:hover {
+                filter: brightness(110%);
+            }
         }
     }
-
-
 }

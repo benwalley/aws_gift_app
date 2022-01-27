@@ -1,0 +1,50 @@
+.themeButton {
+    background: var(--primary-color);
+    border-radius: 5px;
+    padding: 5px;
+    letter-spacing: 0.7px;
+    font-weight: 600;
+    width: 100%;
+    box-shadow: var(--smallBoxShadow);
+
+    &:hover {
+        filter: brightness(90%);
+    }
+}
+
+.themeTextLink {
+    font-size: 0.9em;
+    color: blue;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.themeSelect {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: var(--smallBoxShadow);
+}
+
+.themeInput {
+    padding: 5px;
+    margin: 10px 0;
+    border-radius: 5px;
+    width: 100%;
+    box-shadow: var(--smallBoxShadow)
+}
+
+h2 {
+    font-size: 1.5em;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+}
+
+h3 {
+    font-size: 1.2em;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+}

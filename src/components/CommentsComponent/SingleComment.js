@@ -5,11 +5,14 @@ import {faTimesCircle, faUser} from "@fortawesome/free-solid-svg-icons";
 import {DataStore} from "@aws-amplify/datastore";
 import {Comments, Users} from "../../models";
 import GetNameOrEmail from "../../helpers/getNameOrEmail";
-//TODO: add name and date to comment
+import {dbUserState, refreshNumberComments} from "../../recoil/selectors";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 
 export default function SingleComment(props) {
-    const {comment, updateComments, commenterId, wishlist, wishlistItem} = props
+    const {comment, updateComments, wishlist, wishlistItem} = props
     const [name, setName] = useState()
+    const dbUser = useRecoilValue(dbUserState)
+    const updateNumComments = useSetRecoilState(refreshNumberComments)
 
     useEffect(() => {
         updateName()
@@ -26,6 +29,7 @@ export default function SingleComment(props) {
         const toDelete = await DataStore.query(Comments, id);
         await DataStore.delete(toDelete);
         updateComments()
+        updateNumComments()
     }
 
     const formatDate = (comment) => {
@@ -53,7 +57,7 @@ export default function SingleComment(props) {
         if(wishlistItem && wishlistItem.ownerId) {
             ownersID = wishlistItem.ownerId
         }
-        if(comment && !comment.visibleToOwner && (commenterId === ownersID) ) {
+        if(comment && !comment.visibleToOwner && (dbUser.id === ownersID) ) {
             return false
         }
 
@@ -70,7 +74,7 @@ export default function SingleComment(props) {
                     <div className="date">{formatDate(comment)}</div>
                 </div>
                 <div className="content">{comment.content}</div>
-                {comment.authorId === commenterId && <div className="deleteButton">
+                {comment.authorId === dbUser.id && <div className="deleteButton">
                     <IconButton
                         displayName={"delete"}
                         icon={<FontAwesomeIcon icon={faTimesCircle} size="lg" />}

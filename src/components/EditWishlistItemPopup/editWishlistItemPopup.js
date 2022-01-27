@@ -7,6 +7,7 @@ import TextButton from "../Buttons/TextButton";
 import GetMyWishlist from "../../helpers/getWishlists";
 import {DataStore} from "aws-amplify";
 import {Wishlist, WishlistItems} from "../../models";
+import PriorityInput from "../PriorityInput/priorityInput";
 
 export default function EditWishlistItemPopup(props) {
     const {itemData, updateVisibleWishlist, close} = props;
@@ -15,15 +16,16 @@ export default function EditWishlistItemPopup(props) {
     const [link, setLink] = useState('')
     const [note, setNote] = useState('')
     const [price, setPrice] = useState('')
-
+    const [priority, setPriority] = useState()
 
     useEffect(() => {
         setName(itemData.name)
+        setPriority(itemData.priority)
         setNote(itemData.note)
         setLink(itemData.link)
         setPrice(itemData.price || '')
         setImageUrls([...itemData.imageUrls])
-    }, [itemData])
+    }, [])
 
     const imageUrlInputs = () => {
         const inputs = imageUrls.map((url, index) => {
@@ -74,6 +76,8 @@ export default function EditWishlistItemPopup(props) {
                 updated.name = name;
                 updated.note = note;
                 updated.price = parseFloat(price);
+                updated.priority = priority;
+                updated.link = link;
             })
         );
         updateVisibleWishlist()
@@ -91,9 +95,10 @@ export default function EditWishlistItemPopup(props) {
 
     return (
         <div>
-            <h2>Add an item to your wishlist</h2>
+            <h2>Edit item</h2>
             <form onSubmit={handleSubmit}>
                 {createStyledInput(name, 'Item Name', setName)}
+                <PriorityInput priority={priority} setPriority={setPriority}/>
                 {createStyledInput(note, 'Note', setNote)}
                 {createStyledInput(link, 'Link to item', setLink,)}
                 {createStyledInput(price, 'Approximate price', setPrice,)}

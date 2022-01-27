@@ -1,11 +1,12 @@
 import {DataStore} from "@aws-amplify/datastore";
 import {Wishlist} from "../models";
 
-export default async function createUsersWishlist(ownerId) {
+export default async function createUsersWishlist(owner) {
     try {
-        if(!ownerId) return;
+        if(!owner.id|| !owner.groupId) return;
         const wishlistData = {
-            "ownerId": ownerId
+            "ownerId": owner.id,
+            "groupId": owner.groupId
         }
         const response = await DataStore.save(
             new Wishlist(wishlistData)

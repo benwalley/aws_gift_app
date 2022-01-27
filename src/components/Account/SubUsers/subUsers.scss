@@ -1,0 +1,71 @@
+.subUsersContainer {
+    padding: 20px;
+
+    ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin: 0;
+    }
+
+    .subUserDetails {
+        padding-left: 10px;
+        border-left: 1px solid lightgrey;
+        margin: 10px 5px;
+        font-style: normal;
+        font-size: 0.9em;
+    }
+
+    .details {
+        font-style: italic;
+    }
+
+    h2 {
+        font-size: 1.5em;
+        font-weight: 700;
+        letter-spacing: 0.7px;
+    }
+
+    h3 {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin: 0;
+    }
+
+    .inviteUserSection {
+        margin-top: 30px;
+    }
+
+    .subUserList {
+        border: 2px solid var(--electric-blue);
+        margin-top: 30px;
+
+        h3 {
+            padding: 10px;
+        }
+
+        .even {
+            background: var(--electric-blue);
+        }
+
+        .odd {
+            background: none;
+        }
+
+        .even,
+        .odd {
+            padding: 5px 10px;
+            align-items: center;
+            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr 46px;
+
+            div {
+                text-align: center;
+            }
+        }
+
+        .iconButton {
+            color: var(--delete-red)
+        }
+    }
+}

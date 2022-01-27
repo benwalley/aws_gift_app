@@ -1,3 +1,38 @@
 .wishlistListingContainer {
+  .listItems {
+    max-height: 60vh;
+    overflow: auto;
+  }
 
+  .filtering {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+
+    h4 {
+      white-space: nowrap;
+    }
+
+    select {
+      margin: auto 10px;
+      padding: 6px;
+      width: calc(100% - 20px);
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .nameSearchContainer {
+      border-top: 1px solid grey;
+      grid-column: 1 / span 2;
+      .nameSearch {
+        padding: 5px;
+        font-size: 16px;
+        width: calc(100% - 20px);
+        margin: 10px;
+
+        box-sizing: border-box;
+      }
+    }
+
+
+  }
 }

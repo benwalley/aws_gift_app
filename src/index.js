@@ -1,15 +1,27 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Amplify from "aws-amplify";
-import awsExports from "./aws-exports";
+import awsExports from "./aws-exports"
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from 'recoil';
 Amplify.configure(awsExports);
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <RecoilRoot>
+          <Suspense fallback={<div>Loading whale types...</div>}>
+            <App />
+          </Suspense>
+      </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')
 );

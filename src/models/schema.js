@@ -59,6 +59,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "isCreator": {
+                    "name": "isCreator",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -468,6 +475,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "priority": {
+                    "name": "priority",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -534,6 +548,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "groupId": {
+                    "name": "groupId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -579,5 +600,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "d9d308dcb4e776e88541891ef8e941af"
+    "version": "9e5e04d47fd86a88dc6d72f22167b411"
 };

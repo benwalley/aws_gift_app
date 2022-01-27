@@ -1,27 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import {DataStore} from "@aws-amplify/datastore";
-import {Groups, Users} from "../../models";
+import {Groups, Users, Wishlist} from "../../models";
 import './listList.scss';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams,
+    useNavigate
+} from "react-router-dom";
+import {sDbUser, sUsingUser, gDbUser, gUsingUser} from '../../helpers/users'
+
 
 export default function ListList(props) {
-    const {close, user, setVisibleWishlistOwnerId} = props
+    const {close, setVisibleWishlistOwnerId} = props
     const [users, setUsers] = useState([])
+    const navigate = useNavigate()
+
     useEffect(() => {
         updateList()
-    }, [user])
+    }, [])
 
     const updateList = async() => {
         try {
-            const users = await DataStore.query(Users, c => c.groupId("eq", user.groupId))
+            const myUser = await DataStore.query(Users, gDbUser())
+            const users = await DataStore.query(Users, c => c.groupId("eq", myUser.groupId))
             setUsers(users)
         } catch(e) {
             console.log(e)
         }
     }
 
-    const handleSelectList = (e, user) => {
+    const handleSelectList = async (e, user) => {
         e.preventDefault();
-        setVisibleWishlistOwnerId(user.id)
+        const list = await DataStore.query(Wishlist, c => c.ownerId("eq", user.id));
+        navigate(`/${list[0].id}`)
         close()
     }
 

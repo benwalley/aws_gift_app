@@ -1,0 +1,50 @@
+.accountContainer {
+    display: grid;
+    grid-template:
+            "header header header"
+            "left center right" / 1fr max(60%, 600px) 1fr;
+    margin-top: 30px;
+
+    .header {
+        grid-area: header;
+        font-size: 25px;
+        font-weight: 500;
+        text-align: center;
+        background: #d0cfcf;
+        padding: 15px;
+    }
+
+    .leftContainer {
+        grid-area: left;
+        display: grid;
+        text-align: left;
+        justify-content: left;
+        margin-bottom: auto;
+        padding-left: 20px;
+
+        a {
+            font-size: 20px;
+            padding: 10px;
+            color :var(--main-text-color);
+
+            &:hover {
+                text-shadow:0px 0px 1px #909090;
+                color: var(--theme-selected-blue);
+            }
+        }
+    }
+
+    .centerContainer {
+        grid-area: center;
+        //border-left: 1px solid black;
+        //border-right: 1px solid black;
+
+        margin: 20px;
+        box-shadow: var(--largeBoxShadow);
+
+    }
+
+    .rightContainer {
+        grid-area: right;
+    }
+}
