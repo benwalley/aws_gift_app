@@ -69,7 +69,8 @@ export default function FirstTimePopup(props) {
                     "adminUserId": dbUser.id,
                     "invitedIds": [dbUser.id],
                     "groupId": groupJoining,
-                    "groupName": groupName
+                    "groupName": groupName,
+                    "isCreator": true
                 })
             );
 

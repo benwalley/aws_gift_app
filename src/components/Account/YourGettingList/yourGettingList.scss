@@ -1,0 +1,41 @@
+.yourGettingListContainer {
+    .themeList {
+        .even,
+        .odd {
+            grid-template-columns: 1fr 1fr;
+            cursor: pointer;
+
+            div {
+                white-space: nowrap;
+            }
+
+            .item {
+                text-align: left;
+            }
+
+            .person {
+                text-align: right;
+            }
+        }
+
+        .evenHeader {
+            background: var(--theme-list-color);
+            padding: 5px 10px;
+            align-items: center;
+            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr 46px;
+            width: 100%;
+
+            .headerItem {
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .headerPerson {
+                text-align: right;
+                font-weight: bold;
+            }
+        }
+    }
+}

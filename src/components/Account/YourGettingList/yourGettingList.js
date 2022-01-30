@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import './yourGettingList.scss'
-import {useRecoilValueLoadable} from "recoil";
+import {useRecoilValue, useRecoilValueLoadable} from "recoil";
 import {yourGettingList, youWantToGetList} from "../../../recoil/selectors";
+import {personById} from "../../../recoil/selectorFamilies";
+import UserName from "./UserName/userName";
+import {useNavigate} from "react-router";
 
 export default function YourGettingList() {
     const yourGettingUpdate = useRecoilValueLoadable(yourGettingList)
@@ -9,6 +12,8 @@ export default function YourGettingList() {
     // State values
     const [yourGetting, setYourGetting] = useState([])
     const [wantToGet, setWantToGet] = useState([])
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         if(yourGettingUpdate.state === "hasValue") {
@@ -22,29 +27,48 @@ export default function YourGettingList() {
         }
     }, [wantToGetUpdate]);
 
+    const handleGoToItem = (e, item) => {
+        e.preventDefault()
+        navigate(`/${item.wishlistId}/${item.id}`)
+    }
+
     const getYourGettingList = () => {
-        return (<div className="list">
-            {yourGetting.map((item, index) => {
-                return <div>{item.name}</div>
-            })}
-        </div>)
+        return yourGetting.map((item, index) => {
+            return <button key={item.id}  onClick={(e) => handleGoToItem(e, item)} className={index%2 === 1 ? "even" : "odd"}>
+                <div className="item">{item.name}</div>
+                <div className="person"><UserName id={item.ownerId}/></div>
+            </button>
+        })
     }
 
     const getWantToGetList = () => {
-        return (<div className="list">
-            {wantToGet.map((item, index) => {
-                return <div>{item.name}</div>
-            })}
-        </div>)
+        return wantToGet.map((item, index) => {
+            return <button key={item.id}  onClick={(e) => handleGoToItem(e, item)} className={index%2 === 1 ? "even" : "odd"}>
+                <div className="item">{item.name}</div>
+                <div className="person"><UserName id={item.ownerId}/></div>
+            </button>
+        })
     }
 
     return (
         <div className="yourGettingListContainer">
-            <h2>You're getting</h2>
-            {getYourGettingList()}
+            <div className="themeList">
+                <h2>You're getting</h2>
+                <div className="evenHeader">
+                    <div className="headerItem">Gift</div>
+                    <div className="headerPerson">Person</div>
+                </div>
+                {getYourGettingList()}
+            </div>
 
-            <h2>You want to get</h2>
-            {getWantToGetList()}
+            <div className="themeList">
+                <h2>You want to get</h2>
+                <div className="evenHeader">
+                    <div className="headerItem">Gift</div>
+                    <div className="headerPerson">Person</div>
+                </div>
+                {getWantToGetList()}
+            </div>
         </div>
     );
 }

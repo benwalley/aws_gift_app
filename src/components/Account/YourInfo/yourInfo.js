@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import GetNameOrEmail from '../../../helpers/getNameOrEmail'
 import './yourInfo.scss'
-import {dbUserState, yourGroupName} from "../../../recoil/selectors";
+import {dbUserState, groupAdminsState, yourGroupName} from "../../../recoil/selectors";
 import {useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {Link} from "react-router-dom";
 import {Users} from "../../../models";
 import {DataStore} from "@aws-amplify/datastore";
-import {updateDbUVersion} from "../../../helpers/users";
 import refreshDbUser from "../../../recoil/selectors/refreshDbUser";
 
 export default function YourInfo() {
@@ -15,9 +14,11 @@ export default function YourInfo() {
     const [editNamePopupOpen, setEditNamePopupOpen] = useState(false)
     const updateUser = useSetRecoilState(refreshDbUser)
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const groupAdminsUpdate = useRecoilValueLoadable(groupAdminsState)
     // State values
     const [dbUser, setDbUser] = useState()
     const [groupName, setGroupName] = useState()
+    const [groupAdmins, setGroupAdmins] = useState([])
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -31,7 +32,11 @@ export default function YourInfo() {
         }
     }, [groupNameUpdate]);
 
-
+    useEffect(() => {
+        if(groupAdminsUpdate.state === "hasValue") {
+            setGroupAdmins(groupAdminsUpdate.contents);
+        }
+    }, [groupAdminsUpdate]);
 
     const handleSaveName = async (e) => {
         e.preventDefault()
@@ -47,6 +52,15 @@ export default function YourInfo() {
         updateUser();
         setEditNamePopupOpen(false)
         setEditNameValue('')
+    }
+
+    const getGroupAdmins = () => {
+        return groupAdmins.map(admin => {
+            const adminName = admin.id === dbUser.id ? `${admin.displayName} (you)` : admin.displayName
+            return <div key={admin.id}>
+                {adminName}
+            </div>
+        })
     }
 
     return (
@@ -75,6 +89,10 @@ export default function YourInfo() {
                 <h4>Group</h4>
                 <div className="value">{groupName}</div>
                 <Link className="buttonSection" to={`/account/group`}>Group details</Link>
+            </div>
+            <div className="groupAdmins">
+                <h3>Group Admins</h3>
+                {getGroupAdmins()}
             </div>
         </div>
     );

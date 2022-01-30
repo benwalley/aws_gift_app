@@ -22,7 +22,7 @@
 }
 
 .themeSecondaryButton,
-.themeSecondaryButtonNonFullWidth{
+.themeSecondaryButtonNonFullWidth {
     background: var(--light-green);
     border-radius: 5px;
     padding: 5px;
@@ -72,4 +72,40 @@ h3 {
     font-size: 1.2em;
     font-weight: 700;
     letter-spacing: 0.7px;
+}
+
+.themeList {
+    border: 2px solid var(--theme-list-color);
+    margin-top: 30px;
+
+    h2,
+    h3 {
+        padding: 10px;
+    }
+
+    .even {
+        background: var(--theme-list-color);
+    }
+
+    .odd {
+        background: none;
+    }
+
+    .even,
+    .odd {
+        padding: 5px 10px;
+        align-items: center;
+        justify-content: center;
+        display: grid;
+        grid-template-columns: 1fr 46px;
+        width: 100%;
+
+        div {
+            text-align: center;
+        }
+    }
+
+    .iconButton {
+        color: var(--delete-red)
+    }
 }

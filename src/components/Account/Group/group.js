@@ -148,13 +148,13 @@ export default function Group() {
                 <div>
                     {email}
                 </div>
-                <IconButton
+                {dbUser.isAdmin && <IconButton
                     displayName={'delete'}
                     icon={<FontAwesomeIcon icon={faTimesCircle} size="lg"/>}
                     onClick={(e) => handleDeleteInvite(e, email)}
                     confirm={true}
                     confirmText={`Are you sure you want to un-invite ${email} ?`}
-                />
+                />}
             </div>
         })
     }
@@ -220,11 +220,11 @@ export default function Group() {
                 </form>}
             </div>
             <div className="groupUsersSection">
-                {groupUsers && groupUsers.length > 0 && <div className="groupUsers">
+                {groupUsers && groupUsers.length > 0 && <div className="themeList">
                     <h3>Users in your group</h3>
                     {renderUsersInGroup()}
                 </div>}
-                {invitedUsers && invitedUsers.length > 0 && <div className="groupInvites">
+                {invitedUsers && invitedUsers.length > 0 && <div className="themeList">
                     <h3>Users invited to your group</h3>
                     {renderInvitedGroupUsers()}
                 </div>}

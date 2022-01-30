@@ -12,7 +12,7 @@ import {
     Routes,
     useLocation, Outlet
 } from "react-router-dom";
-
+//TODO: add ability to make other people Admins
 
 export default function Account() {
     const location = useLocation()

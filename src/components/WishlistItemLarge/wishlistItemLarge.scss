@@ -41,6 +41,7 @@
 
     .wantsToGet,
     .getting{
+        overflow: hidden;
         h3 {
             margin: 5px 0;
         }
@@ -150,6 +151,7 @@
     .extras {
         grid-area: extras;
         padding: 10px;
+        min-height: 150px; // so that things don't shift when people get or want to get
     }
 
     .actionButtons {
@@ -166,6 +168,13 @@
             height: 50px;
             width: 100%;
             min-width: 50px;
+        }
+
+        .selected {
+            .iconButton {
+                outline: 3px solid var(--theme-red);
+                outline-offset: -3px;
+            }
         }
 
         .deleteButton {

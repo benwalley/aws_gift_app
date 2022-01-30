@@ -119,13 +119,15 @@ export default function WishlistItem(props) {
     }
 
     const isOwner = () => {
-        if(!dbUser) return false;
+        if(!dbUser || !visibleWishlist) return false;
         if(dbUser.id === visibleWishlist.ownerId) return true;
         return !!isSuper;
 
     }
 
     const getIndicators = () => {
+        // don't return anything if this users shouldn't see them.
+        if(!data || !dbUser || data.ownerId === dbUser.id) return
         if(data.gottenBy && data.gottenBy.length > 0 && data.wantsToGet && data.wantsToGet.length > 0) {
             return <div className="gottenAndWantsIndicator">
                 <div className="wantsToGetIndicator"><FontAwesomeIcon icon={faUserFriends} size="3x" /></div>

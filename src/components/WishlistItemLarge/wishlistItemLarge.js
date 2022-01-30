@@ -45,6 +45,15 @@ export default function WishlistItemLarge(props) {
     const [visibleWishlist, setVisibleWishlist] = useState()
     const [usingUser, setUsingUser] = useState()
     const [data, setData] = useState()
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
 
     useEffect(() => {
         setLargeWishlistItem()
@@ -247,6 +256,14 @@ export default function WishlistItemLarge(props) {
         return usingUser.id === visibleWishlist.ownerId;
     }
 
+    const canSeeWhosGetting = () => {
+        if(!dbUser) return false;
+        if(dbUser.id !== data.ownerId) {
+            return true
+        }
+        return false
+    }
+
     return (
         !data || !itemId ? <div></div> :
         <div className="largeWishlistItemContainer">
@@ -260,14 +277,14 @@ export default function WishlistItemLarge(props) {
             </div>
 
             <div className="actionButtons">
-                {!isOwner() && <div>
+                {!isOwner() && <div className={data.gottenBy.indexOf(dbUser.id) > -1 ? "selected" : ''}>
                     <IconButton onClick={handleGetting} displayName={"Get This"} icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}/>
+                </div>}
+                {!isOwner() && <div className={data.wantsToGet.indexOf(dbUser.id) > -1 ? "selected" : ''}>
+                    <IconButton onClick={handleWantsToGet} displayName={"Want to get this"} icon={<FontAwesomeIcon icon={faUserFriends} size="2x" />}/>
                 </div>}
                 {(isOwner() || isSuper) && <div>
                     <IconButton onClick={() => setEditModalOpen(true)} displayName={"Edit"} icon={<FontAwesomeIcon icon={faPencilAlt} size="2x" />}/>
-                </div>}
-                {!isOwner() && <div>
-                    <IconButton onClick={handleWantsToGet} displayName={"Want to get this"} icon={<FontAwesomeIcon icon={faUserFriends} size="2x" />}/>
                 </div>}
                 {(isOwner() || isSuper) && <div className="deleteButton">
                     <IconButton onClick={handleDelete} displayName={"Delete"} icon={<FontAwesomeIcon icon={faTrashAlt} size="2x" />}/>
@@ -278,7 +295,7 @@ export default function WishlistItemLarge(props) {
                 {getLink()}
             </div>}
             {getNote()}
-            <div className="extras">
+            {canSeeWhosGetting() && <div className="extras">
                 {data.wantsToGet && data.wantsToGet.length > 0 && <div className="wantsToGet">
                     <h3>Want to go in on this:</h3>
                     <div className="wantsToGetList">
@@ -291,7 +308,7 @@ export default function WishlistItemLarge(props) {
                         {getGetting()}
                     </div>
                 </div>}
-            </div>
+            </div>}
             {data && data.id && <CommentsComponent
                 wishlistItem={data}
                 commenterId={12}
