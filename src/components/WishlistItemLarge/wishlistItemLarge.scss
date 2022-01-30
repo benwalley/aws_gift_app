@@ -26,7 +26,7 @@
     .nameContainer {
         grid-area: nameContainer;
         display: grid;
-        grid-template-columns: 1fr 150px;
+        grid-template-columns: 1fr 175px;
         border-bottom: 1px solid #e0e0e0;
 
 
@@ -126,6 +126,17 @@
         font-size: 18px;
         letter-spacing: 0.6px;
 
+        .link {
+            font-size: 0.9em;
+            color: var(--link-blue);
+            margin-top: 10px;
+            display: block;
+
+            &:hover {
+                text-shadow: 0 0 1px #8d8db8;
+            }
+        }
+
 
         .priceContainer {
 
@@ -147,6 +158,7 @@
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 15px;
         padding: 10px;
+        margin-bottom: auto;
 
         .iconButton {
             background: var(--light-green);

@@ -6,7 +6,6 @@ import ButtonAsText from "../Buttons/ButtonAsText";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFileInvoiceDollar, faList, faPlus} from '@fortawesome/free-solid-svg-icons'
 import AddListItem from "../AddListItem/addListItem";
-import MyAccountPopup from "../MyAccountPopup/myAccountPopup";
 import Modal from "../Modal/modal";
 import MoneyModal from "../MoneyModal/moneyModal";
 import ListList from "../ListList/listList";
@@ -14,22 +13,38 @@ import GetNameOrEmail from "../../helpers/getNameOrEmail";
 import {Link, useNavigate} from "react-router-dom";
 import {DataStore} from "@aws-amplify/datastore";
 import {Users, Wishlist} from "../../models";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {dbUserState, usingUserState} from "../../recoil/selectors";
 import createUsersWishlist from "../../helpers/createUserWishlist";
+import {usingUserIdState} from "../../recoil/atoms";
 
 
 export default function Header(props) {
     const {} = props;
 
-    const usingUser = useRecoilValue(usingUserState);
-    const dbUser = useRecoilValue(dbUserState);
+    const usingUserUpdate = useRecoilValueLoadable(usingUserState);
+    const setUsingUserId = useSetRecoilState(usingUserIdState)
 
     const [addItemPopupOpen, setAddItemPopupOpen] = useState(false)
-    const [myAccountPopupOpen, setMyAccountPopupOpen] = useState(false)
     const [moneyPopupOpen, setMoneyPopupOpen] = useState(false)
     const [listListPopupOpen, setListListPopupOpen] = useState(false)
     const navigate = useNavigate()
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+    const [usingUser, setUsingUser] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(usingUserUpdate.state === "hasValue") {
+            setUsingUser(usingUserUpdate.contents);
+        }
+    }, [usingUserUpdate]);
 
     const renderAddItemPopup = () => {
         if (addItemPopupOpen) {
@@ -45,19 +60,6 @@ export default function Header(props) {
         setAddItemPopupOpen(false)
     }
 
-    const renderMyAccountPopup = () => {
-        if(myAccountPopupOpen) {
-            return <MyAccountPopup
-                close={closeAccountPopup}
-            />
-        }
-    }
-
-    const closeAccountPopup = (e) => {
-        if(e) e.preventDefault();
-        setMyAccountPopupOpen(false)
-    }
-    //
     const handleRedirectToHome = async (e) => {
         try {
             e.preventDefault();
@@ -65,9 +67,11 @@ export default function Header(props) {
             if(!wishlist || wishlist.length === 0) {
                 // we need to create their wishlist
                 wishlist = await createUsersWishlist(dbUser)
+                setUsingUserId(dbUser.id)
                 navigate(`/${wishlist.id}`)
             }
             try {
+                setUsingUserId(dbUser.id)
                 navigate(`/${wishlist[0].id}`)
             } catch(e) {
                 console.log(e)
@@ -79,7 +83,6 @@ export default function Header(props) {
     }
 
     const renderCurrentUsersName = () => {
-        console.log(usingUser)
         if(!usingUser) return;
         try {
             if(usingUser && usingUser.isSubUser) {
@@ -91,7 +94,6 @@ export default function Header(props) {
             console.log(e)
             return "loading..."
         }
-
     }
 
     return (
@@ -100,7 +102,6 @@ export default function Header(props) {
             <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
             <div className="myAccountButton">
                 <Link to="/account/account">My Account</Link>
-                {/*<ButtonAsText onClick={() => setMyAccountPopupOpen(true)} displayName={'My Account'}/>*/}
             </div>
             <span className="signOutButton">
                <ButtonAsText onClick={SignOut} displayName={'Sign Out'}/>
@@ -110,7 +111,6 @@ export default function Header(props) {
             <IconButton onClick={() => setListListPopupOpen(true)} displayName={'wishlist list'} icon={<FontAwesomeIcon icon={faList} size="2x"/>}/>
             {/* popups which will all be absolutely positioned*/}
             {renderAddItemPopup()}
-            {renderMyAccountPopup()}
             <Modal isOpen={moneyPopupOpen} close={() => setMoneyPopupOpen(false)}>
                 <MoneyModal/>
             </Modal>

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import GetNameOrEmail from '../../../helpers/getNameOrEmail'
 import './yourInfo.scss'
 import {dbUserState, yourGroupName} from "../../../recoil/selectors";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {Link} from "react-router-dom";
 import {Users} from "../../../models";
 import {DataStore} from "@aws-amplify/datastore";
@@ -10,11 +10,28 @@ import {updateDbUVersion} from "../../../helpers/users";
 import refreshDbUser from "../../../recoil/selectors/refreshDbUser";
 
 export default function YourInfo() {
-    const dbUser = useRecoilValue(dbUserState);
-    const groupName = useRecoilValue(yourGroupName);
+    const groupNameUpdate = useRecoilValueLoadable(yourGroupName);
     const [editNameValue, setEditNameValue] = useState('')
     const [editNamePopupOpen, setEditNamePopupOpen] = useState(false)
     const updateUser = useSetRecoilState(refreshDbUser)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+    const [groupName, setGroupName] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(groupNameUpdate.state === "hasValue") {
+            setGroupName(groupNameUpdate.contents);
+        }
+    }, [groupNameUpdate]);
+
+
 
     const handleSaveName = async (e) => {
         e.preventDefault()
@@ -50,10 +67,10 @@ export default function YourInfo() {
                     <button onClick={handleSaveName}>Save</button>
                 </form>}
             </div>
-            <div className="yourInfoItem">
+            {dbUser && <div className="yourInfoItem">
                 <h4>Email</h4>
                 <div className="value">{dbUser.emailAddress}</div>
-            </div>
+            </div>}
             <div className="yourInfoItem">
                 <h4>Group</h4>
                 <div className="value">{groupName}</div>

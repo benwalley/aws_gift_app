@@ -1,6 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import React from 'react';
 import './modal.scss'
 
 export default function Modal(props) {

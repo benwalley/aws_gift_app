@@ -113,10 +113,19 @@
     .addingAsName {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        margin-top: 10px;
 
         .addingName {
             text-align: right;
-            padding-right: 10px;
+
+            .addingAsNameName {
+                font-weight: bold;
+                background: var(--theme-red);
+                padding: 0 10px;
+                height: 25px;
+                display: inline-block;
+                border-radius: 25px;
+            }
         }
 
         .addToOtherUserButtons {
@@ -124,7 +133,7 @@
                 background: var(--electric-blue);
                 height: 25px;
                 border-radius: 12.5px;
-                display: grid;
+                display: inline-block;
                 align-items: center;
                 justify-content: center;
                 margin: 0 10px;

@@ -1,20 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import './subUsers.scss'
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {dbUserState, subUsersState, updateGroupVersion} from "../../../recoil/selectors";
 import {DataStore} from "aws-amplify";
-import {Groups, Money, Users} from "../../../models";
+import {Groups, Money, Users, Wishlist} from "../../../models";
 import IconButton from "../../Buttons/IconButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {usingUserIdState} from "../../../recoil/atoms";
+import {usingUserIdState, visibleWishlistIDState} from "../../../recoil/atoms";
+import {useNavigate} from "react-router";
+import createUsersWishlist from "../../../helpers/createUserWishlist";
+import {onAuthUIStateChange} from "@aws-amplify/ui-components";
 
 export default function SubUsers() {
     const [subUserName, setSubUserName] = useState('')
-    const subUsers = useRecoilValue(subUsersState);
+    const subUsersUpdate = useRecoilValueLoadable(subUsersState);
     const updateGroup = useSetRecoilState(updateGroupVersion)
-    const dbUser = useRecoilValue(dbUserState)
     const [usingUserId, setUsingUserId] = useRecoilState(usingUserIdState)
+    const setVisibleWishlistId = useSetRecoilState(visibleWishlistIDState)
+    const navigate = useNavigate()
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // state values
+    const [dbUser, setDbUser] = useState()
+    const [subUsers, setSubUsers] = useState([])
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(subUsersUpdate.state === "hasValue") {
+            setSubUsers(subUsersUpdate.contents);
+        }
+    }, [subUsersUpdate]);
+
 
     const handleAddSubUser = async (e) => {
         e.preventDefault();
@@ -42,9 +63,19 @@ export default function SubUsers() {
         updateGroup()
     }
 
-    const handleViewEditAsUser = (e, user) => {
+    const handleViewEditAsUser = async (e, user) => {
         e.preventDefault()
+        let wishlist
+        const subUserWishlists = await DataStore.query(Wishlist, c => c.ownerId("eq", user.id));
+        if(subUserWishlists && subUserWishlists.length > 0) {
+            wishlist = subUserWishlists[0]
+        } else {
+            wishlist = await createUsersWishlist(user)
+        }
+        let switchToId = wishlist.id
+        setVisibleWishlistId(switchToId)
         setUsingUserId(user.id)
+        navigate(`/${switchToId}`)
     }
 
     const handleSwitchToMainUser = (e) => {
@@ -85,7 +116,7 @@ export default function SubUsers() {
             </div>}
             <div className="inviteUserSection">
                 <h3>Add a sub-user</h3>
-                <p className="details">Sub-users are users who do not have their own account.
+                <div className="details">Sub-users are users who do not have their own account.
                     Instead you have the ability to control their wishlist.
                     <div className="subUserDetails">
                         <strong>A sub-user cannot:</strong>
@@ -95,7 +126,7 @@ export default function SubUsers() {
                         </ul>
                     </div>
 
-                </p>
+                </div>
                 <form onSubmit={handleAddSubUser}>
                     <input
                         className="themeInput"

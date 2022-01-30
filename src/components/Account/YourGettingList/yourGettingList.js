@@ -1,11 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import './yourGettingList.scss'
-import {useRecoilValue} from "recoil";
+import {useRecoilValueLoadable} from "recoil";
 import {yourGettingList, youWantToGetList} from "../../../recoil/selectors";
 
-export default function Dropdowns() {
-    const yourGetting = useRecoilValue(yourGettingList)
-    const wantToGet = useRecoilValue(youWantToGetList)
+export default function YourGettingList() {
+    const yourGettingUpdate = useRecoilValueLoadable(yourGettingList)
+    const wantToGetUpdate = useRecoilValueLoadable(youWantToGetList)
+    // State values
+    const [yourGetting, setYourGetting] = useState([])
+    const [wantToGet, setWantToGet] = useState([])
+
+    useEffect(() => {
+        if(yourGettingUpdate.state === "hasValue") {
+            setYourGetting(yourGettingUpdate.contents);
+        }
+    }, [yourGettingUpdate]);
+
+    useEffect(() => {
+        if(wantToGetUpdate.state === "hasValue") {
+            setWantToGet(wantToGetUpdate.contents);
+        }
+    }, [wantToGetUpdate]);
 
     const getYourGettingList = () => {
         return (<div className="list">

@@ -13,7 +13,7 @@ import {
     useParams,
     useNavigate
 } from "react-router-dom";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValueLoadable} from "recoil";
 import {dbUserState, visibleWishlistItemsState} from "../../recoil/selectors";
 import {visibleWishlistIDState} from "../../recoil/atoms";
 
@@ -23,11 +23,16 @@ export default function WishlistListing(props) {
     const [filteredList, setFilteredList] = useState();
     const [selectedFilterBy, setSelectedFilterBy] = useState('name (search)')
     const [nameSearch, setNameSearch] = useState('')
-    const navigate = useNavigate()
-    let { wishlistId, itemId } = useParams();
-    const dbUser = useRecoilValue(dbUserState)
-    const wishlistItems = useRecoilValue(visibleWishlistItemsState)
+    let { wishlistId } = useParams();
+    const wishlistItemsUpdate = useRecoilValueLoadable(visibleWishlistItemsState)
     const [visibleWishlistId, setVisibleWishlistId] = useRecoilState(visibleWishlistIDState)
+    const [wishlistItems, setWishlistItems] = useState();
+
+    useEffect(() => {
+        if(wishlistItemsUpdate.state === "hasValue") {
+            setWishlistItems(wishlistItemsUpdate.contents);
+        }
+    }, [wishlistItemsUpdate]);
 
     useEffect(() => {
         setWishlistIdIfNecessary()

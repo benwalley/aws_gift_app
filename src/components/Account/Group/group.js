@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './group.scss'
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {
     dbUserState,
     invitedGroupUsers,
@@ -17,14 +17,44 @@ import IconButton from "../../Buttons/IconButton";
 export default function Group() {
     const [editNamePopupOpen, setEditNamePopupOpen] = useState(false)
     const [editNameValue, setEditNameValue] = useState('')
-    const dbUser = useRecoilValue(dbUserState)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState)
     const updateGroup = useSetRecoilState(updateGroupVersion)
-    const groupName = useRecoilValue(yourGroupName);
-    const groupUsers = useRecoilValue(usersInGroupState)
-    const invitedUsers = useRecoilValue(invitedGroupUsers)
+    const groupNameUpdate = useRecoilValueLoadable(yourGroupName);
+    const groupUsersUpdate = useRecoilValueLoadable(usersInGroupState)
+    const invitedUsersUpdate = useRecoilValueLoadable(invitedGroupUsers)
     const [inviteText, setInviteText] = useState('')
+    // state valuse
+    const [dbUser, setDbUser] = useState()
+    const [groupName, setGroupName] = useState('');
+    const [groupUsers, setGroupUsers] = useState([])
+    const [invitedUsers, setInvitedUsers] = useState([])
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(groupNameUpdate.state === "hasValue") {
+            setGroupName(groupNameUpdate.contents);
+        }
+    }, [groupNameUpdate]);
+
+    useEffect(() => {
+        if(groupUsersUpdate.state === "hasValue") {
+            setGroupUsers(groupUsersUpdate.contents);
+        }
+    }, [groupUsersUpdate]);
+
+    useEffect(() => {
+        if(invitedUsersUpdate.state === "hasValue") {
+            setInvitedUsers(invitedUsersUpdate.contents);
+        }
+    }, [invitedUsersUpdate]);
 
     const handleSaveName = async (e) => {
+        if(!dbUser) return;
         e.preventDefault()
         // handle updating user
         const original = await DataStore.query(Groups, dbUser.groupId);
@@ -43,13 +73,20 @@ export default function Group() {
     const handleDeleteGroupMember = async (e, user) => {
         // remove their group id
         const originalUser = await DataStore.query(Users, user.id);
-        await DataStore.save(Groups.copyOf(originalUser, updatedUser => {
-            try {
-                updatedUser.groupId = '';
-            } catch (e) {
+        // If they're a subuser, we just delete the user
+        if(originalUser.isSubUser) {
+            await DataStore.delete(originalUser);
+        } else {
+            //If they're a normal user, we just remove their group ID
+            await DataStore.save(Groups.copyOf(originalUser, updatedUser => {
+                try {
+                    updatedUser.groupId = '';
+                } catch (e) {
 
-            }
-        }))
+                }
+            }))
+        }
+
         // remove their invite.
         const originalGroup = await DataStore.query(Groups, dbUser.groupId);
         await DataStore.save(Groups.copyOf(originalGroup, updatedGroup => {
@@ -85,6 +122,8 @@ export default function Group() {
     }
 
     const renderUsersInGroup = () => {
+        if(!dbUser) return;
+        if(!groupUsers) return;
         return groupUsers.map((user, index) => {
             return <div key={user.id} className={index%2 === 0 ? "even" : "odd"}>
                 <div>
@@ -103,6 +142,7 @@ export default function Group() {
     }
 
     const renderInvitedGroupUsers = () => {
+        if(!invitedUsers) return;
         return invitedUsers.map((email, index) => {
             return <div key={email} className={index%2 === 0 ? "even" : "odd"}>
                 <div>
@@ -121,8 +161,6 @@ export default function Group() {
 
     const handleAddInvite = async(e) => {
         e.preventDefault()
-
-
         if(!inviteText || inviteText === "") return;
         let groupData = await DataStore.query(Groups, dbUser.groupId);
         if (!groupData) return; // throw error
@@ -165,10 +203,10 @@ export default function Group() {
         updateGroup()
     }
 
-    return (
-        <div className="yourGroupContainer">
+    return (<>
+        {dbUser && <div className="yourGroupContainer">
             <div className="groupNameSection">
-                <h2 className="groupName">{groupName}</h2>
+                {groupName && <h2 className="groupName">{groupName}</h2>}
                 <button className="themeTextLink" onClick={() => setEditNamePopupOpen(!editNamePopupOpen)}>{editNamePopupOpen ? "Cancel name change" : "Edit group name"}</button>
                 {editNamePopupOpen &&
                 <form className="editNameSection" onSubmit={handleSaveName}>
@@ -205,7 +243,8 @@ export default function Group() {
                     <button className="themeButton" onClick={handleAddInvite}>Invite</button>
                 </form>
             </div>
-        </div>
+        </div>}
+    </>
     );
 }
 

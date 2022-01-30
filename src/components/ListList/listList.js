@@ -1,25 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import {DataStore} from "@aws-amplify/datastore";
-import {Groups, Users, Wishlist} from "../../models";
+import {Wishlist} from "../../models";
 import './listList.scss';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useParams,
     useNavigate
 } from "react-router-dom";
-import {sDbUser, sUsingUser, gDbUser, gUsingUser} from '../../helpers/users'
 import {usersInGroupState} from "../../recoil/selectors";
-import {useRecoilValue} from "recoil";
 import createUsersWishlist from "../../helpers/createUserWishlist";
+import {useRecoilValueLoadable} from "recoil";
 
 
 export default function ListList(props) {
     const {close} = props
-    const users = useRecoilValue(usersInGroupState)
+    const usersUpdate = useRecoilValueLoadable(usersInGroupState)
     const navigate = useNavigate()
+    const [users, setUsers] = useState()
+
+    useEffect(() => {
+        if(usersUpdate.state === "hasValue") {
+            setUsers(usersUpdate.contents);
+        }
+    }, [usersUpdate]);
 
     const handleSelectList = async (e, user) => {
         e.preventDefault();

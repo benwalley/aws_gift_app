@@ -17,7 +17,7 @@ import {
     useParams,
     useNavigate
 } from "react-router-dom";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {
     dbUserState,
     largeWishlistItemDataState,
@@ -33,19 +33,46 @@ export default function WishlistItemLarge(props) {
     const {} = props
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-    const data = useRecoilValue(largeWishlistItemDataState)
+    const dataUpdate = useRecoilValueLoadable(largeWishlistItemDataState)
     const setLargeWishlistItemId = useSetRecoilState(largeWishlistItemIdState)
-    const usingUser = useRecoilValue(usingUserState)
+    const usingUserUpdate = useRecoilValueLoadable(usingUserState)
     const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
-    const visibleWishlist = useRecoilValue((visibleWishlistState))
+    const visibleWishlistUpdate = useRecoilValueLoadable((visibleWishlistState))
     let { wishlistId, itemId } = useParams();
-    const dbUser = useRecoilValue(dbUserState)
-    const isSuper = useRecoilValue(isSuperOwner)
+    const isSuperUpdate = useRecoilValueLoadable(isSuperOwner)
     const navigate = useNavigate()
+    const [isSuper, setIsSuper] = useState(false)
+    const [visibleWishlist, setVisibleWishlist] = useState()
+    const [usingUser, setUsingUser] = useState()
+    const [data, setData] = useState()
 
     useEffect(() => {
         setLargeWishlistItem()
     }, [wishlistId, itemId])
+
+    useEffect(() => {
+        if(isSuperUpdate.state === "hasValue") {
+            setIsSuper(isSuperUpdate.contents);
+        }
+    }, [isSuperUpdate]);
+
+    useEffect(() => {
+        if(visibleWishlistUpdate.state === "hasValue") {
+            setVisibleWishlist(visibleWishlistUpdate.contents);
+        }
+    }, [visibleWishlistUpdate]);
+
+    useEffect(() => {
+        if(usingUserUpdate.state === "hasValue") {
+            setUsingUser(usingUserUpdate.contents);
+        }
+    }, [usingUserUpdate]);
+
+    useEffect(() => {
+        if(dataUpdate.state === "hasValue") {
+            setData(dataUpdate.contents);
+        }
+    }, [dataUpdate]);
 
     const setLargeWishlistItem = () => {
         if(!wishlistId || !itemId) return;
@@ -60,7 +87,7 @@ export default function WishlistItemLarge(props) {
         }
         return (
             <div className="priceContainer">
-                <h4 className="priceLabel">Approximate price:</h4>
+                <h3 className="priceLabel">Approximate price:</h3>
                 <p className="priceData">{price}</p>
             </div>
         )
@@ -101,6 +128,7 @@ export default function WishlistItemLarge(props) {
     }
 
     const handleDelete = async (e) => {
+        if(!data) return;
         e.preventDefault()
         const toDelete = await DataStore.query(WishlistItems, data.id);
         await DataStore.delete(toDelete);
@@ -109,6 +137,7 @@ export default function WishlistItemLarge(props) {
     }
 
     const handleGetting = async (e) => {
+        if(!usingUser) return;
         e.preventDefault()
         const original = await DataStore.query(WishlistItems, data.id);
         const gottenByList = [...original.gottenBy]
@@ -133,6 +162,7 @@ export default function WishlistItemLarge(props) {
     }
 
     const handleWantsToGet = async (e) => {
+        if(!usingUser || !data) return;
         try {
             e.preventDefault()
             const original = await DataStore.query(WishlistItems, data.id);
@@ -190,7 +220,7 @@ export default function WishlistItemLarge(props) {
     const getLink = () => {
         if( data && data.link) {
             return (
-                <a href={data.link} aria-label={data.name} target="_blank`">Link to product</a>
+                <a className="link" href={data.link} aria-label={data.name} target="_blank`">Link to product</a>
             )
         }
     }
@@ -204,7 +234,7 @@ export default function WishlistItemLarge(props) {
     const getNote = () => {
         if(!data || !data.note) return;
         return <div className="notes">
-            <h4>Notes</h4>
+            <h3>Notes</h3>
             <div>
                 {data.note}
             </div>
@@ -213,13 +243,9 @@ export default function WishlistItemLarge(props) {
 
     // only if the using user is the one who created the wishlist
     const isOwner = () => {
+        if(!usingUser) return
         return usingUser.id === visibleWishlist.ownerId;
     }
-
-    const isSubUser = () => {
-
-    }
-
 
     return (
         !data || !itemId ? <div></div> :

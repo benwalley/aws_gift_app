@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, Suspense} from 'react';
 import { DataStore, Predicates, SortDirection, syncExpression } from 'aws-amplify'
 import {WishlistItems, Wishlist, Users} from '../../models';
 import GetMyWishlist from "../../helpers/getWishlists";
@@ -9,9 +9,10 @@ import TextButton from "../Buttons/TextButton";
 import createUsersWishlist from "../../helpers/createUserWishlist";
 import GetNameOrEmail from "../../helpers/getNameOrEmail";
 import PriorityInput from "../PriorityInput/priorityInput";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {RecoilRoot, useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {refreshVisibleWishlistList} from '../../recoil/versionAtoms'
-import {subUsersState, usingUserState} from "../../recoil/selectors";
+import {dbUserState, subUsersState, updateVisibleWishlist, usingUserState} from "../../recoil/selectors";
+import Loading from "../Loading/loading";
 
 export default function AddListItem(props) {
     const {close} = props;
@@ -22,13 +23,36 @@ export default function AddListItem(props) {
     const [price, setPrice] = useState('')
     const [addingToUser, setAddingToUser] = useState(undefined)
     const [priority, setPriority] = useState()
-    const usingUser = useRecoilValue(usingUserState)
-    const subUsers = useRecoilValue(subUsersState)
-    const [visibleListVersion, updateVisibleList] = useRecoilState(refreshVisibleWishlistList)
+    const usingUserUpdate = useRecoilValueLoadable(usingUserState)
+    const subUsersUpdate = useRecoilValueLoadable(subUsersState)
+    const updateVisibleList = useSetRecoilState(updateVisibleWishlist)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+    const [usingUser, setUsingUser] = useState()
+    const [subUsers, setSubUsers] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(usingUserUpdate.state === "hasValue") {
+            setUsingUser(usingUserUpdate.contents);
+        }
+    }, [usingUserUpdate]);
+
+    useEffect(() => {
+        if(subUsersUpdate.state === "hasValue") {
+            setSubUsers(subUsersUpdate.contents);
+        }
+    }, [subUsersUpdate]);
 
     useEffect(() => {
         initAddingTo()
-    }, [])
+    }, [usingUser])
 
     const initAddingTo = async () => {
         if(!usingUser) return
@@ -100,7 +124,7 @@ export default function AddListItem(props) {
         const response = await DataStore.save(
             new WishlistItems(itemData)
         );
-        updateVisibleList(visibleListVersion + 1)
+        updateVisibleList()
         close();
     }
 
@@ -119,36 +143,37 @@ export default function AddListItem(props) {
     }
 
     return (
-            <div className="addListItemContainer" >
-                <div className="addListItemBackground" onClick={close}></div>
-                <form className="addListItemContent" onSubmit={handleAddItem}>
-                    <div className="addListItemScrollingContainer">
-                        <h2>Add an item to your wishlist</h2>
-                        <div className="addingAsName">
-                            <span className="addingName">{`Adding to wishlist: ${GetNameOrEmail(addingToUser)}`}</span>
-                            <span className="addToOtherUserButtons">
-                                {subUsers && subUsers.map(thisUser => {
-                                    return <span key={thisUser.id} className="switchUser" onClick={() => setAddingToUser(thisUser)}>{thisUser.displayName}</span>
-                                })}
-                            </span>
+        <div className="addListItemContainer" >
+            <div className="addListItemBackground" onClick={close}></div>
+            {addingToUser && <form className="addListItemContent" onSubmit={handleAddItem}>
+                <div className="addListItemScrollingContainer">
+                    <h2>Add an item to your wishlist</h2>
+                    <div className="addingAsName">
+                        <span className="addingName">Adding to wishlist: <span className="addingAsNameName">{GetNameOrEmail(addingToUser)}</span></span>
+                        <span className="addToOtherUserButtons">
+                            {subUsers && [...subUsers, dbUser].map(thisUser => {
+                                if(thisUser.id === addingToUser.id) return
+                                return <span key={thisUser.id} className="switchUser" onClick={() => setAddingToUser(thisUser)}>{thisUser.displayName}</span>
+                            })}
+                        </span>
+                    </div>
+
+                        {createInput(name, setName, 'Item Name')}
+                        <PriorityInput priority={priority} setPriority={setPriority}/>
+                        {createInput(note, setNote, 'Note')}
+                        {createInput(link, setLink, 'Link to item')}
+                        {createInput(price, setPrice, 'Approximate price')}
+                        <div className="addImages">
+                            {imageUrlInputs()}
+                            <button type="button" className="addAnotherImageButton" onClick={handleAddAnotherImageUrl}>Add another image url</button>
                         </div>
 
-                            {createInput(name, setName, 'Item Name')}
-                            <PriorityInput priority={priority} setPriority={setPriority}/>
-                            {createInput(note, setNote, 'Note')}
-                            {createInput(link, setLink, 'Link to item')}
-                            {createInput(price, setPrice, 'Approximate price')}
-                            <div className="addImages">
-                                {imageUrlInputs()}
-                                <button type="button" className="addAnotherImageButton" onClick={handleAddAnotherImageUrl}>Add another image url</button>
-                            </div>
-
-                    </div>
-                    <div className="addItemButton">
-                        <TextButton displayName={"Add Item"} onClick={handleAddItem}/>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div className="addItemButton">
+                    <TextButton displayName={"Add Item"} onClick={handleAddItem}/>
+                </div>
+            </form>}
+        </div>
     );
 }
 

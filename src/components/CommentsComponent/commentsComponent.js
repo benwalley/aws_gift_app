@@ -6,7 +6,7 @@ import {Comments} from "../../models";
 import IconButton from "../Buttons/IconButton";
 import './commentsComponent.scss'
 import SingleComment from "./SingleComment";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {dbUserState, refreshNumberComments} from "../../recoil/selectors";
 
 export default function CommentsComponent(props) {
@@ -15,8 +15,16 @@ export default function CommentsComponent(props) {
     const [commentsArr, setCommentsArr] = useState([])
     const [canOwnerSee, setCanOwnerSee] = useState(true)
     const [myInterval, setMyInterval] = useState()
-    const dbUser = useRecoilValue(dbUserState)
     const updateNumComments = useSetRecoilState(refreshNumberComments)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
 
     const updateEvery = 10000 // 10 seconds
 
@@ -79,7 +87,7 @@ export default function CommentsComponent(props) {
     }
 
     const getVisibilityToggle = () => {
-        if(wishlist && wishlist.ownerId && (wishlist.ownerId !== dbUser.id)) {
+        if(dbUser && wishlist && wishlist.ownerId && (wishlist.ownerId !== dbUser.id)) {
             return <button className="canOwnerSeeButton" onClick={handleSetOwnerCanSee} aria-label="can owner see comment">
                 <label htmlFor="">{canOwnerSee ? "Visible to owner" : "Invisible to owner"}</label>
                 <div className="unlocked"><FontAwesomeIcon icon={faEye} size="lg"/></div>
@@ -87,7 +95,7 @@ export default function CommentsComponent(props) {
                 <div className="locked"><FontAwesomeIcon icon={faEyeSlash} size="lg" /></div>
             </button>
         }
-        if (wishlistItem && wishlistItem.id && (wishlistItem.ownerId !== dbUser.id)) {
+        if (dbUser && wishlistItem && wishlistItem.id && (wishlistItem.ownerId !== dbUser.id)) {
             return <button className="canOwnerSeeButton" onClick={handleSetOwnerCanSee} aria-label="can owner see comment">
                 <label htmlFor="">Visible to owner</label>
                 <div className="unlocked"><FontAwesomeIcon icon={faEye} size="lg"/></div>

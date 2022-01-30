@@ -15,24 +15,51 @@ import {
     useNavigate
 } from "react-router-dom";
 import createUsersWishlist from "../../helpers/createUserWishlist";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {visibleWishlistState, dbUserState, visibleWishlistDisplayNameState} from "../../recoil/selectors";
+import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
+import {
+    visibleWishlistState,
+    dbUserState,
+    visibleWishlistDisplayNameState,
+    updateVisibleWishlist
+} from "../../recoil/selectors";
 import {visibleWishlistIDState} from "../../recoil/atoms";
 
 export default function Dashboard(props) {
     const {} = props;
-    // The currently visible wishlist
-    const visibleWishlist = useRecoilValue(visibleWishlistState); // data for the wishlist currently being displayed
-    const dbUser = useRecoilValue(dbUserState);
-    const visibleWishlistDisplayName = useRecoilValue(visibleWishlistDisplayNameState);
-    const [visibleWishlistId, setVisibleWishlistId] = useRecoilState(visibleWishlistIDState)
-
+    const visibleWishlistUpdate = useRecoilValueLoadable(visibleWishlistState); // data for the wishlist currently being displayed
+    const visibleWishlistDisplayNameUpdate = useRecoilValueLoadable(visibleWishlistDisplayNameState);
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const setVisibleWishlistId = useSetRecoilState(visibleWishlistIDState)
+    const updateWishlist = useSetRecoilState(updateVisibleWishlist)
     let { wishlistId, itemId } = useParams();
     const navigate = useNavigate()
+    // State values
+    const [dbUser, setDbUser] = useState()
+    const [visibleWishlistDisplayName, setVisibleWishlistDisplayName] = useState()
+    const [visibleWishlist, setVisibleWishlist] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(visibleWishlistUpdate.state === "hasValue") {
+            setVisibleWishlist(visibleWishlistUpdate.contents);
+        }
+    }, [visibleWishlistUpdate]);
+
+
+    useEffect(() => {
+        if(visibleWishlistDisplayNameUpdate.state === "hasValue") {
+            setVisibleWishlistDisplayName(visibleWishlistDisplayNameUpdate.contents);
+        }
+    }, [visibleWishlistDisplayNameUpdate]);
 
     useEffect(() => {
         redirectToWishlistIfNeeded() // this will make sure you are on a wishlist page. At the moment, there are no pages that are not wishlists
-    }, [wishlistId, itemId])
+    }, [wishlistId, itemId, dbUser])
 
     const redirectToWishlistIfNeeded = async () => {
         if(!dbUser) return false;
@@ -54,9 +81,12 @@ export default function Dashboard(props) {
                 newWishlist = await createUserWishlistIfNeeded(theUser)
             }
             const theWishlist = newWishlist ?? wishlists[0] // the wishlist now represents the viewedWishlist
+            if(!theWishlist) return;
             navigate(`/${theWishlist.id}`)
+            updateWishlist()
         }
         setVisibleWishlistId(wishlistId)
+        updateWishlist()
         return true;
     }
 
@@ -88,7 +118,7 @@ export default function Dashboard(props) {
 
     return (
             <div className="dashboardContainer">
-                {visibleWishlist && <h1 className="dashboardTitle">{visibleWishlistDisplayName}</h1>}
+                {visibleWishlist && visibleWishlistDisplayName && <h1 className="dashboardTitle">{visibleWishlistDisplayName}</h1>}
                 <div className="leftColumn"></div>
                 <div className="visibleWishlistItem">
                     {getVisibleWishlistItem()}
@@ -96,12 +126,12 @@ export default function Dashboard(props) {
                 <div className="wishlistListing">
                     <WishlistListing/>
                 </div>
-                <div className="wishlistCommentsContainer">
+                {dbUser && visibleWishlist && <div className="wishlistCommentsContainer">
                     <CommentsComponent
                         commenterId={dbUser.id}
                         wishlist={visibleWishlist}
                     />
-                </div>
+                </div>}
             </div>
     );
 }

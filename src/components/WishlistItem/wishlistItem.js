@@ -11,23 +11,46 @@ import {
     useParams,
     useNavigate
 } from "react-router-dom";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {dbUserState, isSuperOwner, updateLargeWishlistItemVersion} from "../../recoil/selectors";
 import {refreshNumberOfComments, refreshVisibleWishlistList} from "../../recoil/versionAtoms";
 import visibleWishlist from "../../recoil/selectors/visibleWishlist";
 import visibleWishlistState from "../../recoil/selectors/visibleWishlist";
+import Loading from "../Loading/loading";
 
 export default function WishlistItem(props) {
     const {data, count} = props
     const [numberOfComments, setNumberOfComments] = useState();
-    const dbUser = useRecoilValue(dbUserState)
     let { wishlistId } = useParams();
     const [visibleListVersion, updateVisibleList] = useRecoilState(refreshVisibleWishlistList)
     const numCommentsVersion = useRecoilValue(refreshNumberOfComments)
     const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
-    const visibleWishlist = useRecoilValue(visibleWishlistState)
-    const isSuper = useRecoilValue(isSuperOwner)
+    const visibleWishlistUpdate = useRecoilValueLoadable(visibleWishlistState)
+    const isSuperUpdate = useRecoilValueLoadable(isSuperOwner)
     const navigate = useNavigate()
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+    const [isSuper, setIsSuper] = useState(false)
+    const [visibleWishlist, setVisibleWishlist] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(isSuperUpdate.state === "hasValue") {
+            setIsSuper(isSuperUpdate.contents);
+        }
+    }, [isSuperUpdate]);
+
+    useEffect(() => {
+        if(visibleWishlistUpdate.state === "hasValue") {
+            setVisibleWishlist(visibleWishlistUpdate.contents);
+        }
+    }, [visibleWishlistUpdate]);
 
 
     useEffect(() => {
@@ -118,7 +141,6 @@ export default function WishlistItem(props) {
     }
 
     return (
-        <Suspense fallback={<div>Loading whale types...</div>}>
             <div className={getClass()} onClick={handleSelectWishlistItem}>
                 {getIndicators()}
                 {getImage()}
@@ -130,7 +152,6 @@ export default function WishlistItem(props) {
                 {getNumberOfComments()}
                 <PriorityDisplay priority={data.priority} showName={true} showNumbers={true}/>
             </div>
-        </Suspense>
     );
 }
 

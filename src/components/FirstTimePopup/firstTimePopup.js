@@ -4,7 +4,7 @@ import {DataStore} from "@aws-amplify/datastore";
 import {Groups, Users} from "../../models";
 import TextButton from "../Buttons/TextButton";
 import {dbUserState, yourGroupInvites} from "../../recoil/selectors";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import refreshDbUser from "../../recoil/selectors/refreshDbUser";
 
 export default function FirstTimePopup(props) {
@@ -13,11 +13,27 @@ export default function FirstTimePopup(props) {
     const [groupName, setGroupName] = useState('')
     const [isJoiningGroup, setIsJoiningGroup] = useState('admin')
     const [groupJoining, setGroupJoining] = useState(undefined)
-    const dbUser = useRecoilValue(dbUserState)
     const updateDbUser = useSetRecoilState(refreshDbUser)
-    const groupInvites = useRecoilValue(yourGroupInvites)
+    const groupInvitesUpdate = useRecoilValueLoadable(yourGroupInvites)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+    const [groupInvites, setGroupInvites] = useState([])
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(groupInvitesUpdate.state === "hasValue") {
+            setGroupInvites(groupInvitesUpdate.contents);
+        }
+    }, [groupInvitesUpdate]);
 
     const handleSubmit = async (e) => {
+        if(!dbUser) return;
         e.preventDefault()
         if(!username || !isJoiningGroup) {
             // addError("Please create a username")
@@ -83,7 +99,7 @@ export default function FirstTimePopup(props) {
                 {isJoiningGroup === "join" && <div className="joiningGroup">
                     <h2>You have been invited to the following group(s)</h2>
                     <div className="groupInvites">
-                        {groupInvites.map(invite => {
+                        {groupInvites && groupInvites.map(invite => {
                             return <div className={groupJoining === invite.id ? "selected" : "invite"} key={invite.id} onClick={() => setGroupJoining(invite.id)}>{invite.groupName}</div>
                         })}
                     </div>
@@ -93,7 +109,6 @@ export default function FirstTimePopup(props) {
     }
 
     const renderJoiningChoiceSection = () => {
-        console.log(groupInvites)
         if(groupInvites && groupInvites.length > 0) {
             return (<div className="section">
                 <h2>Are you creating your own group, or joining an existing group?</h2>

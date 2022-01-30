@@ -12,13 +12,14 @@ import {
     useRecoilState,
     useRecoilValue,
 } from 'recoil';
+import Loading from "./components/Loading/loading";
 Amplify.configure(awsExports);
 
 
 ReactDOM.render(
   <React.StrictMode>
       <RecoilRoot>
-          <Suspense fallback={<div>Loading whale types...</div>}>
+          <Suspense fallback={<Loading/>}>
             <App />
           </Suspense>
       </RecoilRoot>

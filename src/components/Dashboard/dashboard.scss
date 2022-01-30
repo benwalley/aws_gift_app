@@ -2,11 +2,16 @@
     display: grid;
     grid-template:
             "title title title"
-            "left center right";
+            "left center right"
+            "comments comments comments";
     grid-template-columns: 1fr 900px minMax(300px, 1fr);
+    max-width: 1600px;
+    margin: 0 auto;
+
 
     .wishlistListing {
         grid-area: right;
+        padding-right: 20px;
     }
 
     .visibleWishlistItem {
@@ -29,7 +34,7 @@
     }
 
     .wishlistCommentsContainer {
-        grid-column: 1 /span 3;
+        grid-area: comments;
         background: white;
         margin: 50px;
         border-radius: 10px;

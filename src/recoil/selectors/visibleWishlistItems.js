@@ -8,7 +8,7 @@ const visibleWishlistItemsState = selector({
     key: 'visibleWishlistItemsState',
     get: async ({get}) => {
         const wishlistId = get(visibleWishlistIDState);
-        const update = get(refreshVisibleWishlistList)
+        const visibleWishlistVersion = get(refreshVisibleWishlistList)
         const itemVersion = get(largeWishlistItemVersion)
         if(!wishlistId) return;
         // find wishlist for usingUser

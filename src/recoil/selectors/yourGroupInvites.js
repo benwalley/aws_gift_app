@@ -9,7 +9,6 @@ const yourGroupInvites = selector({
     key: 'yourGroupInvites',
     get: async ({get}) => {
         const dbUser = get(dbUserState)
-        console.log(dbUser)
         const groups =  await DataStore.query(Groups, c => c.invitedIds("contains", dbUser.id));
         return groups;
     },

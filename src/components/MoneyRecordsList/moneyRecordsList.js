@@ -8,7 +8,7 @@ import IconButton from "../Buttons/IconButton";
 import {DataStore} from "@aws-amplify/datastore";
 import {Money} from "../../models";
 import userMoniesState from "../../recoil/selectors/userMonies";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {refreshMonies} from "../../recoil/selectors";
 //TODO: show comment
 export default function MoneyRecordsList(props) {
@@ -19,8 +19,16 @@ export default function MoneyRecordsList(props) {
     const [totalPersonOneOwes, setTotalPersonOneOwes] = useState(0)
     const [totalPersonTwoOwes, setTotalPersonTwoOwes] = useState(0)
     const [subtotal, setSubtotal] = useState('')
-    const moneyRecords = useRecoilValue(userMoniesState)
+    const moneyRecordsUpdate = useRecoilValueLoadable(userMoniesState)
     const refreshMoney = useSetRecoilState(refreshMonies)
+    // State values
+    const [moneyRecords, setMoneyRecords] = useState([])
+
+    useEffect(() => {
+        if(moneyRecordsUpdate.state === "hasValue") {
+            setMoneyRecords(moneyRecordsUpdate.contents);
+        }
+    }, [moneyRecordsUpdate]);
 
 
     useEffect(() => {

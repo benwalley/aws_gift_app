@@ -15,17 +15,10 @@ import Modal from "./components/Modal/modal";
 import {
     BrowserRouter as Router,
     Routes,
-    Switch,
     Route,
-    Link,
-    Redirect,
 } from "react-router-dom";
 import {
-    RecoilRoot,
-    atom,
-    selector,
-    useRecoilState,
-    useRecoilValue,
+   useRecoilValueLoadable, useSetRecoilState,
 } from 'recoil';
 import {authUserEmail,  authUserUsername, } from './recoil/atoms'
 import Account from "./components/Account/account";
@@ -44,19 +37,28 @@ Amplify.configure(awsconfig);
 const AuthStateApp = () => {
     const [authState, setAuthState] = useState()
     const [authUser, setAuthUser] = useState();
-    const [authUsername, setAuthUsername] = useRecoilState(authUserUsername)
-    const [authEmail, setAuthEmail] = useRecoilState(authUserEmail)
+    const setAuthUsername = useSetRecoilState(authUserUsername)
+    const setAuthEmail = useSetRecoilState(authUserEmail)
     const [firstTimePopupOpen, setFirstTimePopupOpen] = useState(false) // popup state
-    const dbUser = useRecoilValue(dbUserState)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const [dbUser, setDbUser] = useState()
 
     useEffect(() => {
         return onAuthUIStateChange((nextAuthState, authData) => {
             setAuthState(nextAuthState);
             setAuthUser(authData)
-            setAuthUsername(authData.username)
-            setAuthEmail(authData.attributes.email)
+            if(authData) {
+                setAuthUsername(authData.username)
+                setAuthEmail(authData.attributes.email)
+            }
         });
     }, []);
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
 
     // show first time popup if necessary
     useEffect(() => {

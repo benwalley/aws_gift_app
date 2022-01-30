@@ -10,16 +10,24 @@ import {WishlistItems, Money, Wishlist} from "../../models";
 import MoneyRecordsList from "../MoneyRecordsList/moneyRecordsList";
 
 import {dbUserState, refreshMonies} from "../../recoil/selectors";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilValueLoadable, useSetRecoilState} from "recoil";
 
 export default function MoneyModal(props) {
     const {} = props;
-    const dbUser = useRecoilValue(dbUserState)
     const [amountOwedFrom, setAmountOwedFrom] = useState('')
     const [amountOwedTo, setAmountOwedTo] = useState('')
     const [amountOwed, setAmountOwed] = useState(0)
     const [comment, setComment] = useState('')
     const refreshMoney = useSetRecoilState(refreshMonies)
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    // State values
+    const [dbUser, setDbUser] = useState()
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
 
     const handleFromInputNameChange = (e) => {
         setAmountOwedFrom(e.target.value)
