@@ -66,6 +66,14 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "groupIds": {
+                    "name": "groupIds",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -128,10 +136,11 @@ export const schema = {
                 },
                 "adminUserId": {
                     "name": "adminUserId",
-                    "isArray": false,
+                    "isArray": true,
                     "type": "String",
                     "isRequired": true,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true
                 },
                 "groupName": {
                     "name": "groupName",
@@ -142,6 +151,21 @@ export const schema = {
                 },
                 "invitedIds": {
                     "name": "invitedIds",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "creatorId": {
+                    "name": "creatorId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "adminIds": {
+                    "name": "adminIds",
                     "isArray": true,
                     "type": "String",
                     "isRequired": false,
@@ -482,6 +506,14 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "groupIds": {
+                    "name": "groupIds",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -600,5 +632,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "9e5e04d47fd86a88dc6d72f22167b411"
+    "version": "46c27f91a3ed67b320d304b6abb8e514"
 };

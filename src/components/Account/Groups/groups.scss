@@ -1,0 +1,25 @@
+.groupsContainer {
+    padding: 20px;
+
+    .groupName {
+        svg {
+            margin-left: 8px;
+            margin-bottom: 3px;
+            color: var(--theme-red);
+        }
+    }
+
+    .ownerInstructions {
+        padding: 5px;
+        font-size:.9em;
+        font-style: italic;
+
+        svg {
+            color: var(--theme-red);
+        }
+    }
+
+    .addGroupForm {
+        padding: 10px;
+    }
+}

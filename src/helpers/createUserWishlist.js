@@ -3,10 +3,9 @@ import {Wishlist} from "../models";
 
 export default async function createUsersWishlist(owner) {
     try {
-        if(!owner.id|| !owner.groupId) return;
+        if(!owner.id) return;
         const wishlistData = {
-            "ownerId": owner.id,
-            "groupId": owner.groupId
+            "ownerId": owner.id
         }
         const response = await DataStore.save(
             new Wishlist(wishlistData)

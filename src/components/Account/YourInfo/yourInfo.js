@@ -55,6 +55,7 @@ export default function YourInfo() {
     }
 
     const getGroupAdmins = () => {
+        if(!groupAdmins) return;
         return groupAdmins.map(admin => {
             const adminName = admin.id === dbUser.id ? `${admin.displayName} (you)` : admin.displayName
             return <div key={admin.id}>
@@ -93,6 +94,7 @@ export default function YourInfo() {
             <div className="groupAdmins">
                 <h3>Group Admins</h3>
                 {getGroupAdmins()}
+                <Link className="buttonSection" to={`/account/group`}>Manage group admins</Link>
             </div>
         </div>
     );

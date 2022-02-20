@@ -6,11 +6,13 @@ import './editWishlistItemPopup.scss'
 import TextButton from "../Buttons/TextButton";
 import GetMyWishlist from "../../helpers/getWishlists";
 import {DataStore} from "aws-amplify";
-import {Wishlist, WishlistItems} from "../../models";
+import {Groups, Wishlist, WishlistItems} from "../../models";
 import PriorityInput from "../PriorityInput/priorityInput";
 import {updateLargeWishlistItemVersion} from "../../recoil/selectors";
 import {refreshVisibleWishlistList} from "../../recoil/versionAtoms";
-import {useSetRecoilState} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import GroupMultiSelect from "../GroupMultiSelect/groupMultiSelect";
+import usingUserId from "../../recoil/atoms/usingUserId";
 
 export default function EditWishlistItemPopup(props) {
     const {itemData, close} = props;
@@ -20,8 +22,10 @@ export default function EditWishlistItemPopup(props) {
     const [note, setNote] = useState('')
     const [price, setPrice] = useState('')
     const [priority, setPriority] = useState()
+    const [selectedGroups, setSelectedGroups] = useState([])
     const updateLargeItem = useSetRecoilState(updateLargeWishlistItemVersion)
     const updateVisibleWishlist = useSetRecoilState(refreshVisibleWishlistList)
+    const usingUser = useRecoilValue(usingUserId)
 
     useEffect(() => {
         setName(itemData.name)
@@ -30,7 +34,17 @@ export default function EditWishlistItemPopup(props) {
         setLink(itemData.link)
         setPrice(itemData.price || '')
         setImageUrls([...itemData.imageUrls])
+        setGroups()
     }, [])
+
+    const setGroups = async () => {
+        const selectedGroupsArray = []
+        for(const id of itemData.groupIds) {
+            const groupData = await DataStore.query(Groups, id);
+            selectedGroupsArray.push(groupData)
+        }
+        setSelectedGroups(selectedGroupsArray)
+    }
 
     const imageUrlInputs = () => {
         const inputs = imageUrls.map((url, index) => {
@@ -83,6 +97,7 @@ export default function EditWishlistItemPopup(props) {
                 updated.price = parseFloat(price);
                 updated.priority = priority;
                 updated.link = link;
+                updated.groupIds = selectedGroups.map(g => g.id)
             })
         );
         updateVisibleWishlist()
@@ -103,6 +118,9 @@ export default function EditWishlistItemPopup(props) {
             <form className="editWishlistContentsContainer" onSubmit={handleSubmit}>
                 <div className="scrollingContents">
                     <h2>Edit item</h2>
+                    <div className="selectGroups">
+                        <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={itemData.ownerId}/>
+                    </div>
                     {createStyledInput(name, 'Item Name', setName)}
                     <PriorityInput priority={priority} setPriority={setPriority}/>
                     {createStyledInput(note, 'Note', setNote)}

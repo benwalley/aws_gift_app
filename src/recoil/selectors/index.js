@@ -22,6 +22,9 @@ import yourGroupInvites from "./yourGroupInvites";
 import isSuperOwner from "./isSuperOwner";
 import updateVisibleWishlist from "./updateVisibleWishlist";
 import groupAdminsState from "./groupAdmins";
+import usersGroupsState from "./usersGroups";
+import currentGroupState from "./currentGroup";
+import usersInvitedToGroupsState from "./usersInvitedToGroupsState";
 
 export {subUsersState,
     largeWishlistItemDataState,
@@ -44,7 +47,10 @@ export {subUsersState,
     yourGroupInvites,
     isSuperOwner,
     updateVisibleWishlist,
-    groupAdminsState
+    groupAdminsState,
+    usersGroupsState,
+    usersInvitedToGroupsState,
+    currentGroupState
 };
 
 export default atom

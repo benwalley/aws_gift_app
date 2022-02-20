@@ -1,7 +1,6 @@
 import React, {useEffect, useState, Suspense} from 'react';
-import { DataStore, Predicates, SortDirection, syncExpression } from 'aws-amplify'
+import { DataStore } from 'aws-amplify'
 import {WishlistItems, Wishlist, Users} from '../../models';
-import GetMyWishlist from "../../helpers/getWishlists";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import './addListItem.scss'
@@ -9,10 +8,10 @@ import TextButton from "../Buttons/TextButton";
 import createUsersWishlist from "../../helpers/createUserWishlist";
 import GetNameOrEmail from "../../helpers/getNameOrEmail";
 import PriorityInput from "../PriorityInput/priorityInput";
-import {RecoilRoot, useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
-import {refreshVisibleWishlistList} from '../../recoil/versionAtoms'
+import {useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {dbUserState, subUsersState, updateVisibleWishlist, usingUserState} from "../../recoil/selectors";
-import Loading from "../Loading/loading";
+import currentGroupState from "../../recoil/selectors/currentGroup";
+import GroupMultiSelect from "../GroupMultiSelect/groupMultiSelect";
 
 export default function AddListItem(props) {
     const {close} = props;
@@ -23,14 +22,19 @@ export default function AddListItem(props) {
     const [price, setPrice] = useState('')
     const [addingToUser, setAddingToUser] = useState(undefined)
     const [priority, setPriority] = useState()
+    const [selectedGroups, setSelectedGroups] = useState([])
     const usingUserUpdate = useRecoilValueLoadable(usingUserState)
     const subUsersUpdate = useRecoilValueLoadable(subUsersState)
     const updateVisibleList = useSetRecoilState(updateVisibleWishlist)
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const currentGroupUpdate = useRecoilValueLoadable(currentGroupState)
+
     // State values
     const [dbUser, setDbUser] = useState()
     const [usingUser, setUsingUser] = useState()
     const [subUsers, setSubUsers] = useState()
+    const [currentGroup, setCurrentGroup] = useState()
+
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -49,6 +53,13 @@ export default function AddListItem(props) {
             setSubUsers(subUsersUpdate.contents);
         }
     }, [subUsersUpdate]);
+
+    useEffect(() => {
+        if(currentGroupUpdate.state === "hasValue") {
+            setCurrentGroup(currentGroupUpdate.contents);
+            setSelectedGroups([currentGroupUpdate.contents])
+        }
+    }, [currentGroupUpdate]);
 
     useEffect(() => {
         initAddingTo()
@@ -119,7 +130,8 @@ export default function AddListItem(props) {
             "wishlistId": wishlistId,
             "ownerId": addingToUser.id,
             "wishlistItemComments": [],
-            "priority": priority
+            "priority": priority,
+            'groupIds': selectedGroups.map(g => g.id)
         }
         const response = await DataStore.save(
             new WishlistItems(itemData)
@@ -149,13 +161,19 @@ export default function AddListItem(props) {
                 <div className="addListItemScrollingContainer">
                     <h2>Add an item to your wishlist</h2>
                     <div className="addingAsName">
-                        <span className="addingName">Adding to wishlist: <span className="addingAsNameName">{GetNameOrEmail(addingToUser)}</span></span>
+                        <span className="addingName">
+                            Adding to wishlist: <span className="addingAsNameName">{GetNameOrEmail(addingToUser)}</span>
+                        </span>
                         <span className="addToOtherUserButtons">
                             {subUsers && [...subUsers, dbUser].map(thisUser => {
                                 if(thisUser.id === addingToUser.id) return
                                 return <span key={thisUser.id} className="switchUser" onClick={() => setAddingToUser(thisUser)}>{thisUser.displayName}</span>
                             })}
                         </span>
+                    </div>
+                    <div className="selectGroups">
+                        <h4>Adding to group(s)</h4>
+                        <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={addingToUser.id}/>
                     </div>
 
                         {createInput(name, setName, 'Item Name')}

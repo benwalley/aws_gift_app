@@ -60,7 +60,7 @@ export default function IconButton(props) {
 
     return (
         <>
-            <button onClick={onButtonClick} className={getClassName()} aria-label={displayName}>
+            <button type="button" onClick={onButtonClick} className={getClassName()} aria-label={displayName}>
                 {getIcon()}
             </button>
             {confirm && confirmationOpen && getConfirmation()}

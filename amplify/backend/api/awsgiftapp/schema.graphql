@@ -8,14 +8,17 @@ type Users @model @auth(rules: [{allow: public}]) {
   parentUserId: String
   emailAddress: String!
   isCreator: Boolean
+  groupIds: [String]
 }
 
 type Groups @model @auth(rules: [{allow: public}]) {
   id: ID!
   memberIds: [String]
-  adminUserId: String!
+  adminUserId: [String!]
   groupName: String
   invitedIds: [String]
+  creatorId: String
+  adminIds: [String]
 }
 
 type Money @model @auth(rules: [{allow: public}]) {
@@ -54,6 +57,7 @@ type WishlistItems @model @auth(rules: [{allow: public}]) {
   wishlistId: String!
   ownerId: String!
   priority: Int
+  groupIds: [String!]
 }
 
 type Wishlist @model @auth(rules: [{allow: public}]) {

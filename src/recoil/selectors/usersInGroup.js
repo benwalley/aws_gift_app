@@ -1,8 +1,9 @@
 import {DataStore} from "aws-amplify";
-import {Users} from "../../models";
+import {Groups, Users} from "../../models";
 import {dbUserState} from "./";
 import { selector } from "recoil"
 import {groupVersion} from "../versionAtoms";
+import {currentGroupIdState} from "../atoms";
 
 
 const usersInGroupState = selector({
@@ -10,9 +11,15 @@ const usersInGroupState = selector({
     get: async ({get}) => {
         const dbUser = get(dbUserState);
         const version = get(groupVersion)
-        if(!dbUser || !dbUser.groupId) return;
-        const gottenOtherUsers = await DataStore.query(Users, c => c.groupId("eq", dbUser.groupId));
-        return gottenOtherUsers
+        const currentGroup = get(currentGroupIdState)
+        if(!dbUser) return;
+        const group = await DataStore.query(Groups, currentGroup);
+        const groupUsers = []
+        for(const id of group.memberIds) {
+            const user = await DataStore.query(Users, id);
+            if(user) groupUsers.push(user);
+        }
+        return groupUsers;
     },
 });
 

@@ -1,28 +1,36 @@
 import React, {useEffect, useState} from 'react';
 import './subUsers.scss'
 import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
-import {dbUserState, subUsersState, updateGroupVersion} from "../../../recoil/selectors";
+import {dbUserState, subUsersState, updateGroupVersion, usersGroupsState} from "../../../recoil/selectors";
 import {DataStore} from "aws-amplify";
 import {Groups, Money, Users, Wishlist} from "../../../models";
 import IconButton from "../../Buttons/IconButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {usingUserIdState, visibleWishlistIDState} from "../../../recoil/atoms";
-import {useNavigate} from "react-router";
 import createUsersWishlist from "../../../helpers/createUserWishlist";
 import {onAuthUIStateChange} from "@aws-amplify/ui-components";
+import currentGroupState from "../../../recoil/selectors/currentGroup";
+import GroupMultiSelect from "../../GroupMultiSelect/groupMultiSelect";
+import GroupMultiSelectPopup from "../../GroupMultiSelect/Popup/popup";
+import SubUserItem from "./SubUserItem/subUserItem";
 
 export default function SubUsers() {
     const [subUserName, setSubUserName] = useState('')
     const subUsersUpdate = useRecoilValueLoadable(subUsersState);
     const updateGroup = useSetRecoilState(updateGroupVersion)
     const [usingUserId, setUsingUserId] = useRecoilState(usingUserIdState)
-    const setVisibleWishlistId = useSetRecoilState(visibleWishlistIDState)
-    const navigate = useNavigate()
+
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const currentGroupUpdate = useRecoilValueLoadable(currentGroupState)
+
+
     // state values
     const [dbUser, setDbUser] = useState()
     const [subUsers, setSubUsers] = useState([])
+    const [currentGroup, setCurrentGroup] = useState()
+    const [subUserGroups, setSubUserGroups] = useState([])
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false)
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -36,11 +44,16 @@ export default function SubUsers() {
         }
     }, [subUsersUpdate]);
 
+    useEffect(() => {
+        if(currentGroupUpdate.state === "hasValue") {
+            setCurrentGroup(currentGroupUpdate.contents);
+        }
+    }, [currentGroupUpdate]);
+
 
     const handleAddSubUser = async (e) => {
         e.preventDefault();
-        const group = await DataStore.query(Groups, dbUser.groupId);
-        if(!group) {
+        if(!subUserGroups || !subUserName || subUserName === "" || subUserGroups.length === 0) {
             return;
         }
         const subUserData = {
@@ -48,34 +61,25 @@ export default function SubUsers() {
             "parentUserId": dbUser.id,
             "isAdmin": false,
             "isSubUser": true,
-            "groupId": group.id || ''
         }
         const response = await DataStore.save(
             new Users(subUserData)
         );
+        // Add id to group
+        for await (const groupData of subUserGroups) {
+            const original = await DataStore.query(Groups, groupData.id);
+            await DataStore.save(Groups.copyOf(original, updated => {
+                try {
+                    const copy = [...original.memberIds]
+                    copy.push(response.id)
+                    updated.memberIds = copy;
+                } catch (e) {
+                    console.log(e)
+                }
+            }))
+        }
         updateGroup();
         setSubUserName('')
-    }
-
-    const handleDeleteSubUser = async (user) => {
-        const todelete = await DataStore.query(Users, user.id);
-        await DataStore.delete(todelete);
-        updateGroup()
-    }
-
-    const handleViewEditAsUser = async (e, user) => {
-        e.preventDefault()
-        let wishlist
-        const subUserWishlists = await DataStore.query(Wishlist, c => c.ownerId("eq", user.id));
-        if(subUserWishlists && subUserWishlists.length > 0) {
-            wishlist = subUserWishlists[0]
-        } else {
-            wishlist = await createUsersWishlist(user)
-        }
-        let switchToId = wishlist.id
-        setVisibleWishlistId(switchToId)
-        setUsingUserId(user.id)
-        navigate(`/${switchToId}`)
     }
 
     const handleSwitchToMainUser = (e) => {
@@ -85,25 +89,11 @@ export default function SubUsers() {
 
     const getSubUserList = () => {
         return subUsers.map((user, index) => {
-            return <div key={user.id} className={index%2 === 0 ? "even" : "odd"}>
-                <div className="name">
-                    {user.displayName}
-                    {usingUserId === user.id ? ' (current)' : ''}
-                </div>
-                <button onClick={(e) => handleViewEditAsUser(e, user)} className="viewEditButton">view/edit as {user.displayName}</button>
-
-                <IconButton
-                    displayName={'delete'}
-                    icon={<FontAwesomeIcon icon={faTimesCircle} size="lg"/>}
-                    onClick={(e) => handleDeleteSubUser(user)}
-                    confirm={true}
-                    confirmText={`Are you sure you want to delete the user ${user.displayName}?`}
-                />
-            </div>
+            return <SubUserItem key={user.id} user={user} setIsEditPopupOpen={setIsEditPopupOpen} index={index} isEditPopupOpen={isEditPopupOpen}/>
         })
     }
 
-    return (
+    return (<>{dbUser &&
         <div className="subUsersContainer">
             <h2>Sub-users</h2>
             {subUsers && subUsers.length > 0 && <div className="groupNameSection">
@@ -135,9 +125,11 @@ export default function SubUsers() {
                         value={subUserName}
                         onChange={(e) => setSubUserName(e.target.value)}
                     />
+                    <GroupMultiSelect selectedGroups={subUserGroups} setSelectedGroups={setSubUserGroups} userId={dbUser.id}/>
                     <button className="themeButton" onClick={handleAddSubUser}>Create sub-user</button>
                 </form>
             </div>
-        </div>
+        </div>}
+        </>
     );
 }

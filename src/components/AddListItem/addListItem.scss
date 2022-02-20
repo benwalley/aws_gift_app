@@ -112,11 +112,11 @@
 
     .addingAsName {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         margin-top: 10px;
 
         .addingName {
-            text-align: right;
+            text-align: center;
 
             .addingAsNameName {
                 font-weight: bold;

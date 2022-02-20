@@ -3,6 +3,7 @@ import {Groups, Users} from "../../models";
 import {dbUserState} from "./";
 import { selector } from "recoil"
 import {groupVersion} from "../versionAtoms";
+import {currentGroupIdState} from "../atoms";
 
 
 const groupAdminsState = selector({
@@ -10,10 +11,18 @@ const groupAdminsState = selector({
     get: async ({get}) => {
         const dbUser = get(dbUserState);
         const version = get(groupVersion)
-        if(!dbUser || !dbUser.groupId) return;
-        const admin = await DataStore.query(Users, c => c.groupId("eq", dbUser.groupId).isAdmin('eq', true));
-        if(!admin) return [];
-        return admin
+        const currentGroup = get(currentGroupIdState)
+        if(!dbUser) return;
+        const admins = []
+        const group = await DataStore.query(Groups, currentGroup);
+        if(!group) return []
+        for await (const id of group.adminIds) {
+            const user = await DataStore.query(Users, id);
+            if(user) {
+                admins.push(user);
+            }
+        }
+        return admins;
     },
 });
 

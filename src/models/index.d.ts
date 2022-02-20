@@ -38,6 +38,7 @@ export declare class Users {
   readonly parentUserId?: string;
   readonly emailAddress: string;
   readonly isCreator?: boolean;
+  readonly groupIds?: (string | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Users, UsersMetaData>);
@@ -47,9 +48,11 @@ export declare class Users {
 export declare class Groups {
   readonly id: string;
   readonly memberIds?: (string | null)[];
-  readonly adminUserId: string;
+  readonly adminUserId?: string[];
   readonly groupName?: string;
   readonly invitedIds?: (string | null)[];
+  readonly creatorId?: string;
+  readonly adminIds?: (string | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Groups, GroupsMetaData>);
@@ -99,6 +102,7 @@ export declare class WishlistItems {
   readonly wishlistId: string;
   readonly ownerId: string;
   readonly priority?: number;
+  readonly groupIds?: string[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<WishlistItems, WishlistItemsMetaData>);

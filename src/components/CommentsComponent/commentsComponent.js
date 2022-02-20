@@ -8,6 +8,8 @@ import './commentsComponent.scss'
 import SingleComment from "./SingleComment";
 import {useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {dbUserState, refreshNumberComments} from "../../recoil/selectors";
+import currentGroup from "../../recoil/selectors/currentGroup";
+import currentGroupState from "../../recoil/selectors/currentGroup";
 
 export default function CommentsComponent(props) {
     const {wishlist, wishlistItem} = props
@@ -17,8 +19,17 @@ export default function CommentsComponent(props) {
     const [myInterval, setMyInterval] = useState()
     const updateNumComments = useSetRecoilState(refreshNumberComments)
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const currentGroupUpdate = useRecoilValueLoadable(currentGroupState)
+
     // State values
     const [dbUser, setDbUser] = useState()
+    const [currentGroup, setCurrentGroup] = useState()
+
+    useEffect(() => {
+        if(currentGroupUpdate.state === "hasValue") {
+            setCurrentGroup(currentGroupUpdate.contents);
+        }
+    }, [currentGroupUpdate]);
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -58,13 +69,14 @@ export default function CommentsComponent(props) {
 
     const handleSendComment = async (e) => {
         e.preventDefault()
-        if(!commentInput || !dbUser || commentInput === '') return;
+        if(!commentInput || !dbUser || !currentGroup || commentInput === '') return;
 
         const commentData = {
             "authorId": dbUser.id,
             "content": commentInput,
             "visibleToOwner": canOwnerSee,
-            "createdAt": getNewDate()
+            "createdAt": getNewDate(),
+            "groupId": currentGroup.id
         }
         if(wishlistItem && wishlistItem.id) commentData.wishlistItemId = wishlistItem.id;
         if(wishlist && wishlist.id) commentData.wishlistId = wishlist.id

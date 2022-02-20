@@ -5,16 +5,41 @@ import './listList.scss';
 import {
     useNavigate
 } from "react-router-dom";
-import {usersInGroupState} from "../../recoil/selectors";
+import {currentGroupState, dbUserState, usersGroupsState, usersInGroupState} from "../../recoil/selectors";
 import createUsersWishlist from "../../helpers/createUserWishlist";
 import {useRecoilValueLoadable} from "recoil";
+import GroupMultiSelect from "../GroupMultiSelect/groupMultiSelect";
+import usersInGroups from "../../recoil/selectorFamilies/usersInGroups";
 
 
 export default function ListList(props) {
-    const {close} = props
-    const usersUpdate = useRecoilValueLoadable(usersInGroupState)
+    const {close, selectedGroups, setSelectedGroups} = props
+
     const navigate = useNavigate()
     const [users, setUsers] = useState()
+    const usersUpdate = useRecoilValueLoadable(usersInGroups(selectedGroups));
+    const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const currentGroupUpdate = useRecoilValueLoadable((currentGroupState))
+    const [dbUser, setDbUser] = useState()
+    const [currentGroup, setCurrentGroup] = useState()
+
+    useEffect(() => {
+        if(currentGroupUpdate.state === "hasValue") {
+            setCurrentGroup(currentGroupUpdate.contents);
+        }
+    }, [currentGroupUpdate]);
+
+    useEffect(() => {
+        if(!selectedGroups) {
+            setSelectedGroups([currentGroup])
+        }
+    }, [currentGroup]);
+
+    useEffect(() => {
+        if(dbUserUpdate.state === "hasValue") {
+            setDbUser(dbUserUpdate.contents);
+        }
+    }, [dbUserUpdate]);
 
     useEffect(() => {
         if(usersUpdate.state === "hasValue") {
@@ -40,6 +65,9 @@ export default function ListList(props) {
         if(!users || users.length === 0) return
         return <div className="listListContainer">
             <h2>All Wishlists</h2>
+            <div className="groupsDropdown">
+                <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={dbUser.id} />
+            </div>
             {users.map(user => {
                 return (<div key={user.id} className="usersListItem" onClick={(e) => handleSelectList(e, user)}>
                     {user.displayName === "noname" ? user.emailAddress : user.displayName}

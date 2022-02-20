@@ -67,9 +67,7 @@ export default function Dashboard(props) {
         if(wishlistId) {
             // check if it is for a real wishlist
             const wishlist = await DataStore.query(Wishlist, wishlistId);
-            //TODO: Handle way to see shared lists
-            const theUser = await DataStore.query(Users, dbUser.id);
-            if(wishlist && wishlist.groupId === theUser.groupId) goodWishlist = true; // if it's not in the user's group, you can't see it
+            if(wishlist) goodWishlist = true; // if it's not in the user's group, you can't see it
         }
         // If there is no wishlist id, or if the id is not good, find the user's wishlist
         if(!wishlistId || !goodWishlist) {

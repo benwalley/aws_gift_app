@@ -1,0 +1,76 @@
+.firstPageContainer {
+    text-align: center;
+
+
+    .firstTimeUserContainer {
+        h1 {
+            padding: 20px;
+        }
+
+
+        .invite,
+        .selected {
+            cursor: pointer;
+        }
+
+        .selected {
+            outline: 3px solid var(--theme-red);
+            outline-offset: -1.5px;
+        }
+
+
+        form {
+            width: 800px;
+            max-width: 100%;
+            box-shadow: var(--largeBoxShadow);
+            margin: 0 auto;
+            padding: 20px;
+
+            .userInput {
+                padding-top: 15px;
+
+                label {
+                    font-size: 18px;
+                }
+            }
+
+            .createGroupSection,
+            .nameGroupSection{
+                margin-top: 40px;
+            }
+
+            .nameGroupSection {
+                margin-bottom: 30px;
+            }
+
+            .joinOrCreateSection {
+                .radioContainer {
+                    margin-top: 25px;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+
+                    label {
+                        display: grid;
+                        align-items: center;
+                        justify-content: center;
+                        background: var(--mimi-pink);
+                        margin: 0 auto;
+                        padding: 10px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                    }
+
+                    input {
+                        display: none;
+
+                        &:checked + label {
+                             outline: 3px solid var(--theme-red);
+                            outline-offset: -3px;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}

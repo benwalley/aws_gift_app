@@ -83,16 +83,8 @@ h3 {
         padding: 10px;
     }
 
-    .even {
-        background: var(--theme-list-color);
-    }
 
-    .odd {
-        background: none;
-    }
-
-    .even,
-    .odd {
+    > div {
         padding: 5px 10px;
         align-items: center;
         justify-content: center;
@@ -102,6 +94,17 @@ h3 {
 
         div {
             text-align: center;
+        }
+
+        &:nth-child(odd) {
+            background: none;
+
+        }
+
+        &:nth-child(even) {
+            background: var(--theme-list-color);
+
+
         }
     }
 

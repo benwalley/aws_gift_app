@@ -1,0 +1,53 @@
+.groupSelect {
+    background: none;
+    font-size: 18px;
+    cursor: pointer;
+    height: 100%;
+    display: grid;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+
+    .trigger {
+        cursor: pointer;
+        white-space: nowrap;
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        align-items: center;
+
+        div {
+            padding-right: 20px;
+        }
+    }
+
+    .dropdownContent {
+        cursor: pointer;
+        position: absolute;
+        top: 95%;
+        left: 20px;
+        background: white;
+        box-shadow: var(--smallBoxShadow);
+        min-width: 100%;
+        border-radius: 5px;
+        z-index: 1;
+
+        .groupItem {
+            padding: 5px 20px;
+            white-space: nowrap;
+
+            &:hover {
+                background: lightgrey;
+            }
+        }
+    }
+
+    .dropdownBackground {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}

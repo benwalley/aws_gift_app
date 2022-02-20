@@ -42,35 +42,28 @@
             padding: 10px;
         }
 
-        .groupUsers,
-        .groupInvites {
-            border: 2px solid var(--electric-blue);
-            margin-top: 30px;
-
-            .even {
-                background: var(--electric-blue);
+        .themeList {
+            > div {
+                grid-template-columns: 1fr min-content 46px;
             }
 
-            .odd {
-                background: none;
-            }
-
-            .even,
-            .odd {
-                padding: 5px 10px;
-                align-items: center;
-                justify-content: center;
-                display: grid;
-                grid-template-columns: 1fr 46px;
-
-                div {
-                    text-align: center;
+            .makeAdmin {
+                button {
+                    white-space: nowrap;
+                    font-size: 0.9em;
+                    text-decoration: underline;
                 }
+                min-width: 105px;
             }
+        }
 
-            .iconButton {
-                color: var(--delete-red)
-            }
+        .groupUserItem {
+            display: grid;
+            grid-template-columns: min-content min-content;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            padding-left: 105px; // to make them more centered because of the makeAdmin button width.
         }
     }
 
@@ -90,5 +83,20 @@
         }
 
         margin-top: 30px;
+    }
+
+    .adminIcon {
+        padding-left: 10px;
+        color: var(--theme-red);
+    }
+
+    .adminLegend {
+        display: grid;
+        grid-template-columns: min-content min-content;
+        white-space: nowrap;
+        font-size: 0.9em;
+        color: #2c2c2c;
+        align-items: center;
+        padding-top: 10px;
     }
 }

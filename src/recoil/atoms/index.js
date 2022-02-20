@@ -8,6 +8,8 @@ import successContentState from "./successContent";
 import visibleWishlistIDState from "./visibleWishlistId";
 import usingUserIdState from "./usingUserId";
 import authStateState from "./authState";
+import currentGroupIdState from "./currentGroupId";
+
 export {authUserUsername,
     authUserEmail,
     errorContentState,
@@ -15,7 +17,8 @@ export {authUserUsername,
     successContentState,
     visibleWishlistIDState,
     usingUserIdState,
-    authStateState
+    authStateState,
+    currentGroupIdState
 }
 
 export default atom;

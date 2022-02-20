@@ -1,17 +1,14 @@
-import {DataStore} from "aws-amplify";
-import {Users} from "../../models";
-import {dbUserState} from "./";
 import { selector } from "recoil"
-import {groupVersion} from "../versionAtoms";
+import usersInGroupState from "./usersInGroup";
 
 const subUsersState = selector({
     key: 'subUsersState',
     get: async ({get}) => {
-        const dbUser = get(dbUserState);
-        const version = get(groupVersion)
-        if(!dbUser) return;
-        const gottenOtherUsers = await DataStore.query(Users, c => c.parentUserId("eq", dbUser.id));
-        return gottenOtherUsers
+        const allGroup = get(usersInGroupState)
+        const filteredGroup = allGroup.filter(member => {
+            return member.isSubUser
+        })
+        return filteredGroup
     },
 });
 

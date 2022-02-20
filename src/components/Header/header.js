@@ -17,6 +17,7 @@ import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilStat
 import {dbUserState, usingUserState} from "../../recoil/selectors";
 import createUsersWishlist from "../../helpers/createUserWishlist";
 import {usingUserIdState} from "../../recoil/atoms";
+import GroupSelect from "../GroupSelect/groupSelect";
 
 
 export default function Header(props) {
@@ -33,6 +34,7 @@ export default function Header(props) {
     // State values
     const [dbUser, setDbUser] = useState()
     const [usingUser, setUsingUser] = useState()
+    const [selectedGroups, setSelectedGroups] = useState([])
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -98,7 +100,9 @@ export default function Header(props) {
 
     return (
         <div className="headerContainer">
-            <ButtonAsText onClick={handleRedirectToHome} displayName={"My Dashboard"}/>
+            <div className="selectGroup">
+                <GroupSelect/>
+            </div>
             <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
             <div className="myAccountButton">
                 <Link to="/account/account">My Account</Link>
@@ -115,7 +119,7 @@ export default function Header(props) {
                 <MoneyModal/>
             </Modal>
             <Modal isOpen={listListPopupOpen} close={() => setListListPopupOpen(false)}>
-                <ListList close={() => setListListPopupOpen(false)}/>
+                <ListList close={() => setListListPopupOpen(false)} selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups}/>
             </Modal>
         </div>
     );

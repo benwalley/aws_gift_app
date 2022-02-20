@@ -65,15 +65,26 @@
             align-items: center;
             justify-content: center;
             display: grid;
-            grid-template-columns: 1fr  min-content 46px;
+            grid-template-columns: min-content 1fr  min-content 46px;
+
+            button {
+                white-space: nowrap;
+                text-decoration: underline;
+                font-size: 0.9em;
+            }
 
             div {
                 text-align: center;
+                font-weight: bold;
             }
         }
 
         .iconButton {
             color: var(--delete-red)
         }
+    }
+
+    .groupMultiSelect {
+        margin-bottom: 10px;
     }
 }

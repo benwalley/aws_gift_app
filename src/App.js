@@ -10,8 +10,6 @@ import './colors.scss'
 import './global.scss'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FirstTimePopup from "./components/FirstTimePopup/firstTimePopup";
-import Modal from "./components/Modal/modal";
 import {
     BrowserRouter as Router,
     Routes,
@@ -25,23 +23,32 @@ import Account from "./components/Account/account";
 import YourInfo from "./components/Account/YourInfo/yourInfo";
 import Group from "./components/Account/Group/group";
 import SubUsers from "./components/Account/SubUsers/subUsers";
-import {dbUserState} from "./recoil/selectors";
+import {dbUserState, usersGroupsState} from "./recoil/selectors";
+import FirstPage from "./components/FirstPage/firstPage";
+import currentGroupId from "./recoil/atoms/currentGroupId";
+import currentGroupIdState from "./recoil/atoms/currentGroupId";
+import currentGroupState from "./recoil/selectors/currentGroup";
+import GroupsSection from "./components/Account/Groups/groups";
+import {Groups, Users} from "./models";
 
 
 Amplify.configure(awsconfig);
-// TODO: add list of what you're getting
 // TODO: (someday maybe) let users upload profile pic
 // TODO: mobile styling
-// TODO: add better loading states
 
 const AuthStateApp = () => {
     const [authState, setAuthState] = useState()
     const [authUser, setAuthUser] = useState();
     const setAuthUsername = useSetRecoilState(authUserUsername)
     const setAuthEmail = useSetRecoilState(authUserEmail)
-    const [firstTimePopupOpen, setFirstTimePopupOpen] = useState(false) // popup state
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const currentGroupIdUpdate = useRecoilValueLoadable(currentGroupIdState)
+    const usersGroupsUpdate = useRecoilValueLoadable(usersGroupsState)
     const [dbUser, setDbUser] = useState()
+    const [isValidated, setIsValidated] = useState(false)
+    const [groupId, setGroupId] = useState()
+    const [groups, setGroups] = useState()
+    const setCurrentGroupId = useSetRecoilState(currentGroupIdState)
 
     useEffect(() => {
         return onAuthUIStateChange((nextAuthState, authData) => {
@@ -60,42 +67,78 @@ const AuthStateApp = () => {
         }
     }, [dbUserUpdate]);
 
-    // show first time popup if necessary
     useEffect(() => {
-        showFirstTimePopupIfNeeded()
-    }, [dbUser]);
-
-    const showFirstTimePopupIfNeeded = () => {
-        if(!dbUser) return;
-        if(!dbUser.groupId || dbUser.displayName === "noname") {
-            setFirstTimePopupOpen(true)
+        if(currentGroupIdUpdate.state === "hasValue") {
+            setGroupId(currentGroupIdUpdate.contents);
         }
+    }, [currentGroupIdUpdate]);
+
+    useEffect(() => {
+        if(usersGroupsUpdate.state === "hasValue") {
+            setGroups(usersGroupsUpdate.contents);
+        }
+    }, [usersGroupsUpdate]);
+
+    useEffect(() => {
+        initializeGroups()
+
+
+    }, [groupId, groups]);
+
+    const initializeGroups = async () => {
+        // check if there is a group set, and if so, consider it done.
+        if(groupId) {
+            setIsValidated(true)
+            localStorage.setItem('wishlistGroup', groupId)
+            return
+        }
+        // check if there is a group stored in the local storage
+        const savedGroupId = localStorage.getItem('wishlistGroup');
+        if(savedGroupId) {
+            // only set current group id if you are part of that group (because you might have signed out and signed in as another user.
+            const currentGroupData = await DataStore.query(Groups, savedGroupId);
+            if(!currentGroupData || !dbUser) {
+                localStorage.setItem('wishlistGroup', '')
+                return;
+            }
+            if(currentGroupData.memberIds.indexOf(dbUser.id) === -1) {
+                // remove saved groupId
+                localStorage.setItem('wishlistGroup', '')
+            } else {
+                setCurrentGroupId(savedGroupId)
+            }
+        }
+
+        // If there is not a group set in local storage, check if there's only one group
+        if(groups && groups.length > 0) {
+            setCurrentGroupId(groups[0].id)
+            return;
+        }
+
     }
 
     return authState === AuthState.SignedIn && authUser ? (
         <div className="App">
-                <Router>
-                    <div className="header">
-                        <Header/>
-                    </div>
+            {!isValidated ? <FirstPage setIsValidated={setIsValidated}/> :
+            <Router>
+                <div className="header">
+                    <Header/>
+                </div>
 
-                    <Routes>
-                        <Route path='/' element={<Dashboard/>}>
-                            <Route path='/:wishlistId' element={<Dashboard/>}>
-                                <Route path='/:wishlistId/:itemId' element={<Dashboard/>}/>
-                            </Route>
+                <Routes>
+                    <Route path='/' element={<Dashboard/>}>
+                        <Route path='/:wishlistId' element={<Dashboard/>}>
+                            <Route path='/:wishlistId/:itemId' element={<Dashboard/>}/>
                         </Route>
-                        <Route path='account' element={<Account/>}>
-                            <Route path="account" element={<YourInfo/>} />
-                            <Route path="group" element={<Group/>} />
-                            <Route path="subusers" element={<SubUsers/>} />
-                        </Route>
-                    </Routes>
-
-                    <Modal isOpen={firstTimePopupOpen} close={() => setFirstTimePopupOpen(false)}>
-                        <FirstTimePopup close={() => setFirstTimePopupOpen(false)}/>
-                    </Modal>
-                </Router>
+                    </Route>
+                    <Route path='account' element={<Account/>}>
+                        <Route path="account" element={<YourInfo/>} />
+                        <Route path="subusers" element={<SubUsers/>} />
+                        <Route path="group" element={<Group/>} />
+                        <Route path="groups" element={<GroupsSection/>} />
+                    </Route>
+                </Routes>
+            </Router>}
             <ToastContainer />
         </div>
     ) : (
