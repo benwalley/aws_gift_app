@@ -48,7 +48,7 @@ export default function GroupSelect(props) {
             {groups && groups.length > 0 && <div className="groupSelect">
                 <div className="trigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <div>{getNameFromId(currentGroupId)}</div>
-                    <FontAwesomeIcon icon={faChevronDown} size="md"/>
+                    {filteredGroups() && filteredGroups().length > 0 && <FontAwesomeIcon icon={faChevronDown} size="md"/>}
                 </div>
                 {dropdownOpen && <div className="dropdownContent">
                     {filteredGroups().map(groupData => renderGroupOption(groupData))}

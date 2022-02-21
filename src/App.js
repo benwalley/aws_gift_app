@@ -81,16 +81,27 @@ const AuthStateApp = () => {
 
     useEffect(() => {
         initializeGroups()
-
-
     }, [groupId, groups]);
 
     const initializeGroups = async () => {
-        // check if there is a group set, and if so, consider it done.
+        // check if there is a group set.
         if(groupId) {
-            setIsValidated(true)
-            localStorage.setItem('wishlistGroup', groupId)
-            return
+            // check if the user belongs to this group
+            const groupData = await DataStore.query(Groups, groupId);
+            if(groupData.memberIds.indexOf(dbUser.id) > -1) {
+                // the user is a member of this group, we can continue
+                setIsValidated(true)
+                localStorage.setItem('wishlistGroup', groupId)
+                return
+            }
+            // The user is not a member of that group. We need to set another group for them.
+            const allGroups = await DataStore.query(Groups, c => c.memberIds("contains", dbUser.id));
+            if(allGroups && allGroups.length > 0) {
+                setCurrentGroupId(allGroups[0].id)
+                return;
+            }
+            setIsValidated(false)
+            return;
         }
         // check if there is a group stored in the local storage
         const savedGroupId = localStorage.getItem('wishlistGroup');

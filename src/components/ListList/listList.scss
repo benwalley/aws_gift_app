@@ -1,7 +1,15 @@
 .listListContainer {
+  padding: 20px;
+
   h2 {
     padding: 15px;
   }
+
+  .usersListContainer {
+    margin-top: 30px;
+    border: 2px solid var(--electric-blue)
+  }
+
   .usersListItem {
     padding: 10px;
     font-size: 18px;

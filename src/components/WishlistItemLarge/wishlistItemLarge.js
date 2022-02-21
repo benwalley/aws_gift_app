@@ -253,14 +253,14 @@ export default function WishlistItemLarge(props) {
     // only if the using user is the one who created the wishlist
     const isOwner = () => {
         if(!usingUser) return
-        return usingUser.id === visibleWishlist.ownerId;
+        return usingUser.id === data.ownerId;
     }
 
     const canSeeWhosGetting = () => {
-        if(!dbUser) return false;
-        if(dbUser.id !== data.ownerId) {
-            return true
+        if(dbUser.id !== data.ownerId && usingUser.id !== data.ownerId) {
+            return true;
         }
+
         return false
     }
 
@@ -277,10 +277,10 @@ export default function WishlistItemLarge(props) {
             </div>
 
             <div className="actionButtons">
-                {!isOwner() && <div className={data.gottenBy.indexOf(dbUser.id) > -1 ? "selected" : ''}>
+                {canSeeWhosGetting() && <div className={data.gottenBy.indexOf(dbUser.id) > -1 ? "selected" : ''}>
                     <IconButton onClick={handleGetting} displayName={"Get This"} icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}/>
                 </div>}
-                {!isOwner() && <div className={data.wantsToGet.indexOf(dbUser.id) > -1 ? "selected" : ''}>
+                {canSeeWhosGetting() && <div className={data.wantsToGet.indexOf(dbUser.id) > -1 ? "selected" : ''}>
                     <IconButton onClick={handleWantsToGet} displayName={"Want to get this"} icon={<FontAwesomeIcon icon={faUserFriends} size="2x" />}/>
                 </div>}
                 {(isOwner() || isSuper) && <div>

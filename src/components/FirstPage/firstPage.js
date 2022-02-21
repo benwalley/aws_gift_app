@@ -62,7 +62,7 @@ export default function FirstPage(props) {
                     updated.memberIds = [...new Set(membersCopy)];
                 }))
             }
-            myGroup = groupJoining
+            myGroup = groupJoining[0]
         } else if (isJoiningGroup === "admin") {
             if (!groupName) {
                 // addError("You must enter a name for your group")

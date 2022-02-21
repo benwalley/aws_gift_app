@@ -8,6 +8,7 @@ import IconButton from "../../Buttons/IconButton";
 import {faTimesCircle, faUserShield} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {currentGroupIdState} from "../../../recoil/atoms";
+import TextButton from "../../Buttons/TextButton";
 //TODO: when you join a group, show list of products, and select any you want to move to that group.
 
 export default function GroupsSection() {
@@ -49,6 +50,31 @@ export default function GroupsSection() {
         return group.adminIds.indexOf(dbUser.id) > -1
     }
 
+    const isCreatorOfGroup = (group) => {
+        return group.creatorId === dbUser.id;
+    }
+
+    const handleLeaveGroup = async (group) => {
+        const original = await DataStore.query(Groups, group.id);
+        await DataStore.save(Groups.copyOf(original, updated => {
+            // remove from members list
+            const membersCopy = [...original.memberIds];
+            const index = membersCopy.indexOf(dbUser.id);
+            if(index > -1) {
+                membersCopy.splice(index, 1);
+                updated.memberIds = [...new Set(membersCopy)];
+            }
+            // remove from admins list if necessary
+            const adminsCopy = [...original.adminIds];
+            const adminIndex = adminsCopy.indexOf(dbUser.id);
+            if(adminIndex > -1) {
+                adminsCopy.splice(adminIndex, 1);
+                updated.adminIds = [...new Set(adminsCopy)];
+            }
+        }))
+        updateGroup()
+    }
+
     const renderMyGroups = () => {
         if(!myGroups) return;
         return myGroups.map((group, index) => {
@@ -56,9 +82,15 @@ export default function GroupsSection() {
                 <div className="groupName">
                     {group.groupName}
                     {group.id === currentGroupId && " (Current)"}
-                    {group.creatorId === dbUser.id && <FontAwesomeIcon icon={faUserShield} size="sm"/>}
+                    {isCreatorOfGroup(group) && <FontAwesomeIcon icon={faUserShield} size="sm"/>}
                 </div>
-                {isAdminOfGroup(group) && group.id !== currentGroupId && <IconButton
+                {!isCreatorOfGroup(group) && <TextButton
+                    displayName={'Leave group'}
+                    confirm={true}
+                    confirmText={`Are you sure you want to leave ${group.groupName}?`}
+                    onClick={(e) => handleLeaveGroup(group)}
+                />}
+                {isCreatorOfGroup(group) && group.id !== currentGroupId && <IconButton
                     displayName={'delete'}
                     icon={<FontAwesomeIcon icon={faTimesCircle} size="lg"/>}
                     onClick={(e) => handleDeleteGroup(e, group)}
@@ -84,7 +116,7 @@ export default function GroupsSection() {
         return myInvitedGroups.map((group, index) => {
             return <div className={index % 2 === 0 ? "even" : "odd"} key={group.id}>
                 {group.groupName}
-                <button onClick={(e) => handleJoinGroup(e, group)}>Join group</button>
+                <button className="joinGroupButton" onClick={(e) => handleJoinGroup(e, group)}>Join group</button>
             </div>
         })
     }
@@ -114,17 +146,20 @@ export default function GroupsSection() {
 
 
             {/*leave group*/}
-            <div className='themeList'>
-                <h3>Groups you're a part of</h3>
-                {renderMyGroups()}
+            <div className="myGroups">
+                <div className='themeList'>
+                    <h3>Groups you're a part of</h3>
+                    {renderMyGroups()}
+                </div>
             </div>
             <p className="ownerInstructions">Created by you <FontAwesomeIcon icon={faUserShield} size="sm"/></p>
 
-            <div className='themeList'>
-                <h3>Groups you're invited to</h3>
-                {renderInvitedToGroups()}
-            </div>
-            {/*Join group*/}
+            {myInvitedGroups && myInvitedGroups.length > 0 && <div className="invitedToGroups">
+                <div className='themeList'>
+                    <h3>Groups you're invited to</h3>
+                    {renderInvitedToGroups()}
+                </div>
+            </div>}
 
             <div className="themeList">
                 <h3>Create new group</h3>

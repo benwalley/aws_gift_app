@@ -198,7 +198,7 @@ export default function Group() {
                 <div>
                     {email}
                 </div>
-                {dbUser.isAdmin && <IconButton
+                {isUserAdminOfGroup(dbUser.id, currentGroup) && <IconButton
                     displayName={'delete'}
                     icon={<FontAwesomeIcon icon={faTimesCircle} size="lg"/>}
                     onClick={(e) => handleDeleteInvite(e, email)}
@@ -281,16 +281,16 @@ export default function Group() {
                             <h3>Users in your group</h3>
                             {renderUsersInGroup()}
                         </div>}
-                        <div className="adminLegend">
-                            <div>Group admin</div>
-                            <div className="adminIcon"><FontAwesomeIcon icon={faUserCog} size="sm"/></div>
-                        </div>
-                        {invitedUsers && invitedUsers.length > 0 && <div className="themeList">
-                            <h3>Users invited to your group</h3>
-                            {renderInvitedGroupUsers()}
-                        </div>}
                     </div>
-                    {dbUser.isAdmin && <div className="inviteUserSection">
+                    <div className="adminLegend">
+                        <div>Group admin</div>
+                        <div className="adminIcon"><FontAwesomeIcon icon={faUserCog} size="sm"/></div>
+                    </div>
+                    {invitedUsers && invitedUsers.length > 0 && <div className="themeList">
+                        <h3>Users invited to your group</h3>
+                        {renderInvitedGroupUsers()}
+                    </div>}
+                    {isUserAdminOfGroup(dbUser.id, currentGroup) && <div className="inviteUserSection">
                         <h3>Invite a user to join your group</h3>
                         <p>This will not send any sort of invite, all it will do is allow them to join your group if
                             they want to.</p>

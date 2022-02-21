@@ -12,7 +12,7 @@ import {
     useNavigate
 } from "react-router-dom";
 import {useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState} from "recoil";
-import {dbUserState, isSuperOwner, updateLargeWishlistItemVersion} from "../../recoil/selectors";
+import {dbUserState, isSuperOwner, updateLargeWishlistItemVersion, usingUserState} from "../../recoil/selectors";
 import {refreshNumberOfComments, refreshVisibleWishlistList} from "../../recoil/versionAtoms";
 import visibleWishlist from "../../recoil/selectors/visibleWishlist";
 import visibleWishlistState from "../../recoil/selectors/visibleWishlist";
@@ -29,8 +29,10 @@ export default function WishlistItem(props) {
     const isSuperUpdate = useRecoilValueLoadable(isSuperOwner)
     const navigate = useNavigate()
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
+    const usingUserUpdate = useRecoilValueLoadable(usingUserState);
     // State values
     const [dbUser, setDbUser] = useState()
+    const [usingUser, setUsingUser] = useState()
     const [isSuper, setIsSuper] = useState(false)
     const [visibleWishlist, setVisibleWishlist] = useState()
 
@@ -39,6 +41,12 @@ export default function WishlistItem(props) {
             setDbUser(dbUserUpdate.contents);
         }
     }, [dbUserUpdate]);
+
+    useEffect(() => {
+        if(usingUserUpdate.state === "hasValue") {
+            setUsingUser(usingUserUpdate.contents);
+        }
+    }, [usingUserUpdate]);
 
     useEffect(() => {
         if(isSuperUpdate.state === "hasValue") {
@@ -127,7 +135,7 @@ export default function WishlistItem(props) {
 
     const getIndicators = () => {
         // don't return anything if this users shouldn't see them.
-        if(!data || !dbUser || data.ownerId === dbUser.id) return
+        if(!data || !dbUser || data.ownerId === dbUser.id ||data.ownerId === usingUser.id) return
         if(data.gottenBy && data.gottenBy.length > 0 && data.wantsToGet && data.wantsToGet.length > 0) {
             return <div className="gottenAndWantsIndicator">
                 <div className="wantsToGetIndicator"><FontAwesomeIcon icon={faUserFriends} size="3x" /></div>

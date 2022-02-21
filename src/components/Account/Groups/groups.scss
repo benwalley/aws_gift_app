@@ -19,7 +19,45 @@
         }
     }
 
+    .myGroups {
+        .themeList {
+            .even,
+            .odd {
+                grid-template-columns: 1fr min-content;
+
+               > button {
+                    white-space: nowrap;
+                    font-size: 0.9em;
+                    text-decoration: underline;
+                    background: none;
+                    padding: 5px;
+                    box-shadow: none;
+                    align-items: center;
+                    font-weight: normal;
+                    height: auto;
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+
     .addGroupForm {
         padding: 10px;
+    }
+
+    .invitedToGroups {
+        .themeList {
+            .even,
+            .odd {
+                grid-template-columns: 1fr min-content;
+
+                .joinGroupButton {
+                    white-space: nowrap;
+                    font-size: 0.9em;
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }

@@ -162,7 +162,7 @@ export default function AddListItem(props) {
                     <h2>Add an item to your wishlist</h2>
                     <div className="addingAsName">
                         <span className="addingName">
-                            Adding to wishlist: <span className="addingAsNameName">{GetNameOrEmail(addingToUser)}</span>
+                            <span className="selectNameAndGroupTitle">Adding to wishlist: </span><span className="addingAsNameName">{GetNameOrEmail(addingToUser)}</span>
                         </span>
                         <span className="addToOtherUserButtons">
                             {subUsers && [...subUsers, dbUser].map(thisUser => {
@@ -172,7 +172,7 @@ export default function AddListItem(props) {
                         </span>
                     </div>
                     <div className="selectGroups">
-                        <h4>Adding to group(s)</h4>
+                        <h4 className="selectNameAndGroupTitle">Adding to group(s)</h4>
                         <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={addingToUser.id}/>
                     </div>
 

@@ -38,7 +38,7 @@ export default function GroupMultiSelect(props) {
         if(newGroups.length < selectedGroups.length) {
             setSelectedGroups(newGroups)
         }
-    }, [selectedGroups])
+    }, [selectedGroups, groups])
 
     const toggleSelected = (group) => {
         const selectedCopy = [...selectedGroups]

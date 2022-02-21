@@ -30,7 +30,7 @@ export default function ListList(props) {
     }, [currentGroupUpdate]);
 
     useEffect(() => {
-        if(!selectedGroups) {
+        if(!selectedGroups || selectedGroups.length === 0 && currentGroup) {
             setSelectedGroups([currentGroup])
         }
     }, [currentGroup]);
@@ -62,17 +62,18 @@ export default function ListList(props) {
     }
 
     const getListList = () => {
-        if(!users || users.length === 0) return
         return <div className="listListContainer">
             <h2>All Wishlists</h2>
-            <div className="groupsDropdown">
+            {dbUser && currentGroup && <div className="groupsDropdown">
                 <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={dbUser.id} />
-            </div>
-            {users.map(user => {
-                return (<div key={user.id} className="usersListItem" onClick={(e) => handleSelectList(e, user)}>
-                    {user.displayName === "noname" ? user.emailAddress : user.displayName}
-                </div>)
-            })}
+            </div>}
+            {users && users.length > 0 && <div className="usersListContainer">
+                {users.map(user => {
+                    return (<div key={user.id} className="usersListItem" onClick={(e) => handleSelectList(e, user)}>
+                {user.displayName === "noname" ? user.emailAddress : user.displayName}
+                    </div>)
+                })}
+            </div>}
         </div>
     }
 

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import IconButton from "../Buttons/IconButton";
 import './header.scss'
 import SignOut from "../../helpers/signOut";
+import {Auth} from "aws-amplify";
 import ButtonAsText from "../Buttons/ButtonAsText";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFileInvoiceDollar, faList, faPlus} from '@fortawesome/free-solid-svg-icons'
@@ -98,12 +99,31 @@ export default function Header(props) {
         }
     }
 
+
+    const SignOut = async (e) => {
+        e.preventDefault()
+        try {
+            await Auth.signOut();
+            navigate('/')
+            window.location.reload()
+        } catch (error) {
+            console.log('error signing out: ', error);
+        }
+    }
+
+    const switchToMainUser = () => {
+        setUsingUserId(dbUser.id)
+    }
+
     return (
         <div className="headerContainer">
             <div className="selectGroup">
                 <GroupSelect/>
             </div>
-            <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
+            <div className="userNameSection">
+                <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
+                {usingUser && usingUser.isSubUser && <button className="switchToMainUserButton" onClick={switchToMainUser}>Switch to main user</button>}
+            </div>
             <div className="myAccountButton">
                 <Link to="/account/account">My Account</Link>
             </div>
