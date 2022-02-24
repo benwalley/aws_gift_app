@@ -2,7 +2,7 @@ import React, {useEffect, useState, Suspense} from 'react';
 import { DataStore } from 'aws-amplify'
 import {WishlistItems, Wishlist, Users} from '../../models';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import {faChevronDown, faTimes, faTimesCircle} from '@fortawesome/free-solid-svg-icons'
 import './addListItem.scss'
 import TextButton from "../Buttons/TextButton";
 import createUsersWishlist from "../../helpers/createUserWishlist";
@@ -34,6 +34,7 @@ export default function AddListItem(props) {
     const [usingUser, setUsingUser] = useState()
     const [subUsers, setSubUsers] = useState()
     const [currentGroup, setCurrentGroup] = useState()
+    const [userGroupSectionOpen, setUserGroupSectionOpen] = useState()
 
 
     useEffect(() => {
@@ -158,11 +159,22 @@ export default function AddListItem(props) {
         <div className="addListItemContainer" >
             <div className="addListItemBackground" onClick={close}></div>
             {addingToUser && <form className="addListItemContent" onSubmit={handleAddItem}>
+                <button className="closeModal" onClick={close} aria-label="close"><FontAwesomeIcon icon={faTimes} size="xl"/></button>
                 <div className="addListItemScrollingContainer">
                     <h2>Add an item to your wishlist</h2>
-                    <div className="addingAsName">
+                    <div className="dropdownToggle" onClick={() => setUserGroupSectionOpen(!userGroupSectionOpen)}>
+                        <span className="title">Adding to: </span>
+                        <span className="addingToUserBubble">{addingToUser.displayName}</span>
+                        <span className="title">Groups:</span>
+                        {selectedGroups.map(group => {
+                            return <span className="addingToUserBubble">{group.groupName}</span>
+                        })}
+                        <span className={userGroupSectionOpen ? "dropdownToggleArrowOpen" : "dropdownToggleArrow"}><FontAwesomeIcon icon={faChevronDown} size="1x"/></span>
+                    </div>
+                    {userGroupSectionOpen && <div className="dropdownContent">
+                        <div className="addingAsName">
                         <span className="addingName">
-                            <span className="selectNameAndGroupTitle">Adding to wishlist: </span><span className="addingAsNameName">{GetNameOrEmail(addingToUser)}</span>
+                            <span className="selectNameAndGroupTitle">Set wishlist: </span>
                         </span>
                         <span className="addToOtherUserButtons">
                             {subUsers && [...subUsers, dbUser].map(thisUser => {
@@ -170,11 +182,12 @@ export default function AddListItem(props) {
                                 return <span key={thisUser.id} className="switchUser" onClick={() => setAddingToUser(thisUser)}>{thisUser.displayName}</span>
                             })}
                         </span>
-                    </div>
-                    <div className="selectGroups">
-                        <h4 className="selectNameAndGroupTitle">Adding to group(s)</h4>
-                        <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={addingToUser.id}/>
-                    </div>
+                        </div>
+                        <div className="selectGroups">
+                            <h4 className="selectNameAndGroupTitle">Set group(s)</h4>
+                            <GroupMultiSelect selectedGroups={selectedGroups} setSelectedGroups={setSelectedGroups} userId={addingToUser.id}/>
+                        </div>
+                    </div>}
 
                         {createInput(name, setName, 'Item Name')}
                         <PriorityInput priority={priority} setPriority={setPriority}/>

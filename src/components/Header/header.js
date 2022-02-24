@@ -1,11 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
 import IconButton from "../Buttons/IconButton";
 import './header.scss'
 import SignOut from "../../helpers/signOut";
 import {Auth} from "aws-amplify";
 import ButtonAsText from "../Buttons/ButtonAsText";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faFileInvoiceDollar, faList, faPlus} from '@fortawesome/free-solid-svg-icons'
+import {
+    faEllipsisV,
+    faFileInvoiceDollar,
+    faHamburger,
+    faList,
+    faPlus,
+    faUserCircle
+} from '@fortawesome/free-solid-svg-icons'
 import AddListItem from "../AddListItem/addListItem";
 import Modal from "../Modal/modal";
 import MoneyModal from "../MoneyModal/moneyModal";
@@ -36,6 +43,8 @@ export default function Header(props) {
     const [dbUser, setDbUser] = useState()
     const [usingUser, setUsingUser] = useState()
     const [selectedGroups, setSelectedGroups] = useState([])
+    const usernameRef = useRef(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -49,6 +58,10 @@ export default function Header(props) {
         }
     }, [usingUserUpdate]);
 
+    useLayoutEffect(() => {
+        console.log(usernameRef)
+    }, [usernameRef])
+
     const renderAddItemPopup = () => {
         if (addItemPopupOpen) {
             return(
@@ -56,6 +69,11 @@ export default function Header(props) {
                 close={closeAddListItem}
             />)
         }
+    }
+
+    const renderWidth = () => {
+        console.log(usernameRef)
+        return usernameRef.innerWidth;
     }
 
     const closeAddListItem = (e) => {
@@ -83,15 +101,20 @@ export default function Header(props) {
         } catch(e) {
             console.log(e)
         }
+        setMobileMenuOpen(false)
     }
 
     const renderCurrentUsersName = () => {
+        console.log(usernameRef)
         if(!usingUser) return;
         try {
             if(usingUser && usingUser.isSubUser) {
-                return (`${GetNameOrEmail(dbUser)} (Viewing as ${ GetNameOrEmail(usingUser)})`)
+                return <>
+                    <span>{GetNameOrEmail(dbUser)}</span>
+                    <span>{` (Viewing as ${GetNameOrEmail(usingUser)})`}</span>
+                </>
             } else {
-                return GetNameOrEmail(dbUser)
+                return <span>{GetNameOrEmail(dbUser)}</span>
             }
         } catch(e) {
             console.log(e)
@@ -117,22 +140,92 @@ export default function Header(props) {
 
     return (
         <div className="headerContainer">
-            <div className="selectGroup">
-                <GroupSelect/>
+            <div className="mobileHeader">
+                {renderWidth()}
+                <button type="button" className="menuToggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                    <FontAwesomeIcon icon={faEllipsisV} size="2x" />
+                </button>
+                <div className="userNameSection" ref={usernameRef}>
+                    <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
+                    {usingUser && usingUser.isSubUser && <button className="switchToMainUserButton" onClick={switchToMainUser}>Switch to main user</button>}
+                </div>
+                <div className="myAccountButton">
+                    <Link to="/account/account"><FontAwesomeIcon icon={faUserCircle} size="2x"/></Link>
+                </div>
+                <IconButton onClick={() => setAddItemPopupOpen(!addItemPopupOpen)} displayName={'add item'} icon={<FontAwesomeIcon icon={faPlus} size="2x"/>}/>
+                <IconButton onClick={() => setListListPopupOpen(true)} displayName={'wishlist list'} icon={<FontAwesomeIcon icon={faList} size="2x"/>}/>
+                <div className="mobileMenu">
+                    <Modal isOpen={mobileMenuOpen} close={() => setMobileMenuOpen(false)}>
+                        <div className="mobileMenuContent">
+                            <ul>
+                                <li>
+                                    <div className="selectGroup">
+                                        <GroupSelect/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className="userNameSection">
+                                        <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
+                                        {usingUser && usingUser.isSubUser && <button className="switchToMainUserButton" onClick={switchToMainUser}>Switch to main user</button>}
+                                    </div>
+                                </li>
+                                <li onClick={() => setMobileMenuOpen(false)}>
+                                    <Link to="/account/account">
+                                        <FontAwesomeIcon icon={faUserCircle} size="2x" />
+                                        <span>Account</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <button onClick={() => {
+                                        setAddItemPopupOpen(!addItemPopupOpen)
+                                        setMobileMenuOpen(false)
+                                    }}>
+                                        <FontAwesomeIcon icon={faPlus} size="2x" />
+                                        <span>Add to wishlist</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onClick={() => {
+                                        setListListPopupOpen(true)
+                                        setMobileMenuOpen(false)
+                                    }}>
+                                        <FontAwesomeIcon icon={faList} size="2x" />
+                                        <span>All wishlists</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onClick={(e) => {
+                                        setMoneyPopupOpen(true)
+                                        setMobileMenuOpen(false)
+                                    }}>
+                                        <FontAwesomeIcon icon={faFileInvoiceDollar} size="2x" />
+                                        <span>Money</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </Modal>
+                </div>
             </div>
-            <div className="userNameSection">
-                <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
-                {usingUser && usingUser.isSubUser && <button className="switchToMainUserButton" onClick={switchToMainUser}>Switch to main user</button>}
+            <div className="desktopHeader">
+                <div className="selectGroup">
+                    <GroupSelect/>
+                </div>
+                <div className="userNameSection">
+                    <ButtonAsText  onClick={handleRedirectToHome}  displayName={renderCurrentUsersName()}/>
+                    {usingUser && usingUser.isSubUser && <button className="switchToMainUserButton" onClick={switchToMainUser}>Switch to main user</button>}
+                </div>
+                <span className="signOutButton">
+                   <ButtonAsText onClick={SignOut} displayName={'Sign Out'}/>
+                </span>
+                <div className="myAccountButton">
+                    <Link to="/account/account"><FontAwesomeIcon icon={faUserCircle} size="2x"/></Link>
+                </div>
+
+                <IconButton onClick={(e) => setMoneyPopupOpen(true)} displayName={'money'} icon={<FontAwesomeIcon icon={faFileInvoiceDollar} size="2x" />}/>
+                <IconButton onClick={() => setAddItemPopupOpen(!addItemPopupOpen)} displayName={'add item'} icon={<FontAwesomeIcon icon={faPlus} size="2x"/>}/>
+                <IconButton onClick={() => setListListPopupOpen(true)} displayName={'wishlist list'} icon={<FontAwesomeIcon icon={faList} size="2x"/>}/>
             </div>
-            <div className="myAccountButton">
-                <Link to="/account/account">My Account</Link>
-            </div>
-            <span className="signOutButton">
-               <ButtonAsText onClick={SignOut} displayName={'Sign Out'}/>
-            </span>
-            <IconButton onClick={(e) => setMoneyPopupOpen(true)} displayName={'money'} icon={<FontAwesomeIcon icon={faFileInvoiceDollar} size="2x" />}/>
-            <IconButton onClick={() => setAddItemPopupOpen(!addItemPopupOpen)} displayName={'add item'} icon={<FontAwesomeIcon icon={faPlus} size="2x"/>}/>
-            <IconButton onClick={() => setListListPopupOpen(true)} displayName={'wishlist list'} icon={<FontAwesomeIcon icon={faList} size="2x"/>}/>
             {/* popups which will all be absolutely positioned*/}
             {renderAddItemPopup()}
             <Modal isOpen={moneyPopupOpen} close={() => setMoneyPopupOpen(false)}>

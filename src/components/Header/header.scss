@@ -1,31 +1,136 @@
 .headerContainer {
-    display: grid;
-    grid-template-columns: min-content 1fr min-content min-content min-content min-content min-content;
-    padding: 5px;
-    grid-gap: 10px;
-    max-width: 1600px;
-    margin: 0 auto;
+    height: 100%;
+    .desktopHeader {
+        display: none;
+        @media only screen and (min-width: 768px) {
+            display: grid;
+        }
+
+        grid-template-columns: min-content 1fr min-content min-content min-content min-content min-content;
+        padding: 5px;
+        grid-gap: 10px;
+        max-width: 1600px;
+        margin: 0 auto;
 
 
-    .signOutButton {
-        .buttonAsText {
+        .signOutButton {
+            .buttonAsText {
+                font-size: 16px;
+            }
+        }
+
+        .userNameSection {
+            margin: 0 auto;
+        }
+
+        .switchToMainUserButton {
+            text-decoration: underline;
+        }
+
+        .myAccountButton {
             font-size: 16px;
+            white-space: nowrap;
+            display: grid;
+            align-items: center;
+            padding: 0 10px
         }
     }
 
-    .userNameSection {
-        margin: 0 auto;
-    }
-
-    .switchToMainUserButton {
-        text-decoration: underline;
-    }
-
-    .myAccountButton {
-        font-size: 16px;
-        white-space: nowrap;
+    .mobileHeader {
         display: grid;
-        align-items: center;
-        padding: 0 10px
+        @media only screen and (min-width: 768px) {
+            display: none;
+        }
+        grid-template-columns: min-content 1fr min-content min-content min-content;
+        height: 100%;
+
+        > button {
+            padding: 0 20px;
+        }
+
+        > .userNameSection {
+            overflow: hidden;
+            display: none;
+            padding: 0 20px;
+            align-items: center;
+
+            > button {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            @media only screen and (min-width: 450px) {
+                display: grid;
+            }
+        }
+
+        .menuToggle {
+            align-items: center;
+            justify-content: left;
+            padding: 5px;
+            padding-left: 20px;
+            display: grid;
+        }
+
+        .myAccountButton {
+            align-items: center;
+            display: grid;
+            text-align: right;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+
+        .mobileMenu {
+            .modalContent {
+                right: 10%;
+                left: 0;
+                top: 50px;
+            }
+
+            .mobileMenuContent {
+                padding: 40px 10px;
+
+                .groupSelect {
+                    padding: 0;
+
+                    .dropdownContent {
+                        left: 0;
+                    }
+                }
+
+                .userNameSection {
+                    .buttonAsText {
+                        display: grid;
+                        height: auto;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    .switchToMainUserButton {
+
+                    }
+                }
+
+                li {
+                    padding: 10px 5px;
+                    text-align: left;
+                    border-bottom: 1px solid grey;
+
+                    > button,
+                    > a{
+                        display: grid;
+                        align-items: center;
+                        grid-template-columns: min-content 1fr;
+                        grid-gap: 15px;
+
+                        span {
+                            font-size: 20px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

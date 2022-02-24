@@ -4,6 +4,10 @@
             "header header header"
             "left center right" / 1fr max(60%, 600px) 1fr;
     margin-top: 30px;
+    max-width: 1800px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 
     .header {
         grid-area: header;

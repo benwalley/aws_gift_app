@@ -36,22 +36,18 @@ export default function GroupSelect(props) {
     }
 
     const renderGroupOption = (groupData) => {
-        return <div key={groupData.id} className="groupItem" onClick={(e) => handleSelectOption(groupData)}>{groupData.groupName}</div>
+        return <div key={groupData.id} className={groupData.id === currentGroupId ? "groupItemDisabled" : "groupItem"} onClick={(e) => handleSelectOption(groupData)}>{groupData.groupName}</div>
     }
 
-    const filteredGroups = () => {
-        if(!groups) return [];
-        return groups.filter(group => group.id !== currentGroupId)
-    }
 
     return (<>
             {groups && groups.length > 0 && <div className="groupSelect">
                 <div className="trigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <div>{getNameFromId(currentGroupId)}</div>
-                    {filteredGroups() && filteredGroups().length > 0 && <FontAwesomeIcon icon={faChevronDown} size="md"/>}
+                    <FontAwesomeIcon icon={faChevronDown} size="md"/>
                 </div>
                 {dropdownOpen && <div className="dropdownContent">
-                    {filteredGroups().map(groupData => renderGroupOption(groupData))}
+                    {groups.map(groupData => renderGroupOption(groupData))}
                 </div>}
                 {dropdownOpen && <div className="dropdownBackground" onClick={() => setDropdownOpen(false)}></div>}
             </div>}
