@@ -70,7 +70,7 @@ export default function SingleComment(props) {
                 <div className="header">
                     <div className="profileImage">{getProfileImage()}</div>
                     <div>{name}</div>
-                    <div>{comment.visibleToOwner ? "Visible to owner" : "Not visible to owner"}</div>
+                    <div className="visibleToOwner">{comment.visibleToOwner ? "Visible to owner" : "Not visible to owner"}</div>
                     <div className="date">{formatDate(comment)}</div>
                 </div>
                 <div className="content">{comment.content}</div>

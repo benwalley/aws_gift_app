@@ -114,23 +114,23 @@ export default function Dashboard(props) {
     }
 
 
-    return (''
-            // <div className="dashboardContainer">
-            //     {visibleWishlist && visibleWishlistDisplayName && <h1 className="dashboardTitle">{visibleWishlistDisplayName}</h1>}
-            //     <div className="leftColumn"></div>
-            //     <div className="visibleWishlistItem">
-            //         {getVisibleWishlistItem()}
-            //     </div>
-            //     <div className="wishlistListing">
-            //         <WishlistListing/>
-            //     </div>
-            //     {dbUser && visibleWishlist && <div className="wishlistCommentsContainer">
-            //         <CommentsComponent
-            //             commenterId={dbUser.id}
-            //             wishlist={visibleWishlist}
-            //         />
-            //     </div>}
-            // </div>
+    return ( <div className="dashboardContainer">
+        {visibleWishlist && visibleWishlistDisplayName && <h1 className="dashboardTitle">{visibleWishlistDisplayName}</h1>}
+    <div className="leftColumn"></div>
+    <div className="visibleWishlistItem">
+        {getVisibleWishlistItem()}
+    </div>
+    <div className="wishlistListing">
+        <WishlistListing/>
+    </div>
+    {dbUser && visibleWishlist && <div className="wishlistCommentsContainer">
+        <CommentsComponent
+            commenterId={dbUser.id}
+            wishlist={visibleWishlist}
+        />
+    </div>}
+</div>
+
     );
 }
 

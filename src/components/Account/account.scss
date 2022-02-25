@@ -1,16 +1,32 @@
 .accountContainer {
     display: grid;
-    grid-template:
-            "header header header"
-            "left center right" / 1fr max(60%, 600px) 1fr;
-    margin-top: 30px;
     max-width: 1800px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
 
+
+
+    @media only screen and (min-width: 768px) {
+        grid-template:
+            "header heade"
+            "left center"
+            "right right"/ 1fr max(60%, 600px);
+        margin-top: 30px;
+    }
+
+    @media only screen and (min-width: 1000px) {
+        grid-template:
+            "header header header"
+            "left center right" / 1fr max(60%, 600px) 1fr;
+        margin-top: 30px;
+    }
+
     .header {
-        grid-area: header;
+        @media only screen and (min-width: 768px) {
+            grid-area: header;
+        }
+
         font-size: 25px;
         font-weight: 500;
         text-align: center;
@@ -19,16 +35,36 @@
     }
 
     .leftContainer {
-        grid-area: left;
+        @media only screen and (min-width: 768px) {
+            grid-area: left;
+            padding: 0;
+            padding-left: 20px;
+            grid-template-columns: 1fr;
+            grid-gap: 0;
+            border-bottom: 0;
+        }
+
         display: grid;
+        grid-template-columns: 1fr 1fr;
         text-align: left;
         justify-content: left;
         margin-bottom: auto;
-        padding-left: 20px;
+        padding: 0 10px;
+        grid-gap: 10px;
+        border-bottom: 1px solid #c4c4c4;
+        padding-bottom: 10px;
 
         a {
-            font-size: 20px;
-            padding: 10px;
+            @media only screen and (min-width: 768px) {
+                font-size: 20px;
+                padding: 10px;
+                text-align: left;
+                text-decoration: none;
+            }
+            padding: 0;
+            font-size: 18px;
+            text-align: center;
+            text-decoration: underline;
             color :var(--main-text-color);
 
             &:hover {
@@ -39,17 +75,32 @@
     }
 
     .centerContainer {
-        grid-area: center;
-        //border-left: 1px solid black;
-        //border-right: 1px solid black;
+
+        @media only screen and (min-width: 768px) {
+            grid-area: center;
+            box-shadow: var(--largeBoxShadow);
+        }
 
         margin: 20px;
-        box-shadow: var(--largeBoxShadow);
+
 
     }
 
     .rightContainer {
-        grid-area: right;
-        padding-right: 20px;
+        @media only screen and (min-width: 768px) {
+            grid-area: right;
+            padding: 0;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+
+        @media only screen and (min-width: 1000px) {
+            grid-area: right;
+            padding: 0;
+            padding-right: 20px;
+        }
+
+        padding: 0 10px;
+        padding-bottom: 50px;
     }
 }

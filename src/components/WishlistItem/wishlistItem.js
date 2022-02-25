@@ -19,7 +19,7 @@ import visibleWishlistState from "../../recoil/selectors/visibleWishlist";
 import Loading from "../Loading/loading";
 
 export default function WishlistItem(props) {
-    const {data, count} = props
+    const {data, count, closeSelectSection} = props
     const [numberOfComments, setNumberOfComments] = useState();
     let { wishlistId } = useParams();
     const [visibleListVersion, updateVisibleList] = useRecoilState(refreshVisibleWishlistList)
@@ -96,6 +96,7 @@ export default function WishlistItem(props) {
 
     const handleSelectWishlistItem = () => {
         if(!wishlistId) return
+        closeSelectSection()
         navigate(`/${wishlistId}/${data.id}`)
     }
 

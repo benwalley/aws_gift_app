@@ -16,6 +16,8 @@ import {
 import {useRecoilState, useRecoilValueLoadable} from "recoil";
 import {dbUserState, visibleWishlistItemsState} from "../../recoil/selectors";
 import {visibleWishlistIDState} from "../../recoil/atoms";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 export default function WishlistListing(props) {
@@ -27,6 +29,7 @@ export default function WishlistListing(props) {
     const wishlistItemsUpdate = useRecoilValueLoadable(visibleWishlistItemsState)
     const [visibleWishlistId, setVisibleWishlistId] = useRecoilState(visibleWishlistIDState)
     const [wishlistItems, setWishlistItems] = useState();
+    const [sectionOpen, setSectionOpen] = useState(true)
 
     useEffect(() => {
         if(wishlistItemsUpdate.state === "hasValue") {
@@ -146,13 +149,18 @@ export default function WishlistListing(props) {
                 data={item}
                 key={item.id}
                 count={index}
+                closeSelectSection={() => setSectionOpen(false)}
             />
         }))
     }
 
     return (
         <div className="wishlistListingContainer">
-            <div className="filtering">
+            <div className="currentItemTitle" onClick={() => setSectionOpen(!sectionOpen)}>
+                <span>Select Wishlist Item</span>
+                <FontAwesomeIcon icon={faChevronDown} size="lg"/>
+            </div>
+            <div className={sectionOpen ? "filteringOpen" : "filtering"}>
                 <h4>Filter by:</h4>
                 <select className="themeSelect" name="filterBy" id="filterBy" onChange={(e) => setSelectedFilterBy(e.target.value)}>
                     {getFilterOptions()}
@@ -165,7 +173,7 @@ export default function WishlistListing(props) {
                         onChange={(e) => setNameSearch(e.target.value)}/>
                 </div>}
             </div>
-            <div className="listItems">
+            <div className={sectionOpen ? "listItemsOpen" : "listItems"}>
                 {getListItems()}
             </div>
         </div>

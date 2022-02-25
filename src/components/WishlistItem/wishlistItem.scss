@@ -14,11 +14,12 @@ $thumbnailImageWidth: 50px;
     display: grid;
     grid-template-columns: $thumbnailImageWidth min-content 1fr min-content;
     grid-template:
-            "image name name delete"
-            "image numComments priority price" / $thumbnailImageWidth min-content 1fr min-content;
+            "image name name"
+            "image numComments priority"
+            "image price price"/ $thumbnailImageWidth min-content 1fr;
     grid-gap: 5px;
     padding: 10px;
-    max-width: 400px;
+
     width: 100%;
     margin: 0 auto;
     margin-top: -1px;
@@ -26,6 +27,17 @@ $thumbnailImageWidth: 50px;
     align-items: center;
     box-sizing: border-box;
     position: relative;
+
+    @media only screen and (min-width: 450px) {
+        grid-template-columns: $thumbnailImageWidth min-content 1fr min-content;
+        grid-template:
+            "image name name delete"
+            "image numComments priority price" / $thumbnailImageWidth min-content 1fr min-content;
+    }
+
+    @media only screen and (min-width: 1200px) {
+        max-width: 400px;
+    }
 
     &:hover {
         filter: brightness(90%);
@@ -67,6 +79,7 @@ $thumbnailImageWidth: 50px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        margin-right: 30px;
     }
 
     .numComments {
@@ -97,6 +110,9 @@ $thumbnailImageWidth: 50px;
     .deleteButton {
         grid-area: delete;
         text-align: right;
+        position: absolute;
+        top: 10px;
+        right: 0;
 
         .iconButton {
             color: var(--delete-red);

@@ -1,5 +1,9 @@
 .yourGroupContainer {
-    padding: 20px;
+
+
+    @media only screen and (min-width: 768px) {
+        padding: 20px;
+    }
     .groupName {
         font-size: 1.5em;
         font-weight: 700;
@@ -27,6 +31,10 @@
             padding: 5px;
             letter-spacing: 0.7px;
             font-weight: 600;
+            @media only screen and (max-width: 767px) {
+                grid-area: delete;
+            }
+
 
             &:hover {
                 filter: brightness(90%);
@@ -44,10 +52,23 @@
 
         .themeList {
             > div {
-                grid-template-columns: 1fr min-content 46px;
+                grid-template-columns: 1fr 46px;
+                @media only screen and (max-width: 767px) {
+                    grid-template-areas: "name delete"
+                            "admin delete";
+                }
+
+
+                @media only screen and (min-width: 768px) {
+                    grid-template-columns: 1fr min-content 46px;
+                }
             }
 
             .makeAdmin {
+                @media only screen and (max-width: 767px) {
+                    grid-area: admin;
+                }
+
                 button {
                     white-space: nowrap;
                     font-size: 0.9em;
@@ -58,12 +79,24 @@
         }
 
         .groupUserItem {
-            display: grid;
-            grid-template-columns: min-content min-content;
-            align-items: center;
-            justify-content: center;
+            @media only screen and (max-width: 767px) {
+                grid-area: name;
+            }
+
             white-space: nowrap;
-            padding-left: 105px; // to make them more centered because of the makeAdmin button width.
+            overflow: hidden;
+            display: flex;
+
+            .userDisplayName {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            @media only screen and (min-width: 768px) {
+                padding-left: 105px; // to make them more centered because of the makeAdmin button width.
+                justify-content: center;
+
+            }
         }
     }
 

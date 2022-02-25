@@ -173,8 +173,7 @@ export default function Group() {
             const isAdmin = isUserAdminOfGroup(dbUser.id, currentGroup)
             return <div key={user.id} className={index % 2 === 0 ? "even" : "odd"}>
                 <div className="groupUserItem">
-                    {user.displayName}
-                    {user.id === dbUser.id ? " (you)" : ''}
+                    <div className="userDisplayName">{user.displayName} {user.id === dbUser.id ? " (you)" : ''}</div>
                     {currentGroup.adminIds.indexOf(user.id) > -1 ? <div className="adminIcon"><FontAwesomeIcon icon={faUserCog} size="sm"/></div> : ''}
                 </div>
                 <div className="makeAdmin">

@@ -1,12 +1,53 @@
 .wishlistListingContainer {
-  .listItems {
+  box-shadow: var(--largeBoxShadow);
+  border-radius: 10px;
+  padding: 5px;
+
+  @media only screen and (min-width: 1200px) {
+    box-shadow: none;
+  }
+
+  .listItems,
+  .listItemsOpen {
+
+    &.listItems {
+      display: none;
+      @media only screen and (min-width: 1200px) {
+        display: block;
+      }
+    }
     max-height: 60vh;
     overflow: auto;
   }
 
-  .filtering {
-    display: grid;
+  .currentItemTitle {
+    justify-content: space-between;
+    display: flex;
+    padding: 5px 20px;
+    align-items: center;
+
+    @media only screen and (min-width: 1200px) {
+      display: none;
+    }
+  }
+
+  .filtering,
+  .filteringOpen{
+    border-top: 1px solid #a6a6a6;
     grid-template-columns: min-content 1fr;
+
+    @media only screen and (min-width: 1200px) {
+      border-top: none;
+    }
+
+    &.filtering {
+      display: none;
+
+      @media only screen and (min-width: 1200px) {
+        display: grid;
+      }
+    }
+
 
     h4 {
       white-space: nowrap;
@@ -24,7 +65,10 @@
     }
 
     .nameSearchContainer {
-      border-top: 1px solid grey;
+      @media only screen and (min-width: 1200px) {
+        border-top: 1px solid grey;
+      }
+
       grid-column: 1 / span 2;
       .nameSearch {
         padding: 5px;

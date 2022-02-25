@@ -1,6 +1,29 @@
 .largeWishlistItemContainer {
     display: grid;
     grid-template:
+            "nameContainer"
+            "image"
+            "extras"
+            "notes"
+            "information"
+            "actionButtons"
+            " comments";
+
+
+    grid-template-columns:1fr;
+    grid-template-rows: min-content min-content  min-content min-content min-content 1fr min-content;
+
+    padding-top: 0;
+    column-gap: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 8px grey;
+
+
+    @media only screen and (min-width: 768px) {
+        margin: 0 20px;
+        padding: 20px;
+        grid-template:
             "nameContainer nameContainer"
             "image extras"
             "image notes"
@@ -9,15 +32,9 @@
             "comments comments";
 
 
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: min-content min-content min-content min-content 1fr min-content;
-    padding: 20px;
-    padding-top: 0;
-    column-gap: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 1px 1px 8px grey;
-    margin: 0 20px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: min-content min-content min-content min-content 1fr min-content;
+    }
 
     .electricBlue {
         background: var(--electric-blue);
@@ -26,8 +43,17 @@
     .nameContainer {
         grid-area: nameContainer;
         display: grid;
-        grid-template-columns: 1fr 175px;
+        grid-template-columns: 1fr;
         border-bottom: 1px solid #e0e0e0;
+        padding: 10px;
+
+        @media only screen and (min-width: 600px) {
+            grid-template-columns: 1fr 175px;
+        }
+
+        @media only screen and (min-width: 1200px) {
+            padding: 0;
+        }
 
 
         .name {

@@ -28,22 +28,45 @@
     .moneyRecordRowEven,
     .moneyRecordRowOdd {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 50px;
+        grid-template-columns: 20px 1fr 1fr 1fr;
         padding: 5px;
+        position: relative;
 
         .recordAmount {
             text-align: right;
-            padding-right: 20px;
+            padding-right: 30px;
         }
 
         .deleteRow {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 12px;
+
+            @media only screen and (min-width: 600px) {
+                font-size: inherit;
+            }
+
             .iconButton {
                 color: var(--delete-red);
                 cursor: pointer;
+                padding: 0;
 
                 &:hover {
                     filter: brightness(110%);
                 }
+            }
+        }
+
+        .commentToggle {
+            font-size: 12px;
+            display: grid;
+
+            @media only screen and (min-width: 600px) {
+                font-size: inherit;
+            }
+            button {
+                padding: 0;
             }
         }
     }
@@ -51,8 +74,15 @@
     .moneyRecordsFilterBar {
         display: grid;
         grid-template:
+                "title"
+                "selectOne"
+                "selectTwo";
+
+        @media only screen and (min-width: 768px) {
+            grid-template:
                 "title title"
                 "selectOne selectTwo";
+        }
 
         .recordsFilterTitle {
             grid-area: title;

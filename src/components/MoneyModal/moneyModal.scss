@@ -1,9 +1,14 @@
 .moneyModalContents {
-    padding: 20px;
+    padding: 10px;
+    padding-top: 35px;
+
     .amountOwedInputContainer {
-        display: grid;
-        grid-template-columns: 1fr min-content 1fr 1fr;
-        grid-gap: 20px;
+        @media only screen and (min-width: 768px) {
+            display: grid;
+            grid-template-columns: 1fr min-content 1fr 1fr;
+            grid-gap: 20px;
+            padding: 20px;
+        }
 
         > div {
             display: grid;
@@ -17,9 +22,13 @@
             input {
                 padding: 10px;
                 box-sizing: border-box;
-                margin: 0 10px;
                 text-align: center;
                 font-size: 16px;
+
+                @media only screen and (min-width: 768px) {
+                    margin: 0 10px;
+
+                }
 
             }
         }
@@ -27,6 +36,12 @@
         .arrow {
             margin-top: auto;
             margin-bottom: 10px;
+            display: none;
+
+            @media only screen and (min-width: 768px) {
+                display: block;
+
+            }
         }
     }
 
@@ -37,7 +52,14 @@
     }
 
     .comment {
-        grid-column: 1 / span 4;
+        grid-column: 1 / span 5;
+        text-align: left;
+        border-top: 1px solid #dedede;
+        padding: 2px;
+
+        > span {
+            font-weight: bold;
+        }
 
         input.commentInput {
             width: 100%;
@@ -48,6 +70,7 @@
         .textButton {
             margin: 0 auto;
             width: 400px;
+            max-width: 100%;
         }
     }
 }

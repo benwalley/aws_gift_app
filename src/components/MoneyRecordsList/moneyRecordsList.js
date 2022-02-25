@@ -10,6 +10,7 @@ import {Money} from "../../models";
 import userMoniesState from "../../recoil/selectors/userMonies";
 import {useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {refreshMonies} from "../../recoil/selectors";
+import MoneyRecordItem from "./MoneyRecordItem/moneyRecordItem";
 //TODO: show comment
 export default function MoneyRecordsList(props) {
     const {} = props
@@ -49,14 +50,7 @@ export default function MoneyRecordsList(props) {
 
     const getList = () => {
         return getFilteredList().map((record, index) => {
-            return (<div key={index} className={index%2===0 ? "moneyRecordRowEven" : "moneyRecordRowOdd"}>
-                <div className="recordFromName" >{record.moneyFromName}</div>
-                <div className="recordToName" >{record.moneyToName}</div>
-                <div className="recordAmount" >{formatPrice(record.amount)}</div>
-                <div className="deleteRow">
-                    <IconButton displayName={"Delete row"} onClick={(e) => handleDeleteItem(e, record) } icon={<FontAwesomeIcon icon={faTimesCircle} size="lg" />}/>
-                </div>
-            </div>)
+            return <MoneyRecordItem key={index} record={record} index={index} handleDeleteItem={handleDeleteItem}/>
         })
     }
 
