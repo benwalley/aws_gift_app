@@ -42,6 +42,7 @@ type Comments @model @auth(rules: [{allow: public}]) {
   wishlistItemId: String
   wishlistId: String
   createdAt: AWSDateTime!
+  groupId: String
 }
 
 type WishlistItems @model @auth(rules: [{allow: public}]) {

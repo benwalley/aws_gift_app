@@ -161,7 +161,6 @@ export default function WishlistItem(props) {
                     <IconButton icon={<FontAwesomeIcon icon={faTimesCircle} size="lg" />} displayName={'delete'} onClick={handleDelete}/>
                 </div>}
                 {getNumberOfComments()}
-                <PriorityDisplay priority={data.priority} showName={true} showNumbers={true}/>
             </div>
     );
 }

@@ -11,7 +11,6 @@ import userMoniesState from "../../recoil/selectors/userMonies";
 import {useRecoilValueLoadable, useSetRecoilState} from "recoil";
 import {refreshMonies} from "../../recoil/selectors";
 import MoneyRecordItem from "./MoneyRecordItem/moneyRecordItem";
-//TODO: show comment
 export default function MoneyRecordsList(props) {
     const {} = props
     const [people, setPeople] = useState([])

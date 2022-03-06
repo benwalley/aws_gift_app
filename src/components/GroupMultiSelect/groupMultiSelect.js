@@ -1,18 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import './groupMultiSelect.scss'
-import {usersGroupsState} from "../../recoil/selectors";
 import {useRecoilState, useRecoilValueLoadable, useSetRecoilState} from "recoil";
-import IconButton from "../Buttons/IconButton";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {userSpecificGroupsState} from "../../recoil/selectorFamilies";
-import currentGroup from "../../recoil/selectors/currentGroup";
 
 export default function GroupMultiSelect(props) {
     const {selectedGroups, setSelectedGroups, userId, initialSelected} = props //(change these to props when ready to use)
     const groupsUpdate = useRecoilValueLoadable(userSpecificGroupsState(userId))
     const [groups, setGroups] = useState([])
-    //TODO: make all selected by default, then persist your selection
     useEffect(() => {
         if (groupsUpdate.state === "hasValue") {
             setGroups(groupsUpdate.contents);

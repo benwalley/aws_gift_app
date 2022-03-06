@@ -82,8 +82,6 @@ export default function Group() {
     }
 
     const handleDeleteGroupMember = async (e, user) => {
-        //TODO: remove id from group instead of user
-        // remove their group id
         const originalUser = await DataStore.query(Users, user.id);
         // If they're a subuser, we just delete the user
         if (originalUser.isSubUser) {
@@ -160,7 +158,7 @@ export default function Group() {
         if(!isDbUserCreator) return;
         const isAdmin = isUserAdminOfGroup(user.id, currentGroup)
         const isSubUser = user.isSubUser;
-        if(!isSubUser && !dbUser.id === user.id) {
+        if(!isSubUser && !(dbUser.id === user.id)) {
             return <button onClick={(e) => handleToggleAdmin(e, user)}>
                 {isAdmin ? "Make not-admin" : "Make admin"}
             </button>

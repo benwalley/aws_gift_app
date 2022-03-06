@@ -42,14 +42,14 @@ export default function CommentsComponent(props) {
     useEffect(() => {
         updateComments()
         automaticUpdate()
-    }, [wishlist, wishlistItem])
+    }, [wishlist, wishlistItem, currentGroup])
 
     const updateComments = async () => {
         let updatedComments;
         if(wishlist && wishlist.id) {
-            updatedComments = await DataStore.query(Comments, c => c.wishlistId("eq", wishlist.id));
+            updatedComments = await DataStore.query(Comments, c => c.wishlistId("eq", wishlist.id).groupId("eq", currentGroup.id));
         } else if(wishlistItem && wishlistItem.id) {
-            updatedComments = await DataStore.query(Comments, c => c.wishlistItemId("eq", wishlistItem.id));
+            updatedComments = await DataStore.query(Comments, c => c.wishlistItemId("eq", wishlistItem.id).groupId("eq", currentGroup.id));
         } else {
             return;
         }

@@ -4,7 +4,6 @@ import { selector } from "recoil"
 import visibleWishlistState from "./visibleWishlist";
 import {largeWishlistItemVersion} from "../versionAtoms";
 import dbUserState from "./dbUser";
-//TODO: make it based on using user (or have some way to see what they're getting
 const yourGettingList = selector({
     key: 'yourGettingList',
     get: async ({get}) => {

@@ -34,7 +34,6 @@ import {Groups, Users} from "./models";
 
 Amplify.configure(awsconfig);
 // TODO: (someday maybe) let users upload profile pic
-// TODO: mobile styling
 
 const AuthStateApp = () => {
     const [authState, setAuthState] = useState()

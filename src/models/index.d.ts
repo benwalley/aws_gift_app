@@ -84,6 +84,7 @@ export declare class Comments {
   readonly wishlistItemId?: string;
   readonly wishlistId?: string;
   readonly createdAt: string;
+  readonly groupId?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Comments, CommentsMetaData>);
   static copyOf(source: Comments, mutator: (draft: MutableModel<Comments, CommentsMetaData>) => MutableModel<Comments, CommentsMetaData> | void): Comments;

@@ -9,7 +9,8 @@ import {faTimesCircle, faUserShield} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {currentGroupIdState} from "../../../recoil/atoms";
 import TextButton from "../../Buttons/TextButton";
-//TODO: when you join a group, show list of products, and select any you want to move to that group.
+import AddItemsToGroup from "./AddItemsToGroup/addItemsToGroup";
+import Modal from "../../Modal/modal";
 
 export default function GroupsSection() {
     const myGroupsUpdate = useRecoilValueLoadable(usersGroupsState)
@@ -21,6 +22,8 @@ export default function GroupsSection() {
     const dbUserUpdate = useRecoilValueLoadable(dbUserState);
     const updateGroup = useSetRecoilState(updateGroupVersion)
     const [dbUser, setDbUser] = useState()
+    const [newGroupId, setNewGroupId] = useState()
+    const [addItemsPopupOpen, setAddItemsPopupOpen] = useState(false);
 
     useEffect(() => {
         if(dbUserUpdate.state === "hasValue") {
@@ -110,6 +113,17 @@ export default function GroupsSection() {
             updated.memberIds = [...new Set(membersCopy)]
         }))
         updateGroup()
+        handleOpenPopup(group.id)
+    }
+
+    const handleOpenPopup = (groupId) => {
+        setAddItemsPopupOpen(true);
+        setNewGroupId(groupId);
+    }
+
+    const handleClosePopup = () => {
+        setAddItemsPopupOpen(false);
+        setNewGroupId(undefined);
     }
 
     const renderInvitedToGroups = () => {
@@ -138,6 +152,7 @@ export default function GroupsSection() {
 
         updateGroup();
         setNewGroupName('')
+        handleOpenPopup(group.id)
     }
 
     return (
@@ -174,6 +189,9 @@ export default function GroupsSection() {
                     <button className="themeButton">Create</button>
                 </form>
             </div>
+            <Modal close={handleClosePopup} isOpen={addItemsPopupOpen}>
+                <AddItemsToGroup newGroupId={newGroupId} close={handleClosePopup}/>
+            </Modal>
         </div>
     );
 }

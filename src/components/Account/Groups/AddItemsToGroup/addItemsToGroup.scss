@@ -1,0 +1,28 @@
+.addItemsToGroupContainer {
+  padding: 10px;
+
+  @media only screen and (min-width: 768px) {
+    padding: 20px;
+  }
+
+  .themeList {
+    position: relative;
+    > div {
+      text-align: center;
+      cursor: pointer;
+
+      &.selected {
+        outline: 3px solid var(--theme-red);
+        outline-offset: -3px;
+      }
+    }
+
+    .themeButton {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 20px;
+      background: var(--light-green);
+    }
+  }
+}

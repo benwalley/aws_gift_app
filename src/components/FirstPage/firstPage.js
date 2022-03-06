@@ -81,16 +81,13 @@ export default function FirstPage(props) {
                 })
             );
             myGroup = group.id;
-
-            // update user
-            const original = await DataStore.query(Users, dbUser.id);
-            await DataStore.save(Users.copyOf(original, updated => {
-                updated.groupIds = [group.id];
-                updated.displayName = username;
-                updated.isAdmin = true;
-                updated.subUsers = [];
-            }))
         }
+        // update user
+        const original = await DataStore.query(Users, dbUser.id);
+        await DataStore.save(Users.copyOf(original, updated => {
+            updated.displayName = username;
+        }))
+
         updateDbUser()
         setCurrentGroup(myGroup)
     }

@@ -381,6 +381,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "groupId": {
+                    "name": "groupId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "updatedAt": {
                     "name": "updatedAt",
                     "isArray": false,
@@ -632,5 +639,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "46c27f91a3ed67b320d304b6abb8e514"
+    "version": "b07aa4fdfc1c8a4f7f3528c5a5b65411"
 };
